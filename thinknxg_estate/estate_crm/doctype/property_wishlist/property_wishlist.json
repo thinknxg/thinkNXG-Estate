@@ -31,8 +31,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Unit",
-   "options": "Unit",
-   "reqd": 1
+   "options": "Unit"
   },
   {
    "fetch_from": "unit.property",
@@ -71,5 +70,5 @@
   }
  ],
  "restrict_to_domain": "",
- "modified": "2026-11-24 12:00:00.000000"
+ "modified": "2026-11-24 10:30:00.000000"
 }

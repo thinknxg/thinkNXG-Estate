@@ -1,7 +1,7 @@
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 import frappe
 from frappe import _
-from frappe.utils import add_days, today, flt
+from frappe.utils import add_days, flt, nowdate, today
 from thinknxg_estate.core.security import staff_only
 
 VAT_RATES = {

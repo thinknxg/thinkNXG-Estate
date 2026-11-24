@@ -8,8 +8,8 @@
    "in_list_view": 1,
    "label": "Unit",
    "options": "Unit",
-   "reqd": 1,
-   "search_index": 1
+   "search_index": 1,
+   "description": "Empty when the whole property is being viewed."
   },
   {
    "fetch_from": "unit.property",
@@ -17,7 +17,8 @@
    "fieldtype": "Link",
    "label": "Property",
    "options": "Property",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "customer",
@@ -126,5 +127,5 @@
    "write": 1
   }
  ],
- "modified": "2026-11-24 15:00:00.000000"
+ "modified": "2026-11-24 13:45:00.000000"
 }

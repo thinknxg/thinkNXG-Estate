@@ -1,0 +1,25 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+<div class="estate-page py-4">
+  <a href="/properties" class="small text-muted">&larr; {{ _("All properties") }}</a>
+  <h1 class="mt-2 mb-4">{{ _("Compare properties") }}</h1>
+  {% if not rows %}
+  <div class="estate-empty">{{ _("Tick Compare on up to three properties to see them side by side.") }}</div>
+  {% else %}
+  <div class="estate-card" style="overflow-x:auto">
+    <table class="estate-table estate-compare">
+      <tr><th></th>{% for r in rows %}<td>
+        {% if r.cover %}<img src="{{ r.cover }}" alt="">{% endif %}
+        <div class="mt-2"><a href="/{{ r.route }}"><strong>{{ r.title }}</strong></a></div></td>{% endfor %}</tr>
+      <tr><th>{{ _("Price") }}</th>{% for r in rows %}<td><strong>{{ currency }} {{ amount(r.headline_price) }}</strong>
+        <span class="text-muted small">{{ _(r.price_period or "") }}</span></td>{% endfor %}</tr>
+      {% for key, label in specs %}
+      <tr><th>{{ label }}</th>{% for r in rows %}<td>{% if key == "area_sqm" and r[key] %}{{ r[key]|int }}{% else %}{{ _(r[key]) if r[key] else "–" }}{% endif %}</td>{% endfor %}</tr>
+      {% endfor %}
+      <tr><th>{{ _("Amenities") }}</th>{% for r in rows %}<td>{% for a in r.amenities %}<span class="estate-badge muted me-1 mb-1">{{ _(a) }}</span>{% else %}–{% endfor %}</td>{% endfor %}</tr>
+      <tr><th></th>{% for r in rows %}<td><a class="estate-btn" href="/{{ r.route }}">{{ _("View details") }}</a></td>{% endfor %}</tr>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

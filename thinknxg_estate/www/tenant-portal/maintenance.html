@@ -38,6 +38,9 @@
   </table>
   {% else %}<div class="text-muted small">No requests yet.</div>{% endif %}
 </div>
+{% endblock %}
+{% block script %}
+{{ super() }}
 <script>
 (function () {
   document.getElementById("mr-send").addEventListener("click", function () {

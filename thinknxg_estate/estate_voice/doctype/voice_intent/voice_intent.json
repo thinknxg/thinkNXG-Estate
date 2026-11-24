@@ -55,8 +55,7 @@
   },
   {
    "fieldname": "col_break_1",
-   "fieldtype": "Column Break",
-   "label": "Col Break 1"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "transcript",
@@ -98,8 +97,7 @@
   },
   {
    "fieldname": "col_break_2",
-   "fieldtype": "Column Break",
-   "label": "Col Break 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "entities",
@@ -135,8 +133,7 @@
   },
   {
    "fieldname": "col_break_3",
-   "fieldtype": "Column Break",
-   "label": "Col Break 3"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "reply_sent",

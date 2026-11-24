@@ -137,8 +137,7 @@
   },
   {
    "fieldname": "col_break_1",
-   "fieldtype": "Column Break",
-   "label": "Col Break 1"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "owner_ref",
@@ -230,8 +229,7 @@
   },
   {
    "fieldname": "col_break_2",
-   "fieldtype": "Column Break",
-   "label": "Col Break 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "latitude",
@@ -264,8 +262,7 @@
   },
   {
    "fieldname": "col_break_3",
-   "fieldtype": "Column Break",
-   "label": "Col Break 3"
+   "fieldtype": "Column Break"
   },
   {
    "depends_on": "eval:doc.country=='United Arab Emirates'",
@@ -305,8 +302,7 @@
   {
    "collapsible": 1,
    "fieldname": "notes_sb",
-   "fieldtype": "Section Break",
-   "label": "Notes Sb"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "notes",

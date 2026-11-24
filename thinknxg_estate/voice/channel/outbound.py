@@ -4,6 +4,7 @@ Builds on re_crm's WhatsApp Settings. Every send respects the 24-hour customer
 service window: free-form outside it is refused and a template is required."""
 
 import frappe
+from thinknxg_estate.core.http import post_json
 from frappe import _
 from frappe.utils import cstr, now_datetime
 
@@ -35,7 +36,7 @@ def _api(payload, reference=None):
     try:
         url = (f"https://graph.facebook.com/{settings.api_version or 'v19.0'}/"
                f"{settings.phone_number_id}/messages")
-        response = frappe.make_post_request(
+        response = post_json(
             url,
             headers={"Authorization": f"Bearer {settings.get_password('access_token')}",
                      "Content-Type": "application/json"},

@@ -39,5 +39,7 @@ def after_sync():
 
 def after_migrate():
 	from thinknxg_estate.core.install import ensure_rent_item
+	from thinknxg_estate.core.naming import sync_naming_counters
 
 	ensure_rent_item()
+	sync_naming_counters()

@@ -60,8 +60,7 @@
   },
   {
    "fieldname": "col_break_1",
-   "fieldtype": "Column Break",
-   "label": "Col Break 1"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "amount",
@@ -114,8 +113,7 @@
   },
   {
    "fieldname": "col_break_2",
-   "fieldtype": "Column Break",
-   "label": "Col Break 2"
+   "fieldtype": "Column Break"
   },
   {
    "allow_on_submit": 1,

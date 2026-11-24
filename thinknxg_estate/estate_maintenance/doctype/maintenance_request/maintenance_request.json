@@ -58,8 +58,7 @@
   },
   {
    "fieldname": "col_break_1",
-   "fieldtype": "Column Break",
-   "label": "Col Break 1"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "category",
@@ -111,8 +110,7 @@
   },
   {
    "fieldname": "job_sb",
-   "fieldtype": "Section Break",
-   "label": "Job Sb"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "maintenance_job",

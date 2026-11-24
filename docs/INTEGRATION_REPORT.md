@@ -2,7 +2,7 @@
 
 **Scope:** audit of four repositories and their consolidation into one app, `thinknxg_estate`
 (Phases 1 and 2 of the master plan, plus the security fixes the audit made necessary).
-**Date:** 24 November 2026 (Phases 1–2), updated the same day with Phases 3–8
+**Date:** 24 November 2026 (Phases 1–2), updated the same day with Phases 3–8 and release 1.2
 **Test platform:** Frappe Framework 16.60.2 + ERPNext 16.60.0, Python 3.14, MariaDB 10.11.
 
 ## 1. Summary
@@ -27,9 +27,10 @@ What was done:
 - **Security:** five vulnerabilities found and fixed (§6), two of them critical, each
   reproduced on the original code first.
 - **Defects:** nine functional defects found and fixed (§5).
-- **Tests:** 59 automated tests (41 integration + 18 unit) plus 56 HTTP checks, all passing.
+- **Tests:** 96 automated tests (78 integration + 18 unit), 62 HTTP checks through nginx and an
+  11-step browser walk-through, all passing on a freshly upgraded legacy site and on a new site.
 
-Phases 3–8 are summarised in §10; what is still open is in §11.
+Phases 3–8 are summarised in §10, release 1.2 in §11; what is still open is in §12.
 
 ## 2. Repositories audited
 
@@ -218,12 +219,35 @@ Defects found and fixed in this round:
 | D13 | Console endpoints use unfiltered queries | Sales agents would bypass lead ownership through the console | Console limited to portfolio-wide roles |
 | D14 | New checkbox settings read as 0 on upgraded sites until the form is saved | Defaults of 1 silently off | `utils.setting()` honours the declared default |
 
-## 11. Remaining work
+## 11. Release 1.2 (third delivery)
+
+| Item | Delivered | Verified by |
+|---|---|---|
+| One public website | `/properties` is the single public site; `/listings` redirects to it (301). Its visitor features moved over: sign-up and sign-in (`/properties/account`), wishlist hearts on every card, saved searches with daily email alerts (now matched against published listings, with links), viewing requests, and lease requests with a cheque payment plan on the listing page. Whole properties without units (a villa, a shop) can now be listed. New compare page (up to three listings). Upgrade patch keeps everything the old `/listings` showed. | 16 integration tests; browser walk-through (sign-up → save → save search → compare → viewing → lease request → account page); HTTP checks |
+| Map view | Grid/map switch on `/properties` with every matching listing pinned (Leaflet, bundled; tile server configurable in RE Portal Settings), location map on listing pages, `map_points` API following the search filters. | Tests (filters, missing coordinates, no internal ids exposed); browser screenshots |
+| Staff console | `/re-portal` rebuilt on the Estate design system (navy/teal tokens, line icons instead of emoji, local Inter font instead of Google Fonts, keyboard-reachable navigation, mobile layout with a menu button, right-to-left support). All console logic kept; its "+ New" button now works by screen id rather than English title text. | Browser screenshots at desktop and mobile width, no script errors |
+| One AI provider | AI Settings holds the provider (Anthropic, OpenAI, Gemini, or any OpenAI-compatible endpoint), key, default and chat models, prices and one monthly budget shared by the website chat assistant and the voice CRM. Portal Chat Settings keeps only chat behaviour. Speech-to-text has its own key, so a non-OpenAI key is never sent to Whisper. Upgrade patch moves an existing chat key across. | 17 tests (shared config, shared budget, OpenAI vs Gemini payloads, speech key, upgrade patch) |
+| Arabic | Every user-facing string (2,313) has Arabic: 2,066 in the app, the rest from thinkNXG Framework / ERP. Desk forms, the console and the website switch to right-to-left. Estate-specific meanings ("Property" = عقار on Estate forms) are scoped to Estate forms; generic mistranslations used on Estate screens ("Due Date", "Amount", "Bounced", "Draft"…) corrected. | Coverage test fails on any untranslated string; placeholder test; Arabic screenshots |
+| Production | Assets built; deployed behind nginx with gunicorn, Socket.IO, scheduler and workers under supervisor; load-tested with 1,000 units: 300 concurrent users at 57 req/s, 95% under 320 ms, no errors (`LOAD_TEST.md`). Deployment guide (`DEPLOYMENT.md`). | 62 HTTP checks through nginx; load test |
+
+Defects found and fixed in this round:
+
+| # | Defect | Impact | Fix |
+|---|---|---|---|
+| D15 | Document numbering on upgraded sites: legacy records were numbered from per-prefix counters, but `format:` names in Framework 16 use one shared counter that started at zero | After an upgrade, creating a tenant, owner, property or unit failed with a duplicate name | Counter moved past every number in use, at upgrade and on every migrate |
+| D16 | The voice layer and WhatsApp called `frappe.make_post_request` / `make_get_request`, removed in Framework 16 | Every AI call, transcription, WhatsApp send and voice-note download failed and was swallowed by error handling | Helper with timeouts; media kept as bytes |
+| D17 | `nowdate` used without import in bulk PDC payment and purchase invoice creation | Those actions crashed when a date was left blank | Import added |
+| D18 | A local variable shadowed the translation function in the voice confirmation handler | Confirm/cancel replies crashed | Renamed |
+| D19 | Listing names came from titles | Two properties with the same name collided, and the error blocked saving the property | Unique names and routes |
+| D20 | Each `/properties` page view counted against the 120/hour search API limit; the chat widget's per-page call was limited to 120/hour | Visitors paging results, or an office sharing one IP, would be locked out | Page views no longer count; public read limits 600/hour, chat settings 1,200/hour |
+| D21 | Publishing a building and importing leads queued one background job per listing / lead | Large go-lives, the upgrade patch or a lead import hit the 700-job queue cap and failed | One reindex per bulk sync; imports skip per-lead scoring (nightly run covers them) |
+| D22 | Visitors who signed up through the standard sign-up page could not save properties | Error: lead owner equals lead email | Lead created as Administrator |
+| D23 | Legacy forms labelled column breaks "Col Break 1" etc. | Shown as headings on 29 forms | Labels removed |
+
+## 12. Remaining work
 
 | Area | Remaining |
 |---|---|
-| Public portal | `/listings` (visitor accounts, wishlist, saved searches) and `/properties` (SEO pages, feeds, viewing requests) are both live and share one CRM bridge; merging them into a single front end is still open. An interactive map view (coordinates are already returned by search) is open. |
-| Staff console | `/re-portal` (7,600-line single page) is kept as is; the new dashboard page covers the KPIs and charts. Rebuilding the console's forms on the design system is open. |
-| AI configuration | The listings chatbot (Portal Chat Settings) and voice layer (AI Settings) still configure their LLM providers separately. |
-| Localisation | Arabic translations of the new portal pages and reports. |
-| Deployment | Asset build, production deployment and load testing with realistic volumes were not possible in this environment (see §9). |
+| Live providers | WhatsApp, AI and speech calls were tested with mocked providers (request shape, logging, budgets). Live calls need the client's accounts and are part of user acceptance testing. |
+| Map tiles | The default OpenStreetMap tile server suits light use; a busy public site should use a commercial or self-hosted tile service (setting in RE Portal Settings). |
+| Load test scope | Measured on one 2 vCPU server with the load generator on the same machine; repeat on the client's production hardware before go-live (`scripts/load/`). |

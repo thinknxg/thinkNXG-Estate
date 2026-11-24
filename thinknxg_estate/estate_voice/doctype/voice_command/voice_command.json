@@ -53,8 +53,7 @@
   },
   {
    "fieldname": "col_break_1",
-   "fieldtype": "Column Break",
-   "label": "Col Break 1"
+   "fieldtype": "Column Break"
   },
   {
    "description": "Dotted path to the handler function",
@@ -64,7 +63,7 @@
    "reqd": 1
   },
   {
-   "description": "Destructive or irreversible — require a Confirm tap",
+   "description": "Destructive or irreversible \u2014 require a Confirm tap",
    "fieldname": "needs_confirmation",
    "fieldtype": "Check",
    "in_list_view": 1,

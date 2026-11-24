@@ -18,6 +18,9 @@
     {% if contact_whatsapp %}WhatsApp: {{ contact_whatsapp }}{% endif %}
   </div>
 </div>
+{% endblock %}
+{% block script %}
+{{ super() }}
 <script>
 (function () {
   var rendered = new Date().toISOString().slice(0, 19).replace("T", " ");

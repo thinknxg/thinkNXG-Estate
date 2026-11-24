@@ -177,7 +177,15 @@ class TestPortalToCRM(IntegrationTestCase):
 
 
 class TestTenantSecurity(IntegrationTestCase):
+	def setUp(self):
+		# The access-code login commits its session token; keep each test's data rolled back.
+		from unittest.mock import patch
+
+		self._commit = patch.object(frappe.db, "commit")
+		self._commit.start()
+
 	def tearDown(self):
+		self._commit.stop()
 		frappe.set_user("Administrator")
 		frappe.db.set_single_value("Property Settings", "enable_access_code_portal", 0)
 		frappe.db.set_single_value("Property Settings", "allow_tenant_self_termination", 0)

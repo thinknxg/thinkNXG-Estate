@@ -14,14 +14,12 @@ import frappe
 import requests
 from frappe import _
 from frappe.rate_limiter import rate_limit
-from frappe.utils import cint, cstr, flt, get_first_day, now_datetime, nowdate, strip_html
+from frappe.utils import cint, cstr, flt, now_datetime, strip_html
 
 from thinknxg_estate.portal.api.listings import PUBLIC_FIELDS, _maybe_create_lead
 
-API_URL = "https://api.anthropic.com/v1/messages"
-ANTHROPIC_DEFAULT_MODEL = "claude-haiku-5-5"
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
-GEMINI_DEFAULT_MODEL = "gemini-3.8-flash"
+# Provider, key, model, prices and budget come from AI Settings (thinknxg_estate.core.ai),
+# shared with the voice CRM. Portal Chat Settings holds only the chat's own behaviour.
 GEMINI_MAX_TOKENS = 1500  # thinking tokens count towards this
 MAX_TOOL_ROUNDS = 4
 MAX_USER_CHARS = 1000
@@ -58,17 +56,18 @@ def _ascii_digits(value):
 # --------------------------------------------------------------------- endpoints
 
 @frappe.whitelist(allow_guest=True)
-@rate_limit(limit=120, seconds=3600)
+@rate_limit(limit=1200, seconds=3600)  # fetched by the chat widget on every public page view
 def config():
+    from thinknxg_estate.core.ai import provider_config
+
     settings = frappe.get_cached_doc("Portal Chat Settings")
     portal = frappe.get_cached_doc("RE Portal Settings")
-    has_key = bool(settings.get_password("api_key", raise_exception=False))
-    return {"enabled": bool(cint(settings.enabled) and has_key),
+    return {"enabled": bool(cint(settings.enabled) and provider_config("chat")),
             "whatsapp": re.sub(r"\D", "", portal.contact_whatsapp or "")}
 
 
 @frappe.whitelist(allow_guest=True)
-@rate_limit(limit=120, seconds=3600)
+@rate_limit(limit=600, seconds=3600)
 def history(session_token=None):
     """Replay the visible turns of this visitor's own chat (the token is the secret)."""
     name = _session_name(session_token)
@@ -120,9 +119,9 @@ def send(message, session_token=None, lang=None):
     session.message_count = cint(session.message_count) + 1
     session.input_tokens = cint(session.input_tokens) + in_tok
     session.output_tokens = cint(session.output_tokens) + out_tok
-    session.cost = flt(session.cost) + (
-        in_tok * flt(settings.input_cost_per_mtok) + out_tok * flt(settings.output_cost_per_mtok)
-    ) / 1_000_000
+    from thinknxg_estate.core.ai import token_cost
+
+    session.cost = flt(session.cost) + token_cost(in_tok, out_tok)
     session.lang = lang
     session.last_active = now_datetime()
     session.save(ignore_permissions=True)
@@ -153,13 +152,10 @@ def _get_session(token, lang):
 
 
 def _budget_ok(settings):
-    budget = flt(settings.monthly_budget)
-    if not budget:
-        return True
-    spent = frappe.db.sql(
-        "SELECT COALESCE(SUM(cost), 0) FROM `tabPortal Chat Session` WHERE last_active >= %s",
-        get_first_day(nowdate()))[0][0]
-    return flt(spent) < budget
+    """One monthly budget for every AI feature (AI Settings)."""
+    from thinknxg_estate.core.ai import budget_available
+
+    return budget_available()
 
 
 # ------------------------------------------------------------------- model loop
@@ -202,37 +198,39 @@ def _converse(settings, session, messages, lang):
     return None, in_tok, out_tok  # tool-round cap hit
 
 
-def _call_anthropic(settings, system, messages):
-    key = settings.get_password("api_key", raise_exception=False)
-    if not key:
-        return None
+def _call_anthropic(config, system, messages):
     try:
         response = requests.post(
-            API_URL,
-            headers={"x-api-key": key, "anthropic-version": "2023-06-01",
+            config.endpoint,
+            headers={"x-api-key": config.key, "anthropic-version": "2023-06-01",
                      "content-type": "application/json"},
-            json={"model": settings.model or ANTHROPIC_DEFAULT_MODEL, "max_tokens": MAX_OUTPUT_TOKENS,
+            json={"model": config.model, "max_tokens": MAX_OUTPUT_TOKENS,
                   "system": system, "tools": TOOLS, "messages": _strip_extra(messages)},
             timeout=45)
     except requests.RequestException:
-        frappe.log_error(title="re_portal chat: Anthropic request failed",
+        frappe.log_error(title="thinkNXG Estate chat: Anthropic request failed",
                          message=frappe.get_traceback())
         return None
     if response.status_code != 200:
-        frappe.log_error(title=f"re_portal chat: Anthropic HTTP {response.status_code}",
+        frappe.log_error(title=f"thinkNXG Estate chat: Anthropic HTTP {response.status_code}",
                          message=response.text[:1500])
         return None
     return response.json()
 
 
 # ------------------------------------------------------------------- providers
-# History is always stored in Anthropic-style blocks; Gemini (OpenAI-compatible
-# endpoint) is translated on the way out and back in.
+# History is always stored in Anthropic-style blocks; OpenAI, Gemini (its OpenAI-compatible
+# endpoint) and Custom OpenAI-compatible endpoints are translated on the way out and back in.
 
 def _call_model(settings, system, messages):
-    if (settings.provider or "Gemini") == "Anthropic":
-        return _call_anthropic(settings, system, messages)
-    return _call_gemini(settings, system, messages)
+    from thinknxg_estate.core.ai import provider_config
+
+    config = provider_config("chat")
+    if not config:
+        return None
+    if config.provider == "Anthropic":
+        return _call_anthropic(config, system, messages)
+    return _call_openai_compatible(config, system, messages)
 
 
 def _strip_extra(messages):
@@ -265,7 +263,8 @@ def _openai_tools():
                           "parameters": _gemini_schema(t["input_schema"])}} for t in TOOLS]
 
 
-def _to_openai(system, messages):
+def _to_openai(system, messages, gemini=True):
+    """gemini=False drops the Gemini-only fields (tool name on results, thought signatures)."""
     out = [{"role": "system", "content": system}]
     names = {}
     for m in messages:
@@ -276,8 +275,10 @@ def _to_openai(system, messages):
                 continue
             for b in content:
                 if b.get("type") == "tool_result":
-                    out.append({"role": "tool", "tool_call_id": b["tool_use_id"],
-                                "name": names.get(b["tool_use_id"]), "content": b.get("content") or ""})
+                    result = {"role": "tool", "tool_call_id": b["tool_use_id"], "content": b.get("content") or ""}
+                    if gemini:
+                        result["name"] = names.get(b["tool_use_id"])
+                    out.append(result)
             continue
         if isinstance(content, str):
             out.append({"role": "assistant", "content": content})
@@ -290,13 +291,13 @@ def _to_openai(system, messages):
                 call = {"id": b["id"], "type": "function",
                         "function": {"name": b["name"],
                                      "arguments": json.dumps(b.get("input") or {}, ensure_ascii=False)}}
-                if b.get("extra_content"):
+                if gemini and b.get("extra_content"):
                     call["extra_content"] = b["extra_content"]
                 calls.append(call)
         msg = {"role": "assistant", "content": text or None}
         if calls:
             msg["tool_calls"] = calls
-            for b in content:
+            for b in (content if gemini else []):
                 if b.get("msg_extra_content"):
                     msg["extra_content"] = b["msg_extra_content"]
                     break
@@ -336,24 +337,25 @@ def _from_openai(data):
                       "output_tokens": usage.get("completion_tokens")}}
 
 
-def _call_gemini(settings, system, messages):
-    key = settings.get_password("api_key", raise_exception=False)
-    if not key:
-        return None
+def _call_openai_compatible(config, system, messages):
+    gemini = config.provider == "Gemini"
+    body = {"model": config.model, "messages": _to_openai(system, messages, gemini=gemini),
+            "tools": _openai_tools(), "tool_choice": "auto"}
+    if gemini:
+        body.update(max_tokens=GEMINI_MAX_TOKENS, reasoning_effort="low")
+    else:
+        body["max_tokens"] = MAX_OUTPUT_TOKENS
     try:
         response = requests.post(
-            GEMINI_URL,
-            headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-            json={"model": settings.model or GEMINI_DEFAULT_MODEL, "max_tokens": GEMINI_MAX_TOKENS,
-                  "reasoning_effort": "low", "messages": _to_openai(system, messages),
-                  "tools": _openai_tools(), "tool_choice": "auto"},
-            timeout=45)
+            config.endpoint,
+            headers={"Authorization": f"Bearer {config.key}", "Content-Type": "application/json"},
+            json=body, timeout=45)
     except requests.RequestException:
-        frappe.log_error(title="re_portal chat: Gemini request failed",
+        frappe.log_error(title=f"thinkNXG Estate chat: {config.provider} request failed",
                          message=frappe.get_traceback())
         return None
     if response.status_code != 200:
-        frappe.log_error(title=f"re_portal chat: Gemini HTTP {response.status_code}",
+        frappe.log_error(title=f"thinkNXG Estate chat: {config.provider} HTTP {response.status_code}",
                          message=response.text[:1500])
         return None
     return _from_openai(response.json())
@@ -488,7 +490,7 @@ def _tool_search(args, session):
 
 
 def _tool_get(args, session):
-    from thinknxg_estate.estate_portal.doctype.listing.listing import _unit_amenities
+    from thinknxg_estate.estate_portal.doctype.listing.listing import listing_amenities
 
     route = cstr(args.get("route")).strip().lstrip("/")
     name = frappe.db.get_value("Listing", {"route": route, "is_published": 1})
@@ -498,7 +500,7 @@ def _tool_get(args, session):
     out = {k: doc.get(k) for k in PUBLIC_FIELDS if k not in ("name", "featured", "published_on", "route")}
     out.update({"url": "/" + doc.route, "price": _price_text(doc.as_dict()),
                 "description": strip_html(doc.description or "")[:1500],
-                "amenities": _unit_amenities(doc.unit)})
+                "amenities": listing_amenities(doc.property_ref)})
     return out
 
 

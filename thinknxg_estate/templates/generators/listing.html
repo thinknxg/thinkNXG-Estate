@@ -1,44 +1,83 @@
 {% extends "templates/web.html" %}
+{% block head_include %}
+<link rel="stylesheet" href="/assets/thinknxg_estate/vendor/leaflet/leaflet.css">
+{% endblock %}
 {% block page_content %}
 <div class="estate-page py-4">
-  <a href="/properties" class="small text-muted">&larr; All properties</a>
-  <h1 class="mt-2 mb-1">{{ doc.title }}</h1>
-  <div class="text-muted mb-3">{{ doc.locality or "" }}{{ ", " if doc.locality }}{{ doc.city or "" }}
-    · <span class="badge bg-secondary">{{ doc.listing_type }}</span></div>
+  <a href="/properties" class="small text-muted">&larr; {{ _("All properties") }}</a>
+  <div class="estate-toolbar mt-2">
+    <div>
+      <h1 class="mb-1">{{ doc.title }}</h1>
+      <div class="text-muted">{{ doc.locality or "" }}{{ ", " if doc.locality and doc.city }}{{ doc.city or "" }}
+        <span class="estate-badge ms-2">{{ _(doc.listing_type) }}</span></div>
+    </div>
+    <button type="button" class="estate-btn secondary" id="save-btn" data-on="{{ 1 if is_saved else 0 }}">
+      &#9829; <span>{{ _("Saved") if is_saved else _("Save") }}</span></button>
+  </div>
 
-  {% if cover %}
-  <div class="mb-3" style="background:#eee url('{{ cover }}') center/cover; height:360px;
-       border-radius:.75rem;"></div>
-  {% endif %}
+  {% if cover %}<div class="estate-cover-lg" id="cover" style="background-image:url('{{ cover }}')"></div>{% endif %}
   {% if gallery|length > 1 %}
-  <div class="d-flex gap-2 mb-4 flex-wrap">
-    {% for img in gallery %}
-    <img src="{{ img }}" style="height:72px;width:104px;object-fit:cover;border-radius:.4rem;">
-    {% endfor %}
+  <div class="estate-gallery">
+    {% for img in gallery %}<img src="{{ img }}" alt="" data-src="{{ img }}">{% endfor %}
   </div>
   {% endif %}
 
   <div class="row">
     <div class="col-md-8">
-      <h4 class="mb-3">{{ currency }} {{ money(doc.headline_price) }}
-        <span class="text-muted fs-6">{{ doc.price_period }}</span></h4>
-      <div class="d-flex gap-4 text-muted mb-4">
-        <span>{{ doc.unit_type }}</span><span>{{ doc.bedrooms or 0 }} Bedrooms</span>
-        <span>{{ doc.bathrooms or 0 }} Bathrooms</span>
-        {% if doc.area_sqm %}<span>{{ doc.area_sqm }} sqm</span>{% endif %}
-        <span>{{ doc.furnishing or "" }}</span>
+      <h4 class="mb-3">{{ currency }} {{ amount(doc.headline_price) }}
+        <span class="text-muted fs-6">{{ _(doc.price_period or "") }}</span></h4>
+      <div class="d-flex gap-4 flex-wrap text-muted mb-4">
+        {% if doc.unit_type %}<span>{{ _(doc.unit_type) }}</span>{% endif %}
+        {% if doc.bedrooms and doc.bedrooms > 0 %}<span>{{ doc.bedrooms }} {{ _("Bedrooms") }}</span>{% endif %}
+        {% if doc.bathrooms and doc.bathrooms > 0 %}<span>{{ doc.bathrooms }} {{ _("Bathrooms") }}</span>{% endif %}
+        {% if doc.area_sqm %}<span>{{ doc.area_sqm|int }} {{ _("sqm") }}</span>{% endif %}
+        {% if doc.furnishing %}<span>{{ _(doc.furnishing) }}</span>{% endif %}
       </div>
       <div class="mb-4">{{ doc.description or "" }}</div>
       {% if amenities %}
-      <h6>Amenities</h6>
+      <h5>{{ _("Amenities") }}</h5>
       <div class="d-flex gap-2 flex-wrap mb-4">
-        {% for a in amenities %}<span class="badge bg-light text-dark border">{{ a }}</span>{% endfor %}
+        {% for a in amenities %}<span class="estate-badge muted">{{ _(a) }}</span>{% endfor %}
       </div>
       {% endif %}
       {% if latitude and longitude %}
-      <div class="small text-muted">Location: {{ latitude }}, {{ longitude }}
-        · <a target="_blank" rel="noopener"
-             href="https://www.openstreetmap.org/?mlat={{ latitude }}&mlon={{ longitude }}#map=16/{{ latitude }}/{{ longitude }}">view map</a></div>
+      <h5>{{ _("Location") }}</h5>
+      <div id="listing-map" class="estate-map-sm mb-2" data-lat="{{ latitude }}" data-lng="{{ longitude }}"></div>
+      <div class="small text-muted mb-4">{{ address_line or "" }}</div>
+      {% endif %}
+
+      {% if doc.listing_type == "Rent" and doc.headline_price and doc.price_period == "Per Year" %}
+      <div class="estate-card mb-4">
+        <h5>{{ _("Payment plan") }}</h5>
+        <p class="small text-muted">{{ _("Annual rent split into cheques. The final schedule is set in your lease.") }}</p>
+        <div class="estate-seg mb-3" id="plan-seg">
+          {% for n in [1, 2, 4, 6, 12] %}<button type="button" data-n="{{ n }}" class="{{ 'active' if n == 4 }}">{{ n }} {{ _("cheques") if n > 1 else _("cheque") }}</button>{% endfor %}
+        </div>
+        <div class="estate-kpis">
+          <div class="estate-kpi"><span>{{ _("Per cheque") }}</span><strong id="plan-per"></strong></div>
+          <div class="estate-kpi"><span>{{ _("Monthly equivalent") }}</span><strong id="plan-month"></strong></div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if can_request_lease %}
+      <div class="estate-card mb-4">
+        <h5>{{ _("Request a lease") }}</h5>
+        {% if is_visitor %}
+        <p class="small text-muted">{{ _("Send a lease request for this unit. Our team will review it and contact you; nothing is binding until you sign.") }}</p>
+        <div class="row g-2" id="lease-form">
+          <div class="col-6"><label class="small text-muted">{{ _("Start date") }}</label>
+            <input type="date" class="estate-field" id="lease-start" min="{{ min_viewing_date }}"></div>
+          <div class="col-6"><label class="small text-muted">{{ _("Length") }}</label>
+            <select class="estate-field" id="lease-months">{% for m in [6, 12, 24, 36] %}<option value="{{ m }}" {{ "selected" if m == 12 }}>{{ m }} {{ _("months") }}</option>{% endfor %}</select></div>
+          <div class="col-12"><button class="estate-btn" id="lease-go">{{ _("Send lease request") }}</button>
+            <span class="small ms-2" id="lease-msg"></span></div>
+        </div>
+        {% else %}
+        <p class="small text-muted mb-2">{{ _("Sign in to request a lease and track it in your account.") }}</p>
+        <a class="estate-btn secondary" href="/properties/account?next=/{{ doc.route }}">{{ _("Sign in") }}</a>
+        {% endif %}
+      </div>
       {% endif %}
     </div>
 
@@ -50,9 +89,9 @@
         </div>
         <div id="inq-done" class="alert alert-success d-none"></div>
         <div id="inq-form">
-          <input class="estate-field" id="inq-name" placeholder="{{ _('Full name') }}" autocomplete="name">
-          <input class="estate-field" id="inq-mobile" placeholder="{{ _('Mobile (e.g. +968...)') }}" autocomplete="tel">
-          <input class="estate-field" id="inq-email" placeholder="{{ _('Email (optional)') }}" autocomplete="email">
+          <input class="estate-field" id="inq-name" placeholder="{{ _('Full name') }}" autocomplete="name" value="{{ visitor.full_name or '' }}">
+          <input class="estate-field" id="inq-mobile" placeholder="{{ _('Mobile (e.g. +968...)') }}" autocomplete="tel" value="{{ visitor.phone or '' }}">
+          <input class="estate-field" id="inq-email" placeholder="{{ _('Email (optional)') }}" autocomplete="email" value="{{ visitor.email or '' }}">
           <div id="inq-viewing" class="d-none">
             <label class="small text-muted">{{ _("Preferred date") }}</label>
             <input type="date" class="estate-field" id="inq-date" min="{{ min_viewing_date }}">
@@ -69,24 +108,28 @@
         {% if contact_whatsapp %}
         <a class="estate-btn secondary w-100 mt-2" target="_blank" rel="noopener"
            href="https://wa.me/{{ contact_whatsapp | replace('+','') | replace(' ','') }}?text=Inquiry:%20{{ doc.title | urlencode }}">
-          WhatsApp Us</a>
+          {{ _("WhatsApp us") }}</a>
         {% endif %}
       </div>
     </div>
   </div>
   {% if related %}
-  <h5 class="mt-5">{{ _("Similar properties") }}</h5>
-  <div class="row g-3">
+  <h3 class="mt-5 mb-3">{{ _("Similar properties") }}</h3>
+  <div class="estate-grid">
     {% for r in related %}
-    <div class="col-md-4"><a class="estate-card d-block text-decoration-none h-100" href="/{{ r.route }}">
-      {% if r.cover %}<div style="background:#eee url('{{ r.cover }}') center/cover;height:150px;border-radius:10px" class="mb-2"></div>{% endif %}
-      <strong>{{ r.title }}</strong><div class="small text-muted">{{ r.locality or "" }} · {{ r.unit_type or "" }}{% if r.bedrooms %} · {{ r.bedrooms }} {{ _("BR") }}{% endif %}</div>
-      <div class="mt-1">{{ currency }} {{ money(r.headline_price) }} <span class="small text-muted">{{ r.price_period }}</span></div>
+    <div class="estate-listing"><a href="/{{ r.route }}">
+      {% if r.cover %}<div class="cover" style="background-image:url('{{ r.cover }}')"></div>{% else %}<div class="cover empty">{{ _("No photo yet") }}</div>{% endif %}
+      <div class="body"><div class="title">{{ r.title }}</div>
+        <div class="place">{{ r.locality or "" }}{{ " · " if r.locality and r.unit_type }}{{ _(r.unit_type or "") }}{% if r.bedrooms and r.bedrooms > 0 %} · {{ r.bedrooms }} {{ _("bed") }}{% endif %}</div>
+        <div class="price">{{ currency }} {{ amount(r.headline_price) }} <small>{{ _(r.price_period or "") }}</small></div></div>
     </a></div>
     {% endfor %}
   </div>
   {% endif %}
 </div>
+{% endblock %}
+{% block script %}
+{{ super() }}
 <script>
 (function () {
   var rendered = new Date().toISOString().slice(0, 19).replace("T", " ");
@@ -131,6 +174,57 @@
                                     : {{ _("Something went wrong. Please try again.") | tojson }};
       },
     });
+  });
+})();
+</script>
+<script src="/assets/thinknxg_estate/vendor/leaflet/leaflet.js"></script>
+<script>
+(function () {
+  var generic = {{ _("Something went wrong. Please try again.") | tojson }};
+  function serverMsg(r) {
+    try { var d = document.createElement("div"); d.innerHTML = (function (m) { return JSON.parse(m[m.length - 1]).message; })(JSON.parse(r._server_messages)); return d.innerText; }
+    catch (e) { return generic; }
+  }
+  document.querySelectorAll(".estate-gallery img").forEach(function (img) {
+    img.addEventListener("click", function () {
+      var c = document.getElementById("cover"); if (c) c.style.backgroundImage = "url('" + img.dataset.src + "')";
+    });
+  });
+  var save = document.getElementById("save-btn");
+  save.addEventListener("click", function () {
+    {% if not is_visitor %}location.href = "/properties/account?next=" + encodeURIComponent(location.pathname); return;{% endif %}
+    frappe.call({ method: "thinknxg_estate.portal.api.visitor.toggle_wishlist", type: "POST", args: { listing: {{ doc.name | tojson }} },
+      callback: function (r) { save.querySelector("span").innerText = r.message.saved ? {{ _("Saved") | tojson }} : {{ _("Save") | tojson }}; } });
+  });
+  var mapEl = document.getElementById("listing-map");
+  if (mapEl && window.L) {
+    var ll = [parseFloat(mapEl.dataset.lat), parseFloat(mapEl.dataset.lng)];
+    L.Icon.Default.imagePath = "/assets/thinknxg_estate/vendor/leaflet/images/";
+    var m = L.map(mapEl, { scrollWheelZoom: false }).setView(ll, 15);
+    L.tileLayer({{ map_tile_url | tojson }}, { maxZoom: 19, attribution: {{ map_attribution | tojson }} }).addTo(m);
+    L.marker(ll).addTo(m);
+  }
+  var seg = document.getElementById("plan-seg");
+  if (seg) {
+    var annual = {{ doc.headline_price or 0 }}, cur = {{ currency | tojson }};
+    function fmt(v) { return cur + " " + v.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 }); }
+    function plan(n) {
+      seg.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", +b.dataset.n === n); });
+      document.getElementById("plan-per").innerText = fmt(Math.round(annual / n * 1000) / 1000);
+      document.getElementById("plan-month").innerText = fmt(Math.round(annual / 12 * 1000) / 1000);
+    }
+    seg.querySelectorAll("button").forEach(function (b) { b.addEventListener("click", function () { plan(+b.dataset.n); }); });
+    plan(4);
+  }
+  var lease = document.getElementById("lease-go");
+  if (lease) lease.addEventListener("click", function () {
+    var msg = document.getElementById("lease-msg"); lease.disabled = true;
+    frappe.call({ method: "thinknxg_estate.core.listing_portal_api.listing_portal.request_lease_contract", type: "POST",
+      args: { unit: {{ doc.unit | tojson }}, start_date: document.getElementById("lease-start").value,
+              duration_months: document.getElementById("lease-months").value },
+      callback: function () { msg.className = "small ms-2 text-success";
+        msg.innerText = {{ _("Lease request sent. You can follow it in your account.") | tojson }}; },
+      error: function (r) { lease.disabled = false; msg.className = "small ms-2 text-danger"; msg.innerText = serverMsg(r); } });
   });
 })();
 </script>

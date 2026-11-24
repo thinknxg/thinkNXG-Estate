@@ -47,7 +47,13 @@ fixtures = [
 web_include_js = ["/assets/thinknxg_estate/js/chat_widget.js"]
 web_include_css = ["/assets/thinknxg_estate/css/estate.css", "/assets/thinknxg_estate/css/chat_widget.css"]
 
-jinja = {"methods": ["thinknxg_estate.portal.utils.money"]}
+jinja = {"methods": ["thinknxg_estate.portal.utils.money", "thinknxg_estate.portal.utils.amount"]}
+
+# /listings was a second public site; /properties replaced it in 1.2.
+website_redirects = [
+	{"source": "/listings", "target": "/properties"},
+	{"source": r"/listings/(.*)", "target": "/properties"},
+]
 
 standard_portal_menu_items = [
 	{"title": "My Tenancy", "route": "/tenant-portal", "role": "Tenant"},

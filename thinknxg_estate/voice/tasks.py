@@ -106,6 +106,7 @@ def purge_expired_transcripts():
 
 
 def reset_monthly_spend():
-    """Runs on the 1st; the usage log keeps history, this is just the display field."""
-    if nowdate().endswith("-01"):
-        frappe.db.set_single_value("AI Settings", "month_spend", 0)
+    """Daily: refresh the read-only 'Spend This Month' figure (voice CRM and chat assistant combined)."""
+    from thinknxg_estate.core.ai import refresh_month_spend
+
+    refresh_month_spend()

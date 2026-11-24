@@ -1,0 +1,51 @@
+import asyncio, sys, time
+import os
+from playwright.async_api import async_playwright
+site = sys.argv[1]; out = sys.argv[2]; B = f"http://{site}"
+email = f"visitor{int(time.time())}@example.com"
+async def main():
+    async with async_playwright() as p:
+        b = await p.chromium.launch(args=["--no-sandbox", f"--host-resolver-rules=MAP {site} {os.environ.get('SERVER', '127.0.0.1:80')}"])
+        page = await (await b.new_context(viewport={"width": 1366, "height": 900})).new_page()
+        errs = []; page.on("pageerror", lambda e: errs.append(str(e)[:200]))
+        def ok(c, label): print(("PASS " if c else "FAIL ") + label)
+        await page.goto(B + "/properties/account", wait_until="networkidle")
+        await page.fill("#up-name", "Test Visitor"); await page.fill("#up-email", email)
+        await page.fill("#up-phone", "+96891234567"); await page.fill("#up-pass", "Vis!tor-Pass-2026")
+        async with page.expect_navigation(timeout=20000):
+            await page.click("#up-go")
+        await page.wait_for_load_state("networkidle")
+        ok("Welcome" in await page.content(), "sign up lands on the account page signed in")
+        await page.goto(B + "/properties", wait_until="networkidle")
+        heart = page.locator(".estate-heart").first
+        await heart.click(); await page.wait_for_timeout(1200)
+        ok("on" in (await heart.get_attribute("class")), "heart saves a property")
+        await page.select_option("select[name=city]", index=1); await page.click("#save-search"); await page.wait_for_timeout(1500)
+        ok("Search saved" in await page.inner_text("#toast"), "save this search")
+        boxes = page.locator(".compare-box")
+        await boxes.nth(0).check(); await boxes.nth(1).check(); await page.wait_for_timeout(300)
+        ok(await page.is_visible("#comparebar"), "compare bar appears")
+        await page.click("#compare-go"); await page.wait_for_load_state("networkidle")
+        ok(await page.locator(".estate-compare td img, .estate-compare td a strong").count() >= 2, "compare page shows two properties")
+        await page.screenshot(path=f"{out}/v_compare.png", full_page=True)
+        route = await page.evaluate("""() => fetch('/api/method/thinknxg_estate.portal.api.listings.search?listing_type=Rent&page_size=30')
+            .then(r => r.json()).then(d => (d.message.results.find(x => x.unit) || {}).route)""")
+        await page.goto(B + "/" + route, wait_until="networkidle")
+        ok(await page.input_value("#inq-name") == "Test Visitor", "inquiry form prefilled for signed-in visitor")
+        await page.click(".estate-tabs button[data-mode=Viewing]")
+        await page.fill("#inq-date", time.strftime("%Y-%m-%d", time.localtime(time.time() + 3 * 86400)))
+        await page.wait_for_timeout(3200); await page.click("#inq-send"); await page.wait_for_timeout(2000)
+        ok(await page.is_visible("#inq-done"), "viewing request sent")
+        await page.fill("#lease-start", time.strftime("%Y-%m-%d", time.localtime(time.time() + 30 * 86400)))
+        await page.screenshot(path=f"{out}/v_detail.png", full_page=True)
+        await page.click("#lease-go", timeout=8000); await page.wait_for_timeout(2500)
+        msg = await page.inner_text("#lease-msg"); ok("sent" in msg, "lease request: " + msg)
+        await page.goto(B + "/properties/account", wait_until="networkidle")
+        html = await page.content()
+        ok("Viewing" in html and "Lease request" in html, "account lists viewing and lease requests")
+        ok(await page.locator(".estate-listing").count() >= 1, "account lists the saved property")
+        ok(await page.locator(".ss-del").count() >= 1, "account lists the saved search")
+        await page.screenshot(path=f"{out}/v_account.png", full_page=True)
+        print("page errors:", errs); print("visitor:", email)
+        await b.close()
+asyncio.run(main())

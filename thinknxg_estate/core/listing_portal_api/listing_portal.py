@@ -48,11 +48,32 @@ def _get_identity_for_current_user():
     if user == "Guest":
         frappe.throw(_("Please log in to do that."))
 
-    lead = frappe.db.get_value("User", user, "portal_lead")
-
-    if not lead:
-        frappe.throw(_("This account isn't set up as a portal visitor. Please log in with the account you used to sign up on the listings page."))
+    lead = frappe.db.get_value("User", user, "portal_lead") or _create_portal_lead(user)
     return {"customer": None, "lead": lead}
+
+
+def _create_portal_lead(user):
+    """Website users who signed up through the standard sign-up page have no portal Lead yet;
+    create one on first use instead of refusing them. Desk users never get one."""
+    info = frappe.db.get_value("User", user, ["user_type", "full_name", "first_name", "email", "phone",
+                                              "mobile_no"], as_dict=True)
+    if not info or info.user_type != "Website User":
+        frappe.throw(_("Please sign in with a website visitor account to do that."))
+    lead = frappe.get_doc({
+        "doctype": "Lead", "lead_name": info.full_name or info.first_name or user, "email_id": info.email,
+        "mobile_no": info.mobile_no or info.phone, "source": "Website Listings Portal",
+    })
+    if not frappe.db.exists("Lead Source", "Website Listings Portal"):
+        lead.source = None
+    # Insert as Administrator: ERPNext defaults the Lead Owner to the session user and then
+    # refuses a lead whose owner is its own email address.
+    frappe.set_user("Administrator")
+    try:
+        lead.insert(ignore_permissions=True)
+    finally:
+        frappe.set_user(user)
+    frappe.db.set_value("User", user, "portal_lead", lead.name, update_modified=False)
+    return lead.name
 
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
@@ -419,9 +440,12 @@ def get_property_detail(unit=None, property=None):
 
 
 @frappe.whitelist()
-def toggle_wishlist(unit):
+def toggle_wishlist(unit=None, property=None):
+    """Save or unsave a unit, or a whole property listed without units."""
+    if not (unit or property):
+        frappe.throw(_("Choose a property to save."))
     identity = _get_identity_for_current_user()
-    filters = {"unit": unit}
+    filters = {"unit": unit} if unit else {"property": property, "unit": ["is", "not set"]}
     if identity["customer"]:
         filters["customer"] = identity["customer"]
     else:
@@ -436,6 +460,7 @@ def toggle_wishlist(unit):
         "customer": identity["customer"],
         "lead": identity["lead"],
         "unit": unit,
+        "property": property or (unit and frappe.db.get_value("Unit", unit, "property")),
     })
     doc.insert(ignore_permissions=True)
     return {"saved": True}
@@ -653,8 +678,12 @@ def request_lease_contract(unit, start_date, duration_months):
     never submitted. Mirrors thinknxg_estate.core.api.create_lease_contract but resolves
     tenant/property/rent from the unit + logged-in visitor automatically.
     """
-    from frappe.utils import add_months, flt
+    from frappe.utils import add_months, flt, getdate
 
+    if not start_date or getdate(start_date) < getdate(frappe.utils.nowdate()):
+        frappe.throw(_("Please choose a start date from today onwards."))
+    if int(duration_months or 0) not in (6, 12, 24, 36):
+        frappe.throw(_("Please choose a lease length of 6, 12, 24 or 36 months."))
     tenant = _get_or_create_tenant_for_current_user()
 
     unit_doc = frappe.db.get_value("Unit", unit, ["property", "annual_rent", "status"], as_dict=True)
@@ -750,10 +779,11 @@ def get_my_requests():
 
 
 def check_saved_searches():
-    """Scheduled job (daily): for each enabled Saved Search, find units that
-    became newly available since last_checked and match the criteria, notify
-    the visitor by email + Notification Log, then advance last_checked.
-    """
+    """Scheduled job (daily): for each enabled Saved Search, find listings published or
+    updated since last_checked that match the criteria, notify the visitor by email and
+    Notification Log, then advance last_checked."""
+    from thinknxg_estate.portal.api.listings import build_filters
+
     searches = frappe.get_all(
         "Saved Search",
         filters={"enabled": 1},
@@ -761,34 +791,18 @@ def check_saved_searches():
     )
 
     for s in searches:
-        conditions = ["u.published_to_portal = 1", "u.status = 'Vacant'", "p.is_live = 1",
-                      "u.modified > %(since)s"]
-        values = {"since": s.last_checked}
-
+        filters = build_filters(unit_type=s.unit_type, bedrooms=s.bedrooms, min_price=s.min_rent,
+                                max_price=s.max_rent)
+        if s.last_checked:
+            filters["modified"] = [">", s.last_checked]
+        or_filters = None
         if s.location:
-            conditions.append("(p.city = %(location)s OR p.area = %(location)s OR CONCAT(p.area, ', ', p.city) = %(location)s)")
-            values["location"] = s.location
-        if s.unit_type:
-            conditions.append("u.unit_type = %(unit_type)s")
-            values["unit_type"] = s.unit_type
-        if s.bedrooms:
-            conditions.append("u.bedrooms >= %(bedrooms)s")
-            values["bedrooms"] = s.bedrooms
-        if s.min_rent:
-            conditions.append("u.annual_rent >= %(min_rent)s")
-            values["min_rent"] = s.min_rent
-        if s.max_rent:
-            conditions.append("u.annual_rent <= %(max_rent)s")
-            values["max_rent"] = s.max_rent
-
-        matches = frappe.db.sql(f"""
-            SELECT u.name as unit_name, u.unit_no, u.annual_rent, p.property_name, p.city, p.area
-            FROM `tabUnit` u
-            INNER JOIN `tabProperty` p ON u.property = p.name
-            WHERE {" AND ".join(conditions)}
-            LIMIT 20
-        """, values, as_dict=True)
-
+            city, _sep, rest = s.location.partition(", ")
+            # A legacy saved location may be "Area, City"; match either part.
+            or_filters = {"city": rest or city, "locality": city}
+        matches = frappe.get_all("Listing", filters=filters, or_filters=or_filters,
+                                 fields=["name", "title", "route", "headline_price", "city", "locality"],
+                                 order_by="published_on desc", limit=20)
         if matches:
             _notify_saved_search_match(s, matches)
 
@@ -801,7 +815,9 @@ def _notify_saved_search_match(search, matches):
     lead_doc = frappe.get_doc("Lead", search.lead)
     user = frappe.db.get_value("User", {"portal_lead": search.lead}, "name")
 
-    summary = ", ".join(f"{m.unit_no or m.unit_name} at {m.property_name}" for m in matches[:5])
+    summary = "<br>".join(
+        f'<a href="{frappe.utils.get_url("/" + m.route)}">{frappe.utils.escape_html(m.title)}</a>'
+        for m in matches[:5])
 
     if user:
         frappe.get_doc({
@@ -821,8 +837,9 @@ def _notify_saved_search_match(search, matches):
                 message=_(
                     "Hi {0},<br><br>"
                     "{1} new listing(s) just became available matching your saved search:<br>{2}<br><br>"
-                    "Log in to the portal to view and save them.<br><br>— {brand}"
-                ).format(lead_doc.lead_name or "there", len(matches), summary, brand=_brand()),
+                    "See all your saved searches at {link}.<br><br>— {brand}"
+                ).format(lead_doc.lead_name or "there", len(matches), summary, brand=_brand(),
+                         link=frappe.utils.get_url("/properties/account")),
                 now=True,
             )
         except Exception:

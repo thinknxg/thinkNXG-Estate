@@ -80,11 +80,37 @@ def after_sync(legacy):
 		"access_code_portal": keep_access_code_portal(),
 		"legacy_navigation_removed": remove_legacy_navigation(legacy),
 		"legacy_scheduled_jobs_removed": remove_legacy_jobs(),
+		# Frappe marks an app's patches as done when the app is installed, so the 1.2 changes
+		# that a legacy site needs are applied here.
+		"public_site_listings": unify_public_listings(),
+		"ai_provider_shared": share_ai_provider(),
+		"naming_counter": naming_counter(),
 	}
 	summary["legacy_apps_detached"] = detach_legacy_apps(legacy)
 	summary["legacy_module_defs_removed"] = remove_legacy_module_defs()
 	frappe.db.commit()
 	return summary
+
+
+def naming_counter():
+	"""Legacy records were numbered from per-prefix counters; move the shared counter past them."""
+	from thinknxg_estate.core.naming import sync_naming_counters
+
+	return sync_naming_counters()
+
+
+def unify_public_listings():
+	from thinknxg_estate.patches.v1_2.unify_public_listings import execute
+
+	execute()
+	return frappe.db.count("Listing", {"is_published": 1})
+
+
+def share_ai_provider():
+	from thinknxg_estate.patches.v1_2.shared_ai_provider import execute
+
+	execute()
+	return frappe.db.get_single_value("AI Settings", "llm_provider") or "not configured"
 
 
 def _rewrite(value):

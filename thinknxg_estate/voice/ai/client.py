@@ -4,19 +4,15 @@ Every AI call in re_voice goes through llm_complete so that cost is observable
 and the monthly cap degrades the system gracefully rather than silently."""
 
 import frappe
-from frappe import _
-from frappe.utils import cstr, flt, get_first_day, get_last_day, nowdate
+from thinknxg_estate.core.http import post_json
+from frappe.utils import cstr
 
 
 def budget_available():
-    settings = frappe.get_cached_doc("AI Settings")
-    if not settings.monthly_budget:
-        return True
-    spend = frappe.db.sql("""
-        SELECT COALESCE(SUM(cost), 0) FROM `tabVoice Usage Log`
-        WHERE DATE(creation) BETWEEN %s AND %s
-    """, (get_first_day(nowdate()), get_last_day(nowdate())))[0][0]
-    return flt(spend) < flt(settings.monthly_budget)
+    """Shared monthly budget (AI Settings) covering the voice CRM and the chat assistant."""
+    from thinknxg_estate.core.ai import budget_available as shared
+
+    return shared()
 
 
 def log_usage(task, provider, audio_seconds=0, input_tokens=0, output_tokens=0,
@@ -33,17 +29,20 @@ def llm_complete(prompt, system=None, task="Intent", json_mode=False,
                  reference_doctype=None, reference_name=None):
     """Returns the model's text, or None when disabled / over budget / failed.
     Callers must handle None — that is the graceful-degradation path."""
+    from thinknxg_estate.core.ai import provider_config
+
     settings = frappe.get_cached_doc("AI Settings")
-    if not settings.llm_enabled or settings.llm_provider == "None":
+    config = provider_config("voice")
+    if not settings.llm_enabled or not config:
         return None
     if not budget_available():
-        frappe.log_error(title="re_voice: monthly AI budget exhausted",
+        frappe.log_error(title="thinkNXG Estate: monthly AI budget exhausted",
                          message=f"task={task}; falling back to deterministic path")
         return None
 
     try:
-        text, usage = _call_provider(settings, prompt, system, json_mode)
-        log_usage(task, settings.llm_provider,
+        text, usage = _call_provider(config, prompt, system, json_mode)
+        log_usage(task, config.provider,
                   input_tokens=usage.get("input_tokens", 0),
                   output_tokens=usage.get("output_tokens", 0),
                   cost=usage.get("cost") or _token_cost(usage),
@@ -51,23 +50,19 @@ def llm_complete(prompt, system=None, task="Intent", json_mode=False,
                   reference_name=reference_name)
         return text
     except Exception:
-        frappe.log_error(title="re_voice: LLM call failed", message=f"task={task}")
+        frappe.log_error(title="thinkNXG Estate: LLM call failed", message=f"task={task}")
         return None
 
 
-def _call_provider(settings, prompt, system, json_mode):
-    provider = settings.llm_provider
-    key = settings.get_password("api_key")
-
-    if provider == "Anthropic":
-        body = {"model": settings.llm_model or "claude-sonnet-4-6",
-                "max_tokens": 1024,
+def _call_provider(config, prompt, system, json_mode):
+    if config.provider == "Anthropic":
+        body = {"model": config.model, "max_tokens": 1024,
                 "messages": [{"role": "user", "content": prompt}]}
         if system:
             body["system"] = system
-        response = frappe.make_post_request(
-            settings.llm_endpoint or "https://api.anthropic.com/v1/messages",
-            headers={"x-api-key": key, "anthropic-version": "2023-06-01",
+        response = post_json(
+            config.endpoint,
+            headers={"x-api-key": config.key, "anthropic-version": "2023-06-01",
                      "content-type": "application/json"},
             data=frappe.as_json(body))
         text = "".join(block.get("text", "")
@@ -77,15 +72,15 @@ def _call_provider(settings, prompt, system, json_mode):
         return text, {"input_tokens": usage.get("input_tokens", 0),
                       "output_tokens": usage.get("output_tokens", 0)}
 
-    # OpenAI-compatible (also covers "Custom" endpoints)
+    # OpenAI, Gemini (OpenAI-compatible endpoint) and Custom OpenAI-compatible endpoints
     messages = ([{"role": "system", "content": system}] if system else []) + \
                [{"role": "user", "content": prompt}]
-    body = {"model": settings.llm_model or "gpt-4o-mini", "messages": messages}
+    body = {"model": config.model, "messages": messages}
     if json_mode:
         body["response_format"] = {"type": "json_object"}
-    response = frappe.make_post_request(
-        settings.llm_endpoint or "https://api.openai.com/v1/chat/completions",
-        headers={"Authorization": f"Bearer {key}",
+    response = post_json(
+        config.endpoint,
+        headers={"Authorization": f"Bearer {config.key}",
                  "Content-Type": "application/json"},
         data=frappe.as_json(body))
     text = response["choices"][0]["message"]["content"]
@@ -95,12 +90,9 @@ def _call_provider(settings, prompt, system, json_mode):
 
 
 def _token_cost(usage):
-    """Token cost from site_config prices (USD per million tokens) so the cap works."""
-    from frappe.utils import flt
-    price_in = flt(frappe.conf.get("llm_input_cost_per_mtok"))
-    price_out = flt(frappe.conf.get("llm_output_cost_per_mtok"))
-    return (flt(usage.get("input_tokens")) * price_in
-            + flt(usage.get("output_tokens")) * price_out) / 1_000_000
+    from thinknxg_estate.core.ai import token_cost
+
+    return token_cost(usage.get("input_tokens"), usage.get("output_tokens"))
 
 
 def parse_json_response(text):

@@ -211,7 +211,7 @@ def _handle_interactive(message, agent, session):
         outbound.reply(phone, _("Cancelled — nothing was changed."))
         return None
     if reply_id.startswith("intent::"):
-        _, intent_name, command_name = reply_id.split("::", 2)
+        _kind, intent_name, command_name = reply_id.split("::", 2)
         intent = _owned_intent(intent_name, agent, ("Clarifying",))
         if not intent:
             outbound.reply(phone, _("That option has expired. Please send the command again."))

@@ -57,8 +57,7 @@
   },
   {
    "fieldname": "col_break_1",
-   "fieldtype": "Column Break",
-   "label": "Col Break 1"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "pf_agent_id",
@@ -94,8 +93,7 @@
   },
   {
    "fieldname": "col_break_2",
-   "fieldtype": "Column Break",
-   "label": "Col Break 2"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "bayut_agent_name",
@@ -117,11 +115,10 @@
   {
    "collapsible": 1,
    "fieldname": "notes_sb",
-   "fieldtype": "Section Break",
-   "label": "Notes Sb"
+   "fieldtype": "Section Break"
   },
   {
-   "description": "Field mappings follow each portal's published bulk-upload schema; verify against the portal's current spec during onboarding — schemas change without notice.",
+   "description": "Field mappings follow each portal's published bulk-upload schema; verify against the portal's current spec during onboarding \u2014 schemas change without notice.",
    "fieldname": "mapping_notes",
    "fieldtype": "Small Text",
    "label": "Mapping Notes"

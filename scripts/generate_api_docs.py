@@ -20,10 +20,11 @@ for old, new in LEGACY_METHODS.items():
 SECTIONS = [
 	("Staff console API (portfolio-wide roles)", "core/api.py"),
 	("CRM console API (portfolio-wide roles)", "crm/api.py"),
-	("Public listings and visitor accounts (/listings)", "core/listing_portal_api/listing_portal.py"),
-	("Public listings, inquiries and AI chat (/properties)", "portal/api/listings.py"),
+	("Public property website (/properties): search, map, listings, inquiries", "portal/api/listings.py"),
+	("Website visitor accounts (/properties/account): wishlist, saved searches", "portal/api/visitor.py"),
+	("Visitor sign-up, sign-in and requests (shared with the legacy /listings API paths)", "core/listing_portal_api/listing_portal.py"),
 	("Legacy inquiry form", "portal/api/inquiries.py"),
-	("Listings AI chat", "portal/api/chat.py"),
+	("Website chat assistant (provider from AI Settings)", "portal/api/chat.py"),
 	("Property Finder / Bayut feeds", "portal/api/feeds.py"),
 	("Tenant portal (website login, role Tenant)", "portal/api/tenant.py"),
 	("Owner portal (website login, role Property Owner)", "portal/api/owner.py"),
@@ -34,6 +35,9 @@ SECTIONS = [
 	("WhatsApp webhook (Meta Cloud API)", "voice/api/webhook.py"),
 	("Other", None),
 ]
+
+
+CONSTANTS = {}
 
 
 def describe(node):
@@ -56,6 +60,8 @@ def describe(node):
 		access = "Logged-in user (checked in code)"
 	if rl:
 		limit = rl[rl.index("(") + 1:-1].replace("limit=", "").replace("seconds=", "per ").replace(", ", " ")
+		for const, value in CONSTANTS.items():
+			limit = limit.replace(const, value)
 		access += f"; rate limit {limit}s"
 	doc = (ast.get_docstring(node) or "").strip().split("\n")[0]
 	return access, methods, doc
@@ -73,6 +79,9 @@ def collect():
 			rel = os.path.relpath(path, APP)
 			module = "thinknxg_estate." + rel[:-3].replace(os.sep, ".")
 			tree = ast.parse(open(path).read())
+			CONSTANTS.clear()
+			CONSTANTS.update({t.id: ast.unparse(n.value) for n in tree.body if isinstance(n, ast.Assign)
+			                  for t in n.targets if isinstance(t, ast.Name) and isinstance(n.value, ast.Constant)})
 			for node in tree.body:
 				if isinstance(node, ast.FunctionDef):
 					info = describe(node)

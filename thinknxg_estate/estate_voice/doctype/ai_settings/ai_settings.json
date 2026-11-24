@@ -7,25 +7,29 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "llm_sb",
+  "llm_provider",
+  "llm_endpoint",
+  "api_key",
+  "col_break_3",
+  "llm_model",
+  "chat_model",
+  "input_cost_per_mtok",
+  "output_cost_per_mtok",
   "gate_sb",
-  "voice_enabled",
   "llm_enabled",
+  "voice_enabled",
+  "llm_confidence_threshold",
   "col_break_1",
   "monthly_budget",
   "month_spend",
   "asr_sb",
   "asr_provider",
   "asr_endpoint",
+  "asr_api_key",
   "col_break_2",
   "asr_model",
   "asr_cost_per_minute",
-  "llm_sb",
-  "llm_provider",
-  "llm_endpoint",
-  "llm_model",
-  "col_break_3",
-  "api_key",
-  "llm_confidence_threshold",
   "task_sb",
   "enable_translation",
   "enable_sentiment",
@@ -38,9 +42,68 @@
  ],
  "fields": [
   {
+   "fieldname": "llm_sb",
+   "fieldtype": "Section Break",
+   "label": "AI Provider",
+   "description": "One provider, key and budget for every AI feature: the website chat assistant and the voice CRM (intent, translation, summaries, sentiment, scoring)."
+  },
+  {
+   "default": "None",
+   "fieldname": "llm_provider",
+   "fieldtype": "Select",
+   "label": "Provider",
+   "options": "Anthropic\nOpenAI\nGemini\nCustom\nNone",
+   "description": "Custom = any OpenAI-compatible chat completions endpoint (set the endpoint below)."
+  },
+  {
+   "fieldname": "llm_endpoint",
+   "fieldtype": "Data",
+   "label": "Endpoint",
+   "description": "Leave empty for the provider's standard endpoint. Required for Custom."
+  },
+  {
+   "fieldname": "api_key",
+   "fieldtype": "Password",
+   "label": "API Key"
+  },
+  {
+   "fieldname": "col_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "llm_model",
+   "fieldtype": "Data",
+   "label": "Default Model",
+   "description": "Used by the voice CRM, and by the chat assistant unless a chat model is set. Empty = the provider's default."
+  },
+  {
+   "fieldname": "chat_model",
+   "fieldtype": "Data",
+   "label": "Chat Assistant Model",
+   "description": "Optional: a faster or cheaper model for the website chat assistant."
+  },
+  {
+   "fieldname": "input_cost_per_mtok",
+   "fieldtype": "Float",
+   "label": "Input Cost per Million Tokens",
+   "description": "In the budget's currency. Used to track spend against the monthly budget."
+  },
+  {
+   "fieldname": "output_cost_per_mtok",
+   "fieldtype": "Float",
+   "label": "Output Cost per Million Tokens"
+  },
+  {
    "fieldname": "gate_sb",
    "fieldtype": "Section Break",
-   "label": "Enablement"
+   "label": "Usage and Budget"
+  },
+  {
+   "default": 0,
+   "fieldname": "llm_enabled",
+   "fieldtype": "Check",
+   "label": "Use AI in the Voice CRM",
+   "description": "Intent fallback, translation, summaries, sentiment and scoring. The website chat assistant is switched on in Portal Chat Settings."
   },
   {
    "default": 0,
@@ -49,18 +112,18 @@
    "label": "Enable Voice Processing"
   },
   {
-   "default": 0,
-   "fieldname": "llm_enabled",
-   "fieldtype": "Check",
-   "label": "Enable LLM Intent Fallback"
+   "default": 0.6,
+   "description": "Below this, ask the user to clarify instead of acting",
+   "fieldname": "llm_confidence_threshold",
+   "fieldtype": "Float",
+   "label": "Intent Confidence Threshold"
   },
   {
    "fieldname": "col_break_1",
-   "fieldtype": "Column Break",
-   "label": "Col Break 1"
+   "fieldtype": "Column Break"
   },
   {
-   "description": "When exceeded, Tier-1 commands keep working and LLM calls stop",
+   "description": "Shared by the chat assistant and the voice CRM. When it is used up, AI features pause until next month and the system falls back to its non-AI behaviour. Empty = no cap.",
    "fieldname": "monthly_budget",
    "fieldtype": "Currency",
    "label": "Monthly AI Budget"
@@ -80,70 +143,36 @@
    "default": "None",
    "fieldname": "asr_provider",
    "fieldtype": "Select",
-   "label": "Asr Provider",
+   "label": "Speech Provider",
    "options": "OpenAI Whisper API\nLocal Whisper\nNone"
   },
   {
    "description": "Base URL for local Whisper, e.g. http://localhost:9000",
    "fieldname": "asr_endpoint",
    "fieldtype": "Data",
-   "label": "Asr Endpoint"
+   "label": "Speech Endpoint"
+  },
+  {
+   "fieldname": "asr_api_key",
+   "fieldtype": "Password",
+   "label": "Speech API Key",
+   "description": "For OpenAI Whisper. Leave empty to use the AI provider key when the provider is OpenAI."
   },
   {
    "fieldname": "col_break_2",
-   "fieldtype": "Column Break",
-   "label": "Col Break 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": "whisper-1",
    "fieldname": "asr_model",
    "fieldtype": "Data",
-   "label": "Asr Model"
+   "label": "Speech Model"
   },
   {
    "default": 0,
    "fieldname": "asr_cost_per_minute",
    "fieldtype": "Currency",
-   "label": "Asr Cost Per Minute"
-  },
-  {
-   "fieldname": "llm_sb",
-   "fieldtype": "Section Break",
-   "label": "Language Model"
-  },
-  {
-   "default": "None",
-   "fieldname": "llm_provider",
-   "fieldtype": "Select",
-   "label": "Llm Provider",
-   "options": "Anthropic\nOpenAI\nCustom\nNone"
-  },
-  {
-   "fieldname": "llm_endpoint",
-   "fieldtype": "Data",
-   "label": "Llm Endpoint"
-  },
-  {
-   "fieldname": "llm_model",
-   "fieldtype": "Data",
-   "label": "Llm Model"
-  },
-  {
-   "fieldname": "col_break_3",
-   "fieldtype": "Column Break",
-   "label": "Col Break 3"
-  },
-  {
-   "fieldname": "api_key",
-   "fieldtype": "Password",
-   "label": "Api Key"
-  },
-  {
-   "default": 0.6,
-   "description": "Below this, ask the user to clarify instead of acting",
-   "fieldname": "llm_confidence_threshold",
-   "fieldtype": "Float",
-   "label": "Llm Confidence Threshold"
+   "label": "Speech Cost Per Minute"
   },
   {
    "fieldname": "task_sb",
@@ -164,8 +193,7 @@
   },
   {
    "fieldname": "col_break_4",
-   "fieldtype": "Column Break",
-   "label": "Col Break 4"
+   "fieldtype": "Column Break"
   },
   {
    "default": 1,
@@ -205,7 +233,7 @@
  "issingle": 1,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 13:30:00.000000",
+ "modified": "2026-11-24 14:30:00.000000",
  "modified_by": "Administrator",
  "module": "Estate Voice",
  "name": "AI Settings",

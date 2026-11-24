@@ -31,11 +31,11 @@ Work through these in order. All are under **thinkNXG Estate → Settings** in t
 |---|---|
 | **Property Settings** | Rent Item (created automatically as *Rental Charge*), invoice lead days, overdue grace days, auto-create PDCs, Deposits Held liability account and deposit bank account, lease expiry flag days and renewal ToDo days, tenant welcome email, *Enable Access-Code Tenant Portal* (off by default), *Allow Tenants to Terminate Leases Online* (off by default) |
 | **RE CRM Settings** | Auto-assign leads (round robin over agents in the assignment pool), first-contact SLA minutes and escalation user, *Sales Agents See Only Their Own Leads* (on by default), booking fee / commission expense / commission payable accounts (needed for journal entries), WhatsApp auto-replies and reminders, rent reminder days, *Recommend Properties When a Lead Is Qualified* (on by default) and whether to also send them on WhatsApp |
-| **RE Portal Settings** | Portal title and tagline (also used as the sender name in visitor emails), contact WhatsApp and email, currency label, page size, hourly inquiry limit |
+| **RE Portal Settings** | Portal title and tagline (also used as the sender name in visitor emails), contact WhatsApp and email, currency label, page size, hourly inquiry limit, map tile server and attribution, default map centre and zoom |
 | **Listing Feed Settings** | Only with a valid brokerage licence and signed portal agreements: tick the confirmation, set a long random feed token, enable Property Finder and/or Bayut and the agent details. Listings appear in a feed only when opted in and carrying a permit number. |
-| **Portal Chat Settings** | Listings chatbot provider (Anthropic or Gemini), API key, model, per-chat message cap, monthly budget |
+| **Portal Chat Settings** | Turn the website chat assistant on, per-chat message cap, extra instructions. Its AI provider, key, model and budget come from **AI Settings**. |
 | **WhatsApp Settings** | Meta Cloud API phone number ID, access token, default country code (`+968` for Oman), API version |
-| **AI Settings** | Voice processing, ASR and LLM providers, monthly AI budget, translation / sentiment / summary / scoring switches, audio retention days, transcript retention days (0 keeps transcripts) |
+| **AI Settings** | The one AI provider for the chat assistant and the voice CRM: provider (Anthropic, OpenAI, Gemini, or Custom for any OpenAI-compatible endpoint), API key, default model and optional chat model, prices per million tokens, and one monthly budget covering both. Also: *Use AI in the Voice CRM*, voice processing, speech-to-text provider with its own Speech API Key (needed for OpenAI Whisper unless the provider is OpenAI), translation / sentiment / summary / scoring switches, audio and transcript retention days |
 | **WhatsApp Template** | One approved Meta template per purpose (Lead Welcome, Visit Reminder, Reservation Expiry, Rent Reminder, Property Recommendations, Post Visit Feedback, Follow Up). Variables are filled in this order: Lead Welcome (name); Visit Reminder (unit, date/time); Reservation Expiry (reservation, expiry date); Rent Reminder (tenant, amount, due date); Property Recommendations (name, list of units). |
 | **Lead Score Model** | Weights for budget fit, conversation frequency, site visits, response speed and loan requirement; hot and warm thresholds |
 | **Voice Locale Profile** | Two are seeded (GCC English/Arabic, India Malayalam/English); sets number system, unit vocabulary and time zone |
@@ -116,8 +116,11 @@ at `/owner-portal`).
 
 | URL | Audience |
 |---|---|
-| `/properties`, `/property/<route>`, `/contact` | Public listing search and listing pages |
-| `/listings` | Public listings app with visitor accounts, wishlist, saved searches, visit and lease requests |
+| `/properties` | Public property search with grid and map views, wishlist hearts, compare and saved searches (`/listings` redirects here) |
+| `/property/<route>` | Listing page: photos, location map, payment plan, enquiry, viewing request, lease request for signed-in visitors |
+| `/properties/account` | Visitor sign-in / sign-up, saved properties, saved searches, enquiries, viewings and lease requests |
+| `/properties/compare` | Up to three listings side by side |
+| `/contact` | Contact page |
 | `/tenant-portal` (+ `/lease`, `/payments`, `/maintenance`) | Tenants (website login) |
 | `/tenant-self-service` | Tenants with an access code; only when enabled in Property Settings |
 | `/owner-portal` | Property owners (website login) |
@@ -130,7 +133,7 @@ at `/owner-portal`).
 | Frequency | Job |
 |---|---|
 | Hourly | Lead SLA escalation; site-visit WhatsApp reminders; post-visit feedback prompts |
-| Daily | Invoice due rent installments; transcript retention purge; mark overdue installments; lease expiry pipeline (Expiring flag, renewal ToDos); PDC deposit reminders; document expiry alerts; release expired reservations; rent-due WhatsApp reminders; saved-search alerts; listing publication backfill; nightly lead scoring; thread summaries; audio retention purge; monthly AI spend reset |
+| Daily | Invoice due rent installments; transcript retention purge; mark overdue installments; lease expiry pipeline (Expiring flag, renewal ToDos); PDC deposit reminders; document expiry alerts; release expired reservations; rent-due WhatsApp reminders; saved-search alerts; listing publication backfill; nightly lead scoring; thread summaries; audio retention purge; AI spend refresh |
 | Monthly | Owner statements |
 
 The scheduler must be enabled: `bench --site SITE enable-scheduler`.
@@ -146,14 +149,26 @@ menu.
 
 ## 7. Production deployment
 
-1. `bench setup production <user>` (nginx + supervisor), or deploy on thinkNXG Cloud.
-2. HTTPS on the site domain (`bench setup lets-encrypt SITE`); the WhatsApp webhook needs it.
-3. Turn developer mode off on production sites.
-4. Workers: at least one `short` and one `long` queue worker (webhook processing uses
-   `short`, lead scoring uses `long`).
-5. Outbound HTTPS to `graph.facebook.com` (WhatsApp) and to the configured ASR / LLM / chatbot
-   providers.
-6. Run `bench --site SITE migrate` after every app update.
+See `DEPLOYMENT.md` for the full procedure (server sizing, nginx and supervisor, HTTPS,
+load balancers, workers, upgrades and rollback) and `LOAD_TEST.md` for measured capacity.
+
+## 7a. Languages
+
+English and Arabic are included. A user's language (User → Language) sets the desk, the staff
+console at `/re-portal` and the website pages they see when signed in; Arabic switches all of
+them to right-to-left. Visitors who are not signed in can choose a language in the website
+footer if *Website Settings → Show Language Picker* is on.
+
+Translations live in `thinknxg_estate/locale/ar.po`. After changing user-facing text:
+
+```bash
+bench generate-pot-file --app thinknxg_estate
+bench update-po-files --app thinknxg_estate --locale ar
+# translate the new entries in ar.po, then
+bench compile-po-to-mo --app thinknxg_estate --locale ar
+```
+
+The test `tests/test_translations.py` fails if any string has no Arabic translation.
 
 ## 8. Backup and recovery
 

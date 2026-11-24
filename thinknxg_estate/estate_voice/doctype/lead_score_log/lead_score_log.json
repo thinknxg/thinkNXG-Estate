@@ -66,8 +66,7 @@
   },
   {
    "fieldname": "col_break_1",
-   "fieldtype": "Column Break",
-   "label": "Col Break 1"
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "score_response",
@@ -81,8 +80,7 @@
   },
   {
    "fieldname": "why_sb",
-   "fieldtype": "Section Break",
-   "label": "Why Sb"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "reason",

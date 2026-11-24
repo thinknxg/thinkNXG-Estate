@@ -17,7 +17,14 @@
   "currency_label",
   "page_size",
   "col_break_2",
-  "inquiry_hourly_limit"
+  "inquiry_hourly_limit",
+  "map_sb",
+  "map_tile_url",
+  "map_attribution",
+  "col_break_map",
+  "map_default_lat",
+  "map_default_lng",
+  "map_default_zoom"
  ],
  "fields": [
   {
@@ -39,8 +46,7 @@
   },
   {
    "fieldname": "col_break_1",
-   "fieldtype": "Column Break",
-   "label": "Col Break 1"
+   "fieldtype": "Column Break"
   },
   {
    "description": "Shown on listing pages as the WhatsApp CTA",
@@ -75,8 +81,7 @@
   },
   {
    "fieldname": "col_break_2",
-   "fieldtype": "Column Break",
-   "label": "Col Break 2"
+   "fieldtype": "Column Break"
   },
   {
    "default": 20,
@@ -84,6 +89,48 @@
    "fieldname": "inquiry_hourly_limit",
    "fieldtype": "Int",
    "label": "Inquiry Hourly Limit"
+  },
+  {
+   "fieldname": "map_sb",
+   "fieldtype": "Section Break",
+   "label": "Map"
+  },
+  {
+   "fieldname": "map_tile_url",
+   "fieldtype": "Data",
+   "label": "Map Tile URL",
+   "default": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+   "description": "Tile server for the map view. The default is OpenStreetMap's public server, which is fine for light use; set a commercial or self-hosted tile service for busy sites."
+  },
+  {
+   "fieldname": "map_attribution",
+   "fieldtype": "Data",
+   "label": "Map Attribution",
+   "default": "&copy; OpenStreetMap contributors"
+  },
+  {
+   "fieldname": "col_break_map",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "map_default_lat",
+   "fieldtype": "Float",
+   "label": "Default Latitude",
+   "default": "23.5880",
+   "precision": "6"
+  },
+  {
+   "fieldname": "map_default_lng",
+   "fieldtype": "Float",
+   "label": "Default Longitude",
+   "default": "58.3829",
+   "precision": "6"
+  },
+  {
+   "fieldname": "map_default_zoom",
+   "fieldtype": "Int",
+   "label": "Default Zoom",
+   "default": "11"
   }
  ],
  "has_web_view": 0,
@@ -92,7 +139,7 @@
  "issingle": 1,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 13:40:00.000000",
  "modified_by": "Administrator",
  "module": "Estate Portal",
  "name": "RE Portal Settings",

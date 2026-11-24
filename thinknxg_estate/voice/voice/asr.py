@@ -2,6 +2,7 @@
 original audio -> native transcript -> English translation -> CRM note."""
 
 import frappe
+from thinknxg_estate.core.http import post_json
 from frappe import _
 from frappe.utils import cstr, get_files_path
 
@@ -44,16 +45,16 @@ def _run_asr(doc, settings):
     if settings.asr_provider == "Local Whisper":
         endpoint = (settings.asr_endpoint or "").rstrip("/")
         with open(file_path, "rb") as handle:
-            response = frappe.make_post_request(
+            response = post_json(
                 f"{endpoint}/asr?task=transcribe&output=json",
                 files={"audio_file": handle})
         return response.get("text", ""), response.get("language")
 
     # OpenAI-compatible Whisper API
     with open(file_path, "rb") as handle:
-        response = frappe.make_post_request(
+        response = post_json(
             "https://api.openai.com/v1/audio/transcriptions",
-            headers={"Authorization": f"Bearer {frappe.conf.get('openai_api_key') or settings.get_password('api_key')}"},
+            headers={"Authorization": f"Bearer {_whisper_key(settings)}"},
             data={"model": settings.asr_model or "whisper-1",
                   "response_format": "verbose_json"},
             files={"file": handle})
@@ -73,3 +74,14 @@ def translate_to_english(text, source_language, reference=None):
 def resolve_text(voice_message_doc):
     """The text the intent engine should act on: English if available, else native."""
     return (voice_message_doc.translation or voice_message_doc.transcript or "").strip()
+
+
+def _whisper_key(settings):
+    """Speech key: its own field, then site_config, then the shared AI key only when that key is
+    an OpenAI key (never send an Anthropic or Gemini key to OpenAI)."""
+    key = settings.get_password("asr_api_key", raise_exception=False) or frappe.conf.get("openai_api_key")
+    if not key and settings.llm_provider == "OpenAI":
+        key = settings.get_password("api_key", raise_exception=False)
+    if not key:
+        frappe.throw(_("Set a Speech API Key in AI Settings to transcribe voice notes with OpenAI Whisper."))
+    return key

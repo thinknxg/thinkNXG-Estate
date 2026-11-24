@@ -7,6 +7,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "provider_note",
   "gate_sb",
   "enabled",
   "provider",
@@ -24,6 +25,11 @@
  ],
  "fields": [
   {
+   "fieldname": "provider_note",
+   "fieldtype": "HTML",
+   "options": "<p class=\"text-muted\">The AI provider, API key, model and monthly budget for the chat assistant are set in <a href=\"/app/ai-settings\">AI Settings</a>, shared with the voice CRM.</p>"
+  },
+  {
    "fieldname": "gate_sb",
    "fieldtype": "Section Break",
    "label": "Chatbot"
@@ -40,12 +46,17 @@
    "fieldtype": "Select",
    "label": "Provider",
    "options": "Gemini\nAnthropic",
-   "description": "Gemini has a free tier (key from aistudio.google.com/apikey). Anthropic is paid (key from the Claude Console)."
+   "description": "Replaced by AI Settings in 1.2; kept only so an upgrade can be rolled back.",
+   "hidden": 1,
+   "read_only": 1
   },
   {
    "fieldname": "api_key",
    "fieldtype": "Password",
-   "label": "API Key"
+   "label": "API Key",
+   "hidden": 1,
+   "read_only": 1,
+   "description": "Replaced by AI Settings in 1.2; kept only so an upgrade can be rolled back."
   },
   {
    "fieldname": "cb1",
@@ -55,7 +66,9 @@
    "fieldname": "model",
    "fieldtype": "Data",
    "label": "Model",
-   "description": "Leave empty for the provider default (Gemini: gemini-3.8-flash, Anthropic: claude-haiku-5-5)."
+   "description": "Replaced by AI Settings in 1.2; kept only so an upgrade can be rolled back.",
+   "hidden": 1,
+   "read_only": 1
   },
   {
    "default": "20",
@@ -69,26 +82,32 @@
    "label": "Cost Control"
   },
   {
-   "description": "0 = no monthly cap. Compared against the cost logged on Portal Chat Sessions this month.",
+   "description": "Replaced by AI Settings in 1.2; kept only so an upgrade can be rolled back.",
    "fieldname": "monthly_budget",
    "fieldtype": "Float",
-   "label": "Monthly Budget (USD)"
+   "label": "Monthly Budget (USD)",
+   "hidden": 1,
+   "read_only": 1
   },
   {
    "fieldname": "cb2",
    "fieldtype": "Column Break"
   },
   {
-   "description": "USD per million input tokens, from your provider's price list. Leave 0 on a free tier.",
+   "description": "Replaced by AI Settings in 1.2; kept only so an upgrade can be rolled back.",
    "fieldname": "input_cost_per_mtok",
    "fieldtype": "Float",
-   "label": "Input Cost per 1M Tokens"
+   "label": "Input Cost per 1M Tokens",
+   "hidden": 1,
+   "read_only": 1
   },
   {
    "fieldname": "output_cost_per_mtok",
    "fieldtype": "Float",
    "label": "Output Cost per 1M Tokens",
-   "description": "USD per million output tokens."
+   "description": "Replaced by AI Settings in 1.2; kept only so an upgrade can be rolled back.",
+   "hidden": 1,
+   "read_only": 1
   },
   {
    "fieldname": "prompt_sb",
@@ -108,7 +127,7 @@
  "issingle": 1,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 14:30:00.000000",
  "modified_by": "Administrator",
  "module": "Estate Portal",
  "name": "Portal Chat Settings",

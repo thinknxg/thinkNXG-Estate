@@ -1,12 +1,20 @@
 #!/bin/bash
 # HTTP smoke tests against a running server. Usage: smoke.sh <site>
-S=$1; B=http://127.0.0.1:8000; H="Host: $S"; J=/tmp/cj_$S; rm -f $J
+# Test accounts: bench --site SITE console <<< "from thinknxg_estate.setup.smoke_fixtures import run; run()" prints OWN_LEASE, OTHER_LEASE and LEAD to export.
+# BASE=http://127.0.0.1 tests through nginx (default: gunicorn on :8000).
+S=$1; B=${BASE:-http://127.0.0.1:8000}; H="Host: $S"; J=/tmp/cj_$S; rm -f $J
 code() { curl -s -o /tmp/body -w "%{http_code}" -H "$H" -b $J -c $J "$@"; }
 check() { local want=$1 label=$2; shift 2; local got=$(code "$@"); local ok=PASS; [[ "$got" == $want ]] || ok=FAIL; printf "%-5s %-3s %s\n" "$ok" "$got" "$label"; [[ $ok == FAIL ]] && head -c 300 /tmp/body && echo; }
 
 echo "== guest"
 check 200 "public property search page /properties" $B/properties
-check 200 "public listings app /listings" $B/listings
+check "30[12]" "old /listings redirects to /properties" $B/listings
+check 200 "map view /properties?view=map" "$B/properties?view=map"
+check 200 "map points API" "$B/api/method/thinknxg_estate.portal.api.listings.map_points"
+check 200 "compare page" "$B/properties/compare?l=x"
+check 200 "visitor account page (sign-in form)" $B/properties/account
+check 403 "wishlist refused for guests" -X POST -d "listing=x" "$B/api/method/thinknxg_estate.portal.api.visitor.toggle_wishlist"
+check 200 "Leaflet served" $B/assets/thinknxg_estate/vendor/leaflet/leaflet.js
 check 200 "contact page /contact" $B/contact
 check 200 "frappe login page renders (asset stub ok)" $B/login
 check "30[123]" "tenant portal requires login" $B/tenant-portal

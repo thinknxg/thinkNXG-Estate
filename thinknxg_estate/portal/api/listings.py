@@ -21,15 +21,10 @@ SORTS = {
 }
 
 
-@frappe.whitelist(allow_guest=True)
-@rate_limit(limit=120, seconds=3600)
-def search(listing_type=None, unit_type=None, city=None, bedrooms=None,
-           min_price=None, max_price=None, furnishing=None, page=1, page_size=None,
-           bathrooms=None, min_area=None, max_area=None, locality=None, sort=None):
-    settings = frappe.get_cached_doc("RE Portal Settings")
-    page_size = min(cint(page_size) or cint(settings.page_size) or 9, 30)
-    page = max(cint(page), 1)
-
+def build_filters(listing_type=None, unit_type=None, city=None, bedrooms=None, min_price=None,
+                  max_price=None, furnishing=None, bathrooms=None, min_area=None, max_area=None,
+                  locality=None, **_ignored):
+    """Listing filters shared by the search page, the map, saved searches and alerts."""
     filters = {"is_published": 1}
     if listing_type in ("Rent", "Sale"):
         filters["listing_type"] = listing_type
@@ -57,23 +52,116 @@ def search(listing_type=None, unit_type=None, city=None, bedrooms=None,
         filters["area_sqm"] = ["<=", flt(max_area)]
     if locality:
         filters["locality"] = locality
+    return filters
+
+
+def _coords(property_names):
+    names = list({n for n in property_names if n})
+    if not names:
+        return {}
+    return {r.name: r for r in frappe.get_all(
+        "Property", filters={"name": ["in", names]}, fields=["name", "latitude", "longitude"])}
+
+
+def _covers(listing_names):
+    covers = {}
+    if not listing_names:
+        return covers
+    for r in frappe.get_all("Listing Photo", filters={"parent": ["in", list(listing_names)]},
+                            fields=["parent", "image"], order_by="idx asc"):
+        covers.setdefault(r.parent, r.image)
+    return covers
+
+
+# Read-only public endpoints are limited per visitor IP to stop scraping, high enough that a person
+# browsing (or an office sharing one IP) never meets the limit. The /properties page itself calls
+# run_search() directly, so page views do not count against the API limit.
+PUBLIC_READ_LIMIT = 600
+
+
+@frappe.whitelist(allow_guest=True)
+@rate_limit(limit=PUBLIC_READ_LIMIT, seconds=3600)
+def search(listing_type=None, unit_type=None, city=None, bedrooms=None,
+           min_price=None, max_price=None, furnishing=None, page=1, page_size=None,
+           bathrooms=None, min_area=None, max_area=None, locality=None, sort=None):
+    return run_search(listing_type, unit_type, city, bedrooms, min_price, max_price, furnishing, page,
+                      page_size, bathrooms, min_area, max_area, locality, sort)
+
+
+def run_search(listing_type=None, unit_type=None, city=None, bedrooms=None,
+               min_price=None, max_price=None, furnishing=None, page=1, page_size=None,
+               bathrooms=None, min_area=None, max_area=None, locality=None, sort=None):
+    settings = frappe.get_cached_doc("RE Portal Settings")
+    page_size = min(cint(page_size) or cint(settings.page_size) or 9, 30)
+    page = max(cint(page), 1)
+    filters = build_filters(listing_type, unit_type, city, bedrooms, min_price, max_price, furnishing,
+                            bathrooms, min_area, max_area, locality)
 
     total = frappe.db.count("Listing", filters)
-    rows = frappe.get_all("Listing", filters=filters, fields=PUBLIC_FIELDS + ["property_ref"],
+    rows = frappe.get_all("Listing", filters=filters, fields=PUBLIC_FIELDS + ["property_ref", "unit"],
                           order_by=SORTS.get(sort, SORTS["featured"]),
                           start=(page - 1) * page_size, page_length=page_size)
+    covers = _covers([r.name for r in rows])
+    coords = _coords([r.property_ref for r in rows])
     for row in rows:
-        row["cover"] = frappe.db.get_value(
-            "Listing Photo", {"parent": row["name"]}, "image", order_by="idx asc")
-        coords = frappe.db.get_value("Property", row.pop("property_ref"), ["latitude", "longitude"],
-                                     as_dict=True) if row.get("property_ref") else None
-        row["latitude"], row["longitude"] = (coords.latitude, coords.longitude) if coords else (None, None)
+        row["cover"] = covers.get(row["name"])
+        c = coords.get(row.pop("property_ref"))
+        row["latitude"], row["longitude"] = (c.latitude, c.longitude) if c else (None, None)
     return {"total": total, "page": page, "page_size": page_size, "results": rows,
             "currency": settings.currency_label or "OMR"}
 
 
+MAP_LIMIT = 500
+
+
 @frappe.whitelist(allow_guest=True)
-@rate_limit(limit=240, seconds=3600)
+@rate_limit(limit=PUBLIC_READ_LIMIT, seconds=3600)
+def map_points(**kwargs):
+    """Every listing matching the search filters that has map coordinates (up to 500),
+    for the map view. Coordinates come from the property, so units share their building's pin."""
+    filters = build_filters(**{k: v for k, v in kwargs.items() if k != "cmd"})
+    rows = frappe.get_all("Listing", filters=filters,
+                          fields=["name", "title", "route", "headline_price", "price_period", "listing_type",
+                                  "bedrooms", "unit_type", "locality", "city", "property_ref"],
+                          order_by=SORTS["featured"], page_length=MAP_LIMIT)
+    coords = _coords([r.property_ref for r in rows])
+    covers = _covers([r.name for r in rows])
+    points = []
+    for r in rows:
+        c = coords.get(r.pop("property_ref"))
+        if not c or not (c.latitude and c.longitude):
+            continue
+        r.update(lat=c.latitude, lng=c.longitude, cover=covers.get(r.name))
+        points.append(r)
+    settings = frappe.get_cached_doc("RE Portal Settings")
+    return {"points": points, "matching": len(rows), "currency": settings.currency_label or "OMR"}
+
+
+COMPARE_FIELDS = PUBLIC_FIELDS + ["unit", "property_ref", "description"]
+
+
+def compare_rows(names):
+    """Up to three published listings, in the order given, for the compare page."""
+    names = [n for n in (names or []) if n][:3]
+    if not names:
+        return []
+    rows = {r.name: r for r in frappe.get_all(
+        "Listing", filters={"name": ["in", names], "is_published": 1}, fields=COMPARE_FIELDS)}
+    covers = _covers(list(rows))
+    from thinknxg_estate.estate_portal.doctype.listing.listing import listing_amenities
+
+    out = []
+    for n in names:
+        if n in rows:
+            row = rows[n]
+            row["cover"] = covers.get(n)
+            row["amenities"] = listing_amenities(row.property_ref)
+            out.append(row)
+    return out
+
+
+@frappe.whitelist(allow_guest=True)
+@rate_limit(limit=PUBLIC_READ_LIMIT, seconds=3600)
 def get(route):
     name = frappe.db.get_value("Listing", {"route": route, "is_published": 1})
     if not name:
@@ -148,12 +236,15 @@ def _request_visit(inquiry):
     """A viewing request becomes a Site Visit Booking for the CRM lead (same record the
     /listings app creates), so agents confirm every visit request in one list."""
     unit = inquiry.unit or (inquiry.listing and frappe.db.get_value("Listing", inquiry.listing, "unit"))
-    if not unit or not frappe.db.exists("Unit", unit):
+    prop = (frappe.db.get_value("Unit", unit, "property") if unit else
+            inquiry.listing and frappe.db.get_value("Listing", inquiry.listing, "property_ref"))
+    if not prop:
         return
+    portal_lead = (frappe.db.get_value("User", frappe.session.user, "portal_lead")
+                   if frappe.session.user != "Guest" else None)
     try:
         booking = frappe.get_doc({
-            "doctype": "Site Visit Booking", "unit": unit,
-            "property": frappe.db.get_value("Unit", unit, "property"),
+            "doctype": "Site Visit Booking", "unit": unit, "property": prop, "lead": portal_lead,
             "re_lead": inquiry.re_lead or frappe.db.get_value("Listing Inquiry", inquiry.name, "re_lead"),
             "visit_date": inquiry.preferred_date, "visit_time_slot": inquiry.preferred_time_slot,
             "status": "Requested",
@@ -162,7 +253,7 @@ def _request_visit(inquiry):
         inquiry.db_set("site_visit_booking", booking.name, update_modified=False)
         from thinknxg_estate.core.listing_portal_api.listing_portal import _notify_re_managers
         _notify_re_managers("Site Visit Booking", booking.name,
-                            _("New viewing request for unit {0}").format(unit))
+                            _("New viewing request for {0}").format(unit or prop))
     except Exception:
         frappe.log_error(title="thinkNXG Estate: viewing request failed", message=inquiry.name)
 

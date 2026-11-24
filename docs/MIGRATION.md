@@ -130,3 +130,22 @@ bench --site SITE migrate
 
 Keep the legacy apps on the bench until the upgraded site has run through at least one
 billing cycle; `bench remove-app` is the last step.
+
+## Upgrading to 1.2
+
+Applies both to legacy sites (done by the installer) and to sites already on thinkNXG Estate 1.0
+or 1.1 (done by `bench migrate`):
+
+- **One public website.** `/listings` redirects to `/properties`. Units that the old `/listings`
+  page showed are marked *Published to Portal*, so nothing visible disappears; whole properties
+  without units get their own listing. Visitor accounts, wishlists and saved searches carry over.
+- **One AI provider.** If only the website chat had an API key, it moves to *AI Settings*. If both
+  had keys, *AI Settings* wins and a comment on *Portal Chat Settings* records it. Budgets are
+  added together. The old chat fields stay in the database (hidden) for rollback.
+- **Document numbering.** The shared `format:` naming counter is moved past every number in use,
+  so new tenants, owners, properties and units no longer clash with migrated records. It only
+  ever moves forward.
+- **Arabic.** Users with language *Arabic* see the desk, console and website in Arabic, right to
+  left. Nothing to configure.
+
+Rollback is the same as for any update: restore the backup taken before `migrate`.

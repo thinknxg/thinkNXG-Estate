@@ -151,7 +151,24 @@ matching document permission (submit or write), not only read.
 | `thinknxg_estate.crm.api.convert_lead_to_deal` | Estate staff | GET/POST | — | `re_crm.re_crm.api.convert_lead_to_deal` |
 | `thinknxg_estate.crm.api.create_site_visit` | Estate staff | GET/POST | — | `re_crm.re_crm.api.create_site_visit` |
 
-## Public listings and visitor accounts (/listings)
+## Public property website (/properties): search, map, listings, inquiries
+
+| Endpoint | Access | HTTP | Description | Legacy path |
+|---|---|---|---|---|
+| `thinknxg_estate.portal.api.listings.search` | Public (guest); rate limit 600 per 3600s | GET/POST | — | `re_portal.api.listings.search` |
+| `thinknxg_estate.portal.api.listings.map_points` | Public (guest); rate limit 600 per 3600s | GET/POST | Every listing matching the search filters that has map coordinates (up to 500), | — |
+| `thinknxg_estate.portal.api.listings.get` | Public (guest); rate limit 600 per 3600s | GET/POST | — | `re_portal.api.listings.get` |
+| `thinknxg_estate.portal.api.listings.submit_inquiry` | Public (guest); rate limit key='inquiry' 20 per 3600s | POST only | Create a Listing Inquiry. Guards: honeypot (website_url must stay empty), | `re_portal.api.listings.submit_inquiry` |
+
+## Website visitor accounts (/properties/account): wishlist, saved searches
+
+| Endpoint | Access | HTTP | Description | Legacy path |
+|---|---|---|---|---|
+| `thinknxg_estate.portal.api.visitor.toggle_wishlist` | Logged-in user (checked in code) | POST only | — | — |
+| `thinknxg_estate.portal.api.visitor.save_search` | Logged-in user (checked in code) | POST only | Save the current /properties filters; the daily job emails new matches. | — |
+| `thinknxg_estate.portal.api.visitor.delete_search` | Logged-in user (checked in code) | POST only | — | — |
+
+## Visitor sign-up, sign-in and requests (shared with the legacy /listings API paths)
 
 | Endpoint | Access | HTTP | Description | Legacy path |
 |---|---|---|---|---|
@@ -162,7 +179,7 @@ matching document permission (submit or write), not only read.
 | `thinknxg_estate.core.listing_portal_api.listing_portal.get_current_portal_user` | Public (guest) | GET/POST | — | `re_core.re_core.listing_portal_api.listing_portal.get_current_portal_user` |
 | `thinknxg_estate.core.listing_portal_api.listing_portal.get_live_properties` | Public (guest) | GET/POST | Returns published portal listings — either a Unit inside a building, or | `re_core.re_core.listing_portal_api.listing_portal.get_live_properties` |
 | `thinknxg_estate.core.listing_portal_api.listing_portal.get_property_detail` | Public (guest) | GET/POST | Full detail for a single dossier view — either a Unit, or a standalone | `re_core.re_core.listing_portal_api.listing_portal.get_property_detail` |
-| `thinknxg_estate.core.listing_portal_api.listing_portal.toggle_wishlist` | Logged-in user (checked in code) | GET/POST | — | `re_core.re_core.listing_portal_api.listing_portal.toggle_wishlist` |
+| `thinknxg_estate.core.listing_portal_api.listing_portal.toggle_wishlist` | Logged-in user (checked in code) | GET/POST | Save or unsave a unit, or a whole property listed without units. | `re_core.re_core.listing_portal_api.listing_portal.toggle_wishlist` |
 | `thinknxg_estate.core.listing_portal_api.listing_portal.submit_enquiry` | Public (guest); rate limit 20 per 3600s | POST only | Unit enquiry from /listings. Guests must leave a name and a mobile number; signed-in | `re_core.re_core.listing_portal_api.listing_portal.submit_enquiry` |
 | `thinknxg_estate.core.listing_portal_api.listing_portal.book_site_visit` | Logged-in user (checked in code) | GET/POST | — | `re_core.re_core.listing_portal_api.listing_portal.book_site_visit` |
 | `thinknxg_estate.core.listing_portal_api.listing_portal.request_lease_contract` | Logged-in user (checked in code) | GET/POST | Portal-originated lease request. Creates a Draft Lease Contract only - | `re_core.re_core.listing_portal_api.listing_portal.request_lease_contract` |
@@ -172,26 +189,18 @@ matching document permission (submit or write), not only read.
 | `thinknxg_estate.core.listing_portal_api.listing_portal.delete_saved_search` | Logged-in user (checked in code) | GET/POST | — | `re_core.re_core.listing_portal_api.listing_portal.delete_saved_search` |
 | `thinknxg_estate.core.listing_portal_api.listing_portal.calculate_rent_plan` | Public (guest) | GET/POST | Splits the annual rent into an even cheque schedule — the standard | `re_core.re_core.listing_portal_api.listing_portal.calculate_rent_plan` |
 
-## Public listings, inquiries and AI chat (/properties)
-
-| Endpoint | Access | HTTP | Description | Legacy path |
-|---|---|---|---|---|
-| `thinknxg_estate.portal.api.listings.search` | Public (guest); rate limit 120 per 3600s | GET/POST | — | `re_portal.api.listings.search` |
-| `thinknxg_estate.portal.api.listings.get` | Public (guest); rate limit 240 per 3600s | GET/POST | — | `re_portal.api.listings.get` |
-| `thinknxg_estate.portal.api.listings.submit_inquiry` | Public (guest); rate limit key='inquiry' 20 per 3600s | POST only | Create a Listing Inquiry. Guards: honeypot (website_url must stay empty), | `re_portal.api.listings.submit_inquiry` |
-
 ## Legacy inquiry form
 
 | Endpoint | Access | HTTP | Description | Legacy path |
 |---|---|---|---|---|
 | `thinknxg_estate.portal.api.inquiries.create` | Public (guest); rate limit 10 per 3600s | POST only | Public inquiry endpoint. `website` is a honeypot field — must stay empty. | `re_portal.api.inquiries.create` |
 
-## Listings AI chat
+## Website chat assistant (provider from AI Settings)
 
 | Endpoint | Access | HTTP | Description | Legacy path |
 |---|---|---|---|---|
-| `thinknxg_estate.portal.api.chat.config` | Public (guest); rate limit 120 per 3600s | GET/POST | — | `re_portal.api.chat.config` |
-| `thinknxg_estate.portal.api.chat.history` | Public (guest); rate limit 120 per 3600s | GET/POST | Replay the visible turns of this visitor's own chat (the token is the secret). | `re_portal.api.chat.history` |
+| `thinknxg_estate.portal.api.chat.config` | Public (guest); rate limit 1200 per 3600s | GET/POST | — | `re_portal.api.chat.config` |
+| `thinknxg_estate.portal.api.chat.history` | Public (guest); rate limit 600 per 3600s | GET/POST | Replay the visible turns of this visitor's own chat (the token is the secret). | `re_portal.api.chat.history` |
 | `thinknxg_estate.portal.api.chat.send` | Public (guest); rate limit 60 per 3600s | POST only | — | `re_portal.api.chat.send` |
 
 ## Property Finder / Bayut feeds

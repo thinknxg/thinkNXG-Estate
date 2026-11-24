@@ -1,7 +1,7 @@
 (function () {
   "use strict";
   var path = location.pathname;
-  if (!(path === "/properties" || path.indexOf("/property/") === 0 || path === "/contact" || path === "/listings")) return;
+  if (!(path === "/properties" || path.indexOf("/property/") === 0 || path === "/contact" || path === "/properties/compare")) return;
   if (window.__rpChat) return;
   window.__rpChat = true;
 
@@ -30,7 +30,7 @@
   var cfg = {}, busy = false, started = false;
   var el = {};
 
-  // Standalone pages (such as /listings) do not load the Frappe web JS, so there is
+  // Standalone pages do not load the Frappe web JS, so there is
   // no frappe.call there: use fetch, and fetch a CSRF token once for write calls.
   var csrfToken = null;
   function getCsrf(cb) {
