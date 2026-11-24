@@ -37,7 +37,8 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Purpose",
-   "options": "\nPost Visit Feedback\nFollow Up\nLead Welcome\nVisit Reminder\nOther"
+   "options": "\nLead Welcome\nVisit Reminder\nReservation Expiry\nRent Reminder\nProperty Recommendations\nPost Visit Feedback\nFollow Up\nOther",
+   "description": "Business messages outside the 24-hour window use the approved template with this purpose."
   },
   {
    "default": "Draft",
@@ -65,7 +66,7 @@
  "issingle": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 13:30:00.000000",
  "modified_by": "Administrator",
  "module": "Estate Voice",
  "name": "WhatsApp Template",

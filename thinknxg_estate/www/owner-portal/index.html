@@ -1,0 +1,102 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+<div class="estate-page py-4">
+  <div class="estate-hero mb-4">
+    <div>
+      <div class="estate-eyebrow">{{ _("Owner portal") }}</div>
+      <h1 class="mb-1">{{ _("Welcome, {0}").format(owner_name) }}</h1>
+      <p class="text-muted mb-0">{{ _("Your portfolio, tenancies, income and statements for {0}.").format(year) }}</p>
+    </div>
+    <form class="d-flex gap-2" method="get">
+      <select name="year" class="form-select form-select-sm" onchange="this.form.submit()">
+        {% for y in range(year - 4, year + 2) %}<option value="{{ y }}" {{ "selected" if y == year }}>{{ y }}</option>{% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <div class="estate-kpis mb-4">
+    <div class="estate-kpi"><span>{{ _("Properties") }}</span><strong>{{ property_count }}</strong></div>
+    <div class="estate-kpi"><span>{{ _("Units") }}</span><strong>{{ unit_count }}</strong></div>
+    <div class="estate-kpi"><span>{{ _("Occupancy") }}</span><strong>{{ occupancy_rate }}%</strong>
+      <small>{{ occupied }} {{ _("occupied") }} · {{ vacant }} {{ _("vacant") }}{% if reserved %} · {{ reserved }} {{ _("reserved") }}{% endif %}</small></div>
+    <div class="estate-kpi"><span>{{ _("Active leases") }}</span><strong>{{ leases|length }}</strong></div>
+    <div class="estate-kpi"><span>{{ _("Rent collected") }}</span><strong>{{ money(income_collected) }}</strong></div>
+    <div class="estate-kpi"><span>{{ _("Rent outstanding") }}</span><strong>{{ money(rent_outstanding) }}</strong></div>
+    <div class="estate-kpi"><span>{{ _("Expenses") }}</span><strong>{{ money(expenses_total) }}</strong></div>
+    <div class="estate-kpi"><span>{{ _("Open maintenance") }}</span><strong>{{ open_maintenance }}</strong></div>
+  </div>
+
+  <div class="estate-card mb-4">
+    <h5>{{ _("Rent billed and collected by month") }}</h5>
+    {% if monthly %}
+    <table class="estate-table">
+      <thead><tr><th>{{ _("Month") }}</th><th class="text-end">{{ _("Billed") }}</th><th class="text-end">{{ _("Collected") }}</th><th style="width:40%"></th></tr></thead>
+      <tbody>
+      {% for m in monthly %}
+        <tr><td>{{ m.month }}</td><td class="text-end">{{ money(m.billed) }}</td><td class="text-end">{{ money(m.collected) }}</td>
+          <td><div class="estate-bar"><div style="width: {{ (m.collected * 100 / m.billed) if m.billed else 0 }}%"></div></div></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="text-muted mb-0">{{ _("No rent was due in {0}.").format(year) }}</p>{% endif %}
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="estate-card mb-4">
+        <h5>{{ _("Active leases") }}</h5>
+        {% if leases %}
+        <table class="estate-table">
+          <thead><tr><th>{{ _("Unit") }}</th><th>{{ _("Tenant") }}</th><th>{{ _("Term") }}</th><th class="text-end">{{ _("Contract value") }}</th></tr></thead>
+          <tbody>{% for l in leases %}
+            <tr><td>{{ l.unit or l.property }}</td><td>{{ l.tenant_name }}</td>
+              <td>{{ frappe.format_date(l.start_date) }} – {{ frappe.format_date(l.end_date) }}
+                {% if l.status == "Expiring" %}<span class="estate-pill warn">{{ _("Expiring") }}</span>{% endif %}</td>
+              <td class="text-end">{{ money(l.total_contract_value) }}</td></tr>
+          {% endfor %}</tbody>
+        </table>
+        {% else %}<p class="text-muted mb-0">{{ _("No active leases.") }}</p>{% endif %}
+      </div>
+      <div class="estate-card mb-4">
+        <h5>{{ _("Units") }}</h5>
+        <table class="estate-table">
+          <thead><tr><th>{{ _("Unit") }}</th><th>{{ _("Property") }}</th><th>{{ _("Status") }}</th><th class="text-end">{{ _("Annual rent") }}</th></tr></thead>
+          <tbody>{% for u in units %}
+            <tr><td>{{ u.unit_title or u.unit_no or u.name }}</td><td>{{ u.property }}</td>
+              <td><span class="estate-pill {{ 'ok' if u.status == 'Occupied' else ('warn' if u.status == 'Reserved' else '') }}">{{ _(u.status) }}</span></td>
+              <td class="text-end">{{ money(u.annual_rent) }}</td></tr>
+          {% else %}<tr><td colspan="4" class="text-muted">{{ _("No units.") }}</td></tr>{% endfor %}</tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="estate-card mb-4">
+        <h5>{{ _("Owner statements") }}</h5>
+        {% for s in statements %}
+          <div class="estate-row">
+            <div><strong>{{ frappe.format_date(s.period_from) }} – {{ frappe.format_date(s.period_to) }}</strong>
+              <div class="small text-muted">{{ _("Rent {0} · fees {1} · expenses {2}").format(money(s.rent_invoiced), money(s.management_fee), money(s.owner_expenses)) }}</div></div>
+            <div class="text-end"><strong>{{ money(s.net_payable) }}</strong>
+              <div class="small">{% if s.paid %}<span class="estate-pill ok">{{ _("Paid") }}</span>{% else %}<span class="estate-pill">{{ _("Payable") }}</span>{% endif %}
+                <a href="/api/method/thinknxg_estate.portal.api.owner.statement?name={{ s.name | urlencode }}&pdf=1">{{ _("PDF") }}</a></div></div>
+          </div>
+        {% else %}<p class="text-muted mb-0">{{ _("No statements yet.") }}</p>{% endfor %}
+      </div>
+      <div class="estate-card mb-4">
+        <h5>{{ _("Maintenance") }}</h5>
+        {% for m in maintenance %}
+          <div class="estate-row"><div>{{ m.category or _("General") }} · {{ m.unit }}<div class="small text-muted">{{ frappe.format_date(m.creation) }} · {{ m.priority }}</div></div>
+            <span class="estate-pill {{ 'ok' if m.status == 'Completed' else '' }}">{{ _(m.status) }}</span></div>
+        {% else %}<p class="text-muted mb-0">{{ _("No maintenance requests.") }}</p>{% endfor %}
+      </div>
+      <div class="estate-card">
+        <h5>{{ _("Expenses") }}</h5>
+        {% for e in expenses %}
+          <div class="estate-row"><div>{{ e.expense_type }} · {{ e.property }}<div class="small text-muted">{{ frappe.format_date(e.expense_date) }}</div></div>
+            <strong>{{ money(e.amount) }}</strong></div>
+        {% else %}<p class="text-muted mb-0">{{ _("No expenses recorded for {0}.").format(year) }}</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

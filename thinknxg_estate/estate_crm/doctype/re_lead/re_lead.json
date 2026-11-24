@@ -25,6 +25,10 @@
   "budget_min",
   "budget_max",
   "unit_of_interest",
+  "bedrooms_required",
+  "min_area_sqm",
+  "possession_date",
+  "required_amenities",
   "sla_sb",
   "first_contacted_on",
   "sla_due",
@@ -38,7 +42,9 @@
   "sentiment_confidence",
   "preferred_language",
   "loan_required",
-  "notes"
+  "notes",
+  "matching_sb",
+  "matching_html"
  ],
  "fields": [
   {
@@ -60,13 +66,15 @@
    "label": "Mobile",
    "options": "Phone",
    "reqd": 0,
-   "description": "Mobile or email is required."
+   "description": "Mobile or email is required.",
+   "search_index": 1
   },
   {
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email",
-   "options": "Email"
+   "options": "Email",
+   "search_index": 1
   },
   {
    "fieldname": "col_break_1",
@@ -80,7 +88,8 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "New\nContacted\nQualified\nConverted\nDisqualified"
+   "options": "New\nContacted\nQualified\nConverted\nDisqualified",
+   "search_index": 1
   },
   {
    "fieldname": "request_source",
@@ -97,7 +106,8 @@
    "label": "Portal Lead",
    "options": "Lead",
    "read_only": 1,
-   "description": "Reverse link to the core Lead record this RE Lead was bridged from (portal-originated only)."
+   "description": "Reverse link to the core Lead record this RE Lead was bridged from (portal-originated only).",
+   "search_index": 1
   },
   {
    "fieldname": "source",
@@ -111,7 +121,8 @@
    "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Assigned Agent",
-   "options": "RE Agent"
+   "options": "RE Agent",
+   "search_index": 1
   },
   {
    "fieldname": "interest_sb",
@@ -157,6 +168,29 @@
    "fieldtype": "Link",
    "label": "Unit Of Interest",
    "options": "Unit"
+  },
+  {
+   "fieldname": "bedrooms_required",
+   "fieldtype": "Int",
+   "label": "Bedrooms (min)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "min_area_sqm",
+   "fieldtype": "Float",
+   "label": "Area (min sqm)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "possession_date",
+   "fieldtype": "Date",
+   "label": "Preferred Move-in / Possession"
+  },
+  {
+   "fieldname": "required_amenities",
+   "fieldtype": "Table MultiSelect",
+   "options": "Property Amenity",
+   "label": "Required Amenities"
   },
   {
    "collapsible": 1,
@@ -239,6 +273,17 @@
    "fieldname": "notes",
    "fieldtype": "Small Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "matching_sb",
+   "fieldtype": "Section Break",
+   "label": "Matching Properties",
+   "collapsible": 0
+  },
+  {
+   "fieldname": "matching_html",
+   "fieldtype": "HTML",
+   "label": "Matching Properties"
   }
  ],
  "index_web_pages_for_search": 0,
@@ -246,7 +291,7 @@
  "issingle": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Estate CRM",
  "name": "RE Lead",
@@ -254,8 +299,6 @@
  "owner": "Administrator",
  "permissions": [
   {
-   "amend": 1,
-   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -265,12 +308,9 @@
    "report": 1,
    "role": "RE Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   },
   {
-   "amend": 1,
-   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -280,7 +320,6 @@
    "report": 1,
    "role": "RE Sales Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   },
   {
@@ -295,8 +334,6 @@
    "write": 1
   },
   {
-   "amend": 1,
-   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -306,8 +343,30 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Broker",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "role": "Receptionist",
+   "permlevel": 0,
+   "print": 1,
+   "email": 1,
+   "report": 1,
+   "export": 1,
+   "share": 1,
+   "read": 1,
+   "write": 1,
+   "create": 1
   }
  ],
  "search_fields": "full_name,mobile,email",

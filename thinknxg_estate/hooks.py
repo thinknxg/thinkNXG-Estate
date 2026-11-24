@@ -27,13 +27,14 @@ add_to_apps_screen = [
 # ----------------------------------------------------------------------------- fixtures
 ESTATE_ROLES = [
 	# operations
-	"RE Manager", "Property Manager", "Leasing Officer", "Maintenance Supervisor",
+	"RE Manager", "Property Manager", "Leasing Manager", "Leasing Officer", "Maintenance Supervisor",
+	"Maintenance Technician", "Receptionist",
 	# CRM
-	"RE Sales Manager", "RE Sales Agent",
+	"RE Sales Manager", "RE Sales Agent", "Broker",
 	# voice / messaging
 	"Voice Ops Manager",
 	# portal users
-	"Tenant",
+	"Tenant", "Property Owner",
 ]
 
 fixtures = [
@@ -44,17 +45,22 @@ fixtures = [
 
 # ----------------------------------------------------------------------------- website
 web_include_js = ["/assets/thinknxg_estate/js/chat_widget.js"]
-web_include_css = ["/assets/thinknxg_estate/css/chat_widget.css"]
+web_include_css = ["/assets/thinknxg_estate/css/estate.css", "/assets/thinknxg_estate/css/chat_widget.css"]
 
 jinja = {"methods": ["thinknxg_estate.portal.utils.money"]}
 
 standard_portal_menu_items = [
 	{"title": "My Tenancy", "route": "/tenant-portal", "role": "Tenant"},
+	{"title": "My Properties", "route": "/owner-portal", "role": "Property Owner"},
 ]
 
 doctype_js = {
-	"Property": "public/js/property_live_toggle.js",
+	"Property": ["public/js/property_live_toggle.js", "public/js/estate_timeline.js"],
 	"Unit": "public/js/unit_lease_contract.js",
+	"RE Lead": "public/js/estate_timeline.js",
+	"RE Deal": "public/js/estate_timeline.js",
+	"Tenant": "public/js/estate_timeline.js",
+	"Property Owner": "public/js/estate_timeline.js",
 }
 
 # ----------------------------------------------------------------------------- permissions
@@ -70,6 +76,11 @@ permission_query_conditions = {
 }
 has_permission = {dt: f"{_PERM}.has_permission" for dt in permission_query_conditions}
 
+# CRM record ownership for sales agents
+for _dt, _fn in (("RE Lead", "re_lead_query"), ("RE Deal", "re_deal_query"), ("Site Visit", "site_visit_query")):
+	permission_query_conditions[_dt] = f"{_PERM}.{_fn}"
+	has_permission[_dt] = f"{_PERM}.agent_has_permission"
+
 # ----------------------------------------------------------------------------- events
 doc_events = {
 	"Post Dated Cheque": {
@@ -84,7 +95,10 @@ doc_events = {
 	"Property": {"on_update": "thinknxg_estate.portal.sync.sync_property_on_update"},
 	"Unit": {"on_update": "thinknxg_estate.portal.sync.sync_unit_on_update"},
 	"Site Visit": {"on_update": "thinknxg_estate.voice.events.on_site_visit_update"},
-	"RE Lead": {"after_insert": "thinknxg_estate.voice.events.on_lead_insert"},
+	"RE Lead": {
+		"after_insert": "thinknxg_estate.voice.events.on_lead_insert",
+		"on_update": "thinknxg_estate.crm.matching.recommend_on_qualify",
+	},
 }
 
 # ----------------------------------------------------------------------------- scheduler
@@ -111,6 +125,7 @@ scheduler_events = {
 		"thinknxg_estate.voice.tasks.nightly_scoring",
 		"thinknxg_estate.voice.tasks.refresh_thread_summaries",
 		"thinknxg_estate.voice.tasks.purge_expired_audio",
+		"thinknxg_estate.voice.tasks.purge_expired_transcripts",
 		"thinknxg_estate.voice.tasks.reset_monthly_spend",
 	],
 	"monthly": [

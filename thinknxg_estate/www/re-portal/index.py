@@ -8,11 +8,13 @@ def get_context(context):
         frappe.local.flags.redirect_location = "/login?redirect-to=/re-portal"
         raise frappe.Redirect
 
-    from thinknxg_estate.core.security import is_estate_staff
+    from thinknxg_estate.core.security import is_console_user
 
-    if not is_estate_staff():
+    if not is_console_user():
         # tenants and portal visitors have their own pages
-        frappe.local.flags.redirect_location = "/tenant-portal" if "Tenant" in frappe.get_roles() else "/listings"
+        frappe.local.flags.redirect_location = ("/tenant-portal" if "Tenant" in frappe.get_roles() else
+                                               "/app" if frappe.session.user != "Guest" and frappe.db.get_value("User", frappe.session.user, "user_type") == "System User"
+                                               else "/listings")
         raise frappe.Redirect
 
     fullname = frappe.utils.get_fullname(frappe.session.user)

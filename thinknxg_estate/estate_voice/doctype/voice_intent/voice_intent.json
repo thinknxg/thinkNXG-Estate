@@ -156,7 +156,7 @@
  "issingle": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Estate Voice",
  "name": "Voice Intent",
@@ -215,6 +215,17 @@
    "report": 1,
    "export": 1,
    "print": 1
+  },
+  {
+   "create": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Broker",
+   "share": 1,
+   "write": 0
   }
  ],
  "search_fields": "transcript,command",

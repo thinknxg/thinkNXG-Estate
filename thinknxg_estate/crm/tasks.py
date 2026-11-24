@@ -47,7 +47,8 @@ def site_visit_reminders():
                 _("Reminder: your property viewing at {0} is scheduled for {1}. "
                   "See you there!").format(
                     unit_title, get_datetime(visit.visit_datetime).strftime("%d %b, %I:%M %p")),
-                reference_doctype="Site Visit", reference_name=visit.name)
+                reference_doctype="Site Visit", reference_name=visit.name, purpose="Visit Reminder",
+                variables=[unit_title, get_datetime(visit.visit_datetime).strftime("%d %b, %I:%M %p")])
         frappe.db.set_value("Site Visit", visit.name, "reminder_sent", 1)
 
 
@@ -69,7 +70,8 @@ def release_expired_reservations():
                     mobile,
                     _("Your reservation {0} expires tomorrow ({1}). Please complete "
                       "the lease signing to secure the unit.").format(res.name, res.valid_till),
-                    reference_doctype="Reservation", reference_name=res.name)
+                    reference_doctype="Reservation", reference_name=res.name,
+                    purpose="Reservation Expiry", variables=[res.name, res.valid_till])
     # Release the expired
     for name in frappe.get_all("Reservation",
                                filters={"docstatus": 1, "status": "Active",
@@ -79,7 +81,7 @@ def release_expired_reservations():
 
 
 def rent_due_whatsapp_reminders():
-    """Rides on re_core Rent Schedules: nudge tenants N days before due date."""
+    """Nudge tenants N days before a rent installment is due."""
     settings = frappe.get_cached_doc("RE CRM Settings")
     if not settings.wa_rent_reminders:
         return
@@ -104,4 +106,5 @@ def rent_due_whatsapp_reminders():
                   "Thank you!").format(tenant.tenant_name,
                                        frappe.utils.fmt_money(row.amount),
                                        row.due_date),
-                reference_doctype="Rent Installment", reference_name=row.name)
+                reference_doctype="Rent Installment", reference_name=row.name, purpose="Rent Reminder",
+                variables=[tenant.tenant_name, frappe.utils.fmt_money(row.amount), row.due_date])

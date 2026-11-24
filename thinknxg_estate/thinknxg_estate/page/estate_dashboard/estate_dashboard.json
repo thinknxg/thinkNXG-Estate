@@ -1,0 +1,44 @@
+{
+ "content": null,
+ "creation": "2026-11-24 14:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-11-24 14:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "thinkNXG Estate",
+ "name": "estate-dashboard",
+ "owner": "Administrator",
+ "page_name": "estate-dashboard",
+ "roles": [
+  {
+   "role": "RE Manager"
+  },
+  {
+   "role": "Property Manager"
+  },
+  {
+   "role": "Leasing Officer"
+  },
+  {
+   "role": "Maintenance Supervisor"
+  },
+  {
+   "role": "RE Sales Manager"
+  },
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Leasing Manager"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "thinkNXG Estate Dashboard"
+}

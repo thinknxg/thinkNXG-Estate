@@ -6,9 +6,11 @@ or with token authentication (`Authorization: token <api_key>:<api_secret>`).
 
 Access levels:
 
-- **Estate staff**: desk (System User) accounts holding one of RE Manager, Property Manager,
-  Leasing Officer, Maintenance Supervisor, RE Sales Manager, RE Sales Agent, Voice Ops Manager,
-  Accounts User, Accounts Manager or System Manager. Document permissions still apply on top.
+- **Estate staff**: desk (System User) accounts with a portfolio-wide role: System Manager, RE Manager,
+  Property Manager, Leasing Manager, Leasing Officer, Maintenance Supervisor, RE Sales Manager,
+  Voice Ops Manager, Accounts User or Accounts Manager.
+- **Any estate desk role**: the above plus RE Sales Agent, Broker, Receptionist and Maintenance
+  Technician; the endpoint also checks permission on the record it reads.
 - **Public (guest)**: no login; every write is rate limited per IP.
 - **Logged-in user**: identity is resolved server-side from the session (tenant portal, visitor
   account); IDs sent by the client are never trusted.
@@ -20,7 +22,7 @@ portal feed registrations need no change.
 Document actions (`run_doc_method`) such as *Post Dated Cheque → mark_cleared* check the
 matching document permission (submit or write), not only read.
 
-## Staff console API (desk users with an estate or accounts role)
+## Staff console API (portfolio-wide roles)
 
 | Endpoint | Access | HTTP | Description | Legacy path |
 |---|---|---|---|---|
@@ -130,7 +132,7 @@ matching document permission (submit or write), not only read.
 | `thinknxg_estate.core.api.submit_expense_property` | Estate staff | GET/POST | — | `re_core.re_core.api.submit_expense_property` |
 | `thinknxg_estate.core.api.record_expense_partial_payment` | Estate staff | GET/POST | — | `re_core.re_core.api.record_expense_partial_payment` |
 
-## CRM API (desk users with an estate or accounts role)
+## CRM console API (portfolio-wide roles)
 
 | Endpoint | Access | HTTP | Description | Legacy path |
 |---|---|---|---|---|
@@ -209,6 +211,31 @@ matching document permission (submit or write), not only read.
 | `thinknxg_estate.portal.api.tenant.get_outstanding_rent` | Logged-in user (checked in code) | GET/POST | — | `re_portal.api.tenant.get_outstanding_rent` |
 | `thinknxg_estate.portal.api.tenant.terminate_lease` | Logged-in user (checked in code) | POST only | Tenant self-service termination. The lease is always resolved from the session | `re_portal.api.tenant.terminate_lease` |
 | `thinknxg_estate.portal.api.tenant.create_maintenance` | Logged-in user (checked in code) | POST only | — | `re_portal.api.tenant.create_maintenance` |
+
+## Owner portal (website login, role Property Owner)
+
+| Endpoint | Access | HTTP | Description | Legacy path |
+|---|---|---|---|---|
+| `thinknxg_estate.portal.api.owner.dashboard` | Logged-in user (checked in code) | GET/POST | — | — |
+| `thinknxg_estate.portal.api.owner.statement` | Logged-in user (checked in code) | GET/POST | Printable owner statement, only for the statement's own owner. | — |
+
+## Dashboard (portfolio-wide roles)
+
+| Endpoint | Access | HTTP | Description | Legacy path |
+|---|---|---|---|---|
+| `thinknxg_estate.core.dashboard.get_overview` | Estate staff | GET/POST | — | — |
+
+## Lead matching (any desk role, record permission checked)
+
+| Endpoint | Access | HTTP | Description | Legacy path |
+|---|---|---|---|---|
+| `thinknxg_estate.crm.matching.get_matching_units` | Any estate desk role | GET/POST | — | — |
+
+## Communication history (any desk role, record permission checked)
+
+| Endpoint | Access | HTTP | Description | Legacy path |
+|---|---|---|---|---|
+| `thinknxg_estate.channels.timeline.get_timeline` | Any estate desk role | GET/POST | — | — |
 
 ## Access-code tenant portal (opt-in)
 

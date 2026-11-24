@@ -1,7 +1,7 @@
 # Agent Leaderboard: pipeline activity and closed value per agent in a period.
 import frappe
 from frappe import _
-from frappe.utils import flt
+from frappe.utils import flt, getdate, month_diff
 
 
 def execute(filters=None):
@@ -10,7 +10,10 @@ def execute(filters=None):
                   "to_date": filters.get("to_date") or "2999-12-31"}
 
     agents = frappe.get_all("RE Agent", filters={"is_active": 1},
-                            fields=["name", "agent_name"], order_by="name")
+                            fields=["name", "agent_name", "agent_type", "monthly_deal_target",
+                                    "monthly_value_target"], order_by="name")
+    months = (month_diff(filters.to_date, filters.from_date)
+              if filters.get("from_date") and filters.get("to_date") else 0)
     data = []
     for agent in agents:
         params = dict(conditions, agent=agent.name)
@@ -55,7 +58,15 @@ def execute(filters=None):
             "win_rate": flt(won * 100 / deals, 1) if deals else 0,
             "won_value": flt(lease_value or won_value or 0, 3),
             "commission": flt(commission, 3),
+            "agent_type": agent.agent_type,
         })
+        row = data[-1]
+        if months:
+            row["deal_target"] = int(agent.monthly_deal_target or 0) * months
+            row["value_target"] = flt(agent.monthly_value_target) * months
+            row["deal_achievement"] = flt(won * 100 / row["deal_target"], 1) if row["deal_target"] else None
+            row["value_achievement"] = (flt(row["won_value"] * 100 / row["value_target"], 1)
+                                        if row["value_target"] else None)
 
     data.sort(key=lambda r: r["won_value"], reverse=True)
     chart = {
@@ -81,4 +92,9 @@ def get_columns():
         {"label": _("Win Rate %"), "fieldname": "win_rate", "fieldtype": "Percent", "width": 95},
         {"label": _("Won Value"), "fieldname": "won_value", "fieldtype": "Currency", "width": 130},
         {"label": _("Commission"), "fieldname": "commission", "fieldtype": "Currency", "width": 120},
+        {"label": _("Type"), "fieldname": "agent_type", "fieldtype": "Data", "width": 120},
+        {"label": _("Deal Target"), "fieldname": "deal_target", "fieldtype": "Int", "width": 100},
+        {"label": _("Deals vs Target %"), "fieldname": "deal_achievement", "fieldtype": "Percent", "width": 130},
+        {"label": _("Value Target"), "fieldname": "value_target", "fieldtype": "Currency", "width": 130},
+        {"label": _("Value vs Target %"), "fieldname": "value_achievement", "fieldtype": "Percent", "width": 130},
     ]

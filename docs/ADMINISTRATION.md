@@ -30,18 +30,27 @@ Work through these in order. All are under **thinkNXG Estate → Settings** in t
 | Settings | What to set |
 |---|---|
 | **Property Settings** | Rent Item (created automatically as *Rental Charge*), invoice lead days, overdue grace days, auto-create PDCs, Deposits Held liability account and deposit bank account, lease expiry flag days and renewal ToDo days, tenant welcome email, *Enable Access-Code Tenant Portal* (off by default), *Allow Tenants to Terminate Leases Online* (off by default) |
-| **RE CRM Settings** | Auto-assign leads (round robin over agents in the assignment pool), first-contact SLA minutes and escalation user, booking fee / commission expense / commission payable accounts (needed for journal entries), WhatsApp auto-replies and reminders, rent reminder days |
+| **RE CRM Settings** | Auto-assign leads (round robin over agents in the assignment pool), first-contact SLA minutes and escalation user, *Sales Agents See Only Their Own Leads* (on by default), booking fee / commission expense / commission payable accounts (needed for journal entries), WhatsApp auto-replies and reminders, rent reminder days, *Recommend Properties When a Lead Is Qualified* (on by default) and whether to also send them on WhatsApp |
 | **RE Portal Settings** | Portal title and tagline (also used as the sender name in visitor emails), contact WhatsApp and email, currency label, page size, hourly inquiry limit |
 | **Listing Feed Settings** | Only with a valid brokerage licence and signed portal agreements: tick the confirmation, set a long random feed token, enable Property Finder and/or Bayut and the agent details. Listings appear in a feed only when opted in and carrying a permit number. |
 | **Portal Chat Settings** | Listings chatbot provider (Anthropic or Gemini), API key, model, per-chat message cap, monthly budget |
 | **WhatsApp Settings** | Meta Cloud API phone number ID, access token, default country code (`+968` for Oman), API version |
-| **AI Settings** | Voice processing, ASR and LLM providers, monthly AI budget, translation / sentiment / summary / scoring switches, audio retention days |
+| **AI Settings** | Voice processing, ASR and LLM providers, monthly AI budget, translation / sentiment / summary / scoring switches, audio retention days, transcript retention days (0 keeps transcripts) |
+| **WhatsApp Template** | One approved Meta template per purpose (Lead Welcome, Visit Reminder, Reservation Expiry, Rent Reminder, Property Recommendations, Post Visit Feedback, Follow Up). Variables are filled in this order: Lead Welcome (name); Visit Reminder (unit, date/time); Reservation Expiry (reservation, expiry date); Rent Reminder (tenant, amount, due date); Property Recommendations (name, list of units). |
 | **Lead Score Model** | Weights for budget fit, conversation frequency, site visits, response speed and loan requirement; hot and warm thresholds |
 | **Voice Locale Profile** | Two are seeded (GCC English/Arabic, India Malayalam/English); sets number system, unit vocabulary and time zone |
 
 Taxes and currency come from thinkNXG ERP: set up the 5% Oman VAT (or other jurisdiction)
 Item Tax Templates and select them on Lease Charges. Amounts follow the company currency
 (OMR uses 3 decimals).
+
+### WhatsApp messages and the 24-hour rule
+
+Every business message goes through one channel and is logged in **WhatsApp Message Log**
+against its record. Meta allows free text only within 24 hours of the customer's last message;
+outside that window the channel sends the approved template for the message's purpose. If there
+is none, the message is logged as *Skipped* with the reason, so you can see which templates to
+register.
 
 ### WhatsApp webhook
 
@@ -62,15 +71,27 @@ command.
 
 | Role | Typical user | Main access |
 |---|---|---|
-| RE Manager | Head of property / company administrator | Everything in the app, including delete, cancel and amend |
-| Property Manager | Property manager | Properties, units, owners, leases, maintenance; read on cheques and deposits |
+| System Manager | System administrator | Everything |
+| RE Manager | Head of property / company administrator (restrict to one company with a User Permission on Company) | Everything in the app, including delete, cancel and amend |
+| Property Manager | Property manager | Properties, units, owners, leases, maintenance; read on cheques, deposits and owner statements |
+| Leasing Manager | Leasing manager | Leasing Officer access plus cancel, amend and delete leases and inspections; reservations; read on rent schedules, cheques and deposits |
 | Leasing Officer | Leasing executive | Tenants and leases (create, submit), listings; read on units |
-| Maintenance Supervisor | Maintenance manager / technician lead | Maintenance requests and jobs; read on properties and units |
-| Accounts User / Accounts Manager (thinkNXG ERP) | Accountant | Rent schedules, cheques, deposits, commission entries, invoices and payments |
-| RE Sales Manager | CRM manager | Leads, deals, agents, commissions |
-| RE Sales Agent | Sales agent / broker | Leads and deals (create and edit); read on commission entries and voice logs |
+| Accounts User / Accounts Manager (thinkNXG ERP) | Accountant | Rent schedules, cheques, deposits, owner statements, commission entries, invoices and payments |
+| Maintenance Supervisor | Maintenance manager | Maintenance requests and jobs; read on properties and units |
+| Maintenance Technician | Technician | Read properties and units; update maintenance requests and jobs (no submit) |
+| RE Sales Manager | CRM manager | All leads, deals, agents, commissions |
+| RE Sales Agent | Sales agent | Their own leads, deals and site visits (see *Sales Agents See Only Their Own Leads*); lead matching; own commission statement |
+| Broker | External broker | Same as RE Sales Agent; record the brokerage, licence and agreement on the RE Agent (*Agent Type: External Broker*) |
+| Receptionist | Front desk | Create leads, enquiries, visit requests and maintenance requests; read properties, units, listings and tenants |
 | Voice Ops Manager | Communications lead | Voice, AI and WhatsApp configuration (settings, templates, commands, locales, scoring model); read on all message and voice logs |
+| Property Owner | Landlord (website user) | Owner portal only: their properties, units, leases, income, expenses, statements and maintenance |
 | Tenant | Tenant (website user) | Own tenant record, leases, rent schedule, cheques, deposit and maintenance requests only; can raise maintenance requests |
+
+Portfolio-wide screens (the `/re-portal` console, the thinkNXG Estate Dashboard page and the
+console APIs) are for System Manager, RE Manager, Property Manager, Leasing Manager, Leasing
+Officer, Maintenance Supervisor, RE Sales Manager, Voice Ops Manager and the Accounts roles.
+Sales agents, brokers, receptionists and technicians work in the desk forms, where document
+permissions and ownership rules apply.
 
 Rules enforced on the server, whatever the screen shows:
 
@@ -81,13 +102,15 @@ Rules enforced on the server, whatever the screen shows:
 - Money and status actions need more than read access: depositing, clearing or bouncing a
   cheque, refunding a deposit and marking a commission paid need *submit* permission;
   terminating a lease, raising a job from a request and converting a lead need *write*.
-- Agents currently see all leads and deals; to limit an agent to their own, add a User Permission
-  on **RE Agent** for that user (row-level lead ownership is planned work).
+- Sales agents and brokers see the leads, deals and site visits assigned to their RE Agent
+  record (switch off in RE CRM Settings). Each agent's RE Agent record must have their user.
 - Multi-company: restrict staff to their landlord companies with User Permissions on
   **Company** (each landlord can be its own company).
 
 Tenant portal users are created automatically when *Enable Portal* is ticked on a Tenant with
-an email address (role Tenant, website user, login at `/tenant-portal`).
+an email address (role Tenant, website user, login at `/tenant-portal`). Owner portal users are
+created the same way from *Enable Owner Portal* on a Property Owner (role Property Owner, login
+at `/owner-portal`).
 
 ## 5. Web pages
 
@@ -97,7 +120,9 @@ an email address (role Tenant, website user, login at `/tenant-portal`).
 | `/listings` | Public listings app with visitor accounts, wishlist, saved searches, visit and lease requests |
 | `/tenant-portal` (+ `/lease`, `/payments`, `/maintenance`) | Tenants (website login) |
 | `/tenant-self-service` | Tenants with an access code; only when enabled in Property Settings |
-| `/re-portal` | Staff console |
+| `/owner-portal` | Property owners (website login) |
+| `/re-portal` | Staff console (portfolio-wide roles) |
+| `/app/estate-dashboard` | Dashboard with company, property, city and period filters |
 | `/app/thinknxg-estate` | Desk dashboard and sidebar |
 
 ## 6. Scheduled jobs
@@ -105,10 +130,19 @@ an email address (role Tenant, website user, login at `/tenant-portal`).
 | Frequency | Job |
 |---|---|
 | Hourly | Lead SLA escalation; site-visit WhatsApp reminders; post-visit feedback prompts |
-| Daily | Invoice due rent installments; mark overdue installments; lease expiry pipeline (Expiring flag, renewal ToDos); PDC deposit reminders; document expiry alerts; release expired reservations; rent-due WhatsApp reminders; saved-search alerts; listing publication backfill; nightly lead scoring; thread summaries; audio retention purge; monthly AI spend reset |
+| Daily | Invoice due rent installments; transcript retention purge; mark overdue installments; lease expiry pipeline (Expiring flag, renewal ToDos); PDC deposit reminders; document expiry alerts; release expired reservations; rent-due WhatsApp reminders; saved-search alerts; listing publication backfill; nightly lead scoring; thread summaries; audio retention purge; monthly AI spend reset |
 | Monthly | Owner statements |
 
 The scheduler must be enabled: `bench --site SITE enable-scheduler`.
+
+## 6a. Reports
+
+Finance: Rent Roll, Outstanding Rent, Rent Collection, PDC Status, Owner Statement, Deposit
+Register, Property Profitability. Leasing: Lease Expiry, Tenant Register. Property: Property
+Register, Unit Availability. CRM: Agent Leaderboard (with targets), Lead Source Analysis, Site
+Visit Conversion, Broker Commission Statement. Maintenance: Maintenance Overview, Vendor
+Performance. Voice: Voice Command Analytics. All export to Excel, CSV and PDF from the report
+menu.
 
 ## 7. Production deployment
 

@@ -42,7 +42,8 @@
    "in_list_view": 1,
    "label": "Maintenance Request",
    "options": "Maintenance Request",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fetch_from": "maintenance_request.unit",
@@ -59,7 +60,8 @@
    "fieldtype": "Link",
    "label": "Property",
    "options": "Property",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fieldname": "company",
@@ -92,7 +94,8 @@
    "fieldname": "supplier",
    "fieldtype": "Link",
    "label": "Supplier",
-   "options": "Supplier"
+   "options": "Supplier",
+   "search_index": 1
   },
   {
    "fieldname": "scheduled_date",
@@ -182,7 +185,7 @@
  "issingle": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Estate Maintenance",
  "name": "Maintenance Job",
@@ -227,6 +230,17 @@
    "role": "Property Manager",
    "share": 1,
    "submit": 1,
+   "write": 1
+  },
+  {
+   "role": "Maintenance Technician",
+   "permlevel": 0,
+   "print": 1,
+   "email": 1,
+   "report": 1,
+   "export": 1,
+   "share": 1,
+   "read": 1,
    "write": 1
   }
  ],

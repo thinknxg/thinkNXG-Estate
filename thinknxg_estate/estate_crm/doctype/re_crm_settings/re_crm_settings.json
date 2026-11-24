@@ -13,6 +13,7 @@
   "col_break_1",
   "sla_minutes",
   "escalation_user",
+  "agents_see_own_records",
   "fees_sb",
   "booking_fee_account",
   "col_break_2",
@@ -24,7 +25,9 @@
   "col_break_3",
   "wa_reservation_expiry",
   "wa_rent_reminders",
-  "rent_reminder_days"
+  "rent_reminder_days",
+  "recommend_on_qualify",
+  "wa_send_recommendations"
  ],
  "fields": [
   {
@@ -64,6 +67,13 @@
    "fieldtype": "Link",
    "label": "Escalation User",
    "options": "User"
+  },
+  {
+   "fieldname": "agents_see_own_records",
+   "fieldtype": "Check",
+   "default": "1",
+   "label": "Sales Agents See Only Their Own Leads",
+   "description": "Users whose only CRM role is RE Sales Agent see the leads, deals and site visits assigned to their RE Agent record. Managers see everything."
   },
   {
    "fieldname": "fees_sb",
@@ -134,6 +144,19 @@
    "fieldname": "rent_reminder_days",
    "fieldtype": "Int",
    "label": "Rent Reminder Days"
+  },
+  {
+   "fieldname": "recommend_on_qualify",
+   "fieldtype": "Check",
+   "default": "1",
+   "label": "Recommend Properties When a Lead Is Qualified",
+   "description": "Adds the best matching units to the lead's timeline when it is marked Qualified."
+  },
+  {
+   "fieldname": "wa_send_recommendations",
+   "fieldtype": "Check",
+   "label": "Also Send Recommendations on WhatsApp",
+   "depends_on": "recommend_on_qualify"
   }
  ],
  "index_web_pages_for_search": 0,
@@ -141,7 +164,7 @@
  "issingle": 1,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 13:30:00.000000",
  "modified_by": "Administrator",
  "module": "Estate CRM",
  "name": "RE CRM Settings",

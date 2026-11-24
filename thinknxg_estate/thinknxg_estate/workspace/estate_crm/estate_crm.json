@@ -161,7 +161,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 15:30:00.000000",
  "modified_by": "Administrator",
  "module": "thinkNXG Estate",
  "name": "Estate CRM",
@@ -222,6 +222,18 @@
    "parentfield": "roles",
    "parenttype": "Workspace",
    "role": "System Manager"
+  },
+  {
+   "doctype": "Has Role",
+   "parentfield": "roles",
+   "parenttype": "Workspace",
+   "role": "Broker"
+  },
+  {
+   "doctype": "Has Role",
+   "parentfield": "roles",
+   "parenttype": "Workspace",
+   "role": "Receptionist"
   }
  ],
  "sequence_id": 0.0,

@@ -2,7 +2,7 @@
 
 **Scope:** audit of four repositories and their consolidation into one app, `thinknxg_estate`
 (Phases 1 and 2 of the master plan, plus the security fixes the audit made necessary).
-**Date:** 24 November 2026
+**Date:** 24 November 2026 (Phases 1–2), updated the same day with Phases 3–8
 **Test platform:** Frappe Framework 16.60.2 + ERPNext 16.60.0, Python 3.14, MariaDB 10.11.
 
 ## 1. Summary
@@ -27,10 +27,9 @@ What was done:
 - **Security:** five vulnerabilities found and fixed (§6), two of them critical, each
   reproduced on the original code first.
 - **Defects:** nine functional defects found and fixed (§5).
-- **Tests:** 30 automated tests (21 integration + 9 unit) plus 38 HTTP checks, all passing.
+- **Tests:** 59 automated tests (41 integration + 18 unit) plus 56 HTTP checks, all passing.
 
-What is not done yet is listed in §10: the Phase 3–8 product work (owner portal, property
-matching, redesigned UI, broader reporting, full role matrix, deployment hardening).
+Phases 3–8 are summarised in §10; what is still open is in §11.
 
 ## 2. Repositories audited
 
@@ -189,22 +188,42 @@ See `MIGRATION.md`. Rehearsed on a site with all four legacy apps and 131 demo r
 | Fresh install on thinkNXG ERP v16 (68 DocTypes, 9 reports, 22 cards, 8 charts, sidebar, roles, seeds) | pass |
 | `bench migrate` after install | pass |
 | Upgrade rehearsal (§8) | pass, repeatable script |
-| Integration tests (`tests/test_estate_integration.py`) | 21 / 21 |
-| Unit tests (`tests/unit`): voice entities and matcher, feed XML, compatibility map | 9 / 9 |
-| HTTP checks on the upgraded site with legacy packages blocked from import (guest, staff, tenant, legacy URLs, webhook, feeds, pages) | 38 / 38 |
+| Integration tests (`tests/test_estate_integration.py`, `tests/test_estate_portal_crm.py`) | 41 / 41 |
+| Unit tests (`tests/unit`): voice entities and matcher, feed XML, compatibility map, lease months | 18 / 18 |
+| HTTP checks on the upgraded site with legacy packages blocked from import (guest, staff, tenant, owner, legacy URLs, webhook, feeds, pages, dashboard, reports) | 56 / 56 |
 | Every `frappe` / `erpnext` import in the app, top-level and nested | resolves |
 
 Not verified here: the JavaScript bundle build (the sandbox could not download one frontend
 dependency of Frappe itself; pages were rendered server-side with a stub asset manifest), live
 WhatsApp / Meta and LLM calls, and real Property Finder / Bayut onboarding.
 
-## 10. Remaining work, by phase
+## 10. Phases 3–8 (second delivery)
 
-| Phase | Remaining |
+| Phase | Delivered | Verified by |
+|---|---|---|
+| 3 — Portal | **Owner portal** (`/owner-portal`, role *Property Owner*, provisioned from *Enable Owner Portal* on the owner): properties and units, occupancy, active leases, rent collected and outstanding, monthly billed vs collected, expenses, owner statements with PDF, maintenance. All data scoped server-side to the owner's properties and units; owners hold no document permissions. **Schedule a viewing** on every listing page (date + slot, creates a Site Visit Booking for the visitor's CRM lead). **Search**: bathrooms, furnishing, area range, sorting, map coordinates; similar properties on listing pages. | Integration tests (owner isolation, foreign statement refused, viewing flow and date rules, search filters/sort); HTTP checks for owner pages and isolation |
+| 4 — CRM | **Property matching** on the lead (budget, type, bedrooms, location, area, amenities, move-in date; occupied units whose lease ends in time count), shown live on the lead form with one-click *Set as interest*; **recommendations recorded automatically** when a lead is qualified (optional WhatsApp). **Lead ownership**: sales agents and brokers see only their leads, deals and site visits (setting). **Brokers**: agent type, brokerage, licence, agreement and expiry. **Targets**: monthly deal and value targets with achievement in the Agent Leaderboard. | Tests for scoring, exclusions, possession date, qualify comment, ownership on/off |
+| 5 — Communications | **One WhatsApp channel** for every business message: logged once against its record, free text inside the 24-hour window, the approved template for the message's purpose outside it, otherwise *Skipped* with the reason. **Communication History** on leads, deals, tenants, owners and properties (WhatsApp, voice notes, email, notes, enquiries, visits, maintenance). **Transcript retention** setting and purge job. | Tests for skip/queue rules and timeline content |
+| 6 — Interface | **Design system** (`estate.css`: navy/teal tokens, cards, KPI tiles, tables, pills, buttons, fields, tabs) on owner, tenant, listing and search pages. **thinkNXG Estate Dashboard** desk page (`/app/estate-dashboard`) with company, property, city and period filters: 18 KPIs and 9 charts from live records, each KPI opening the matching list or report; company User Permissions respected. | Test comparing KPIs with records; HTTP check |
+| 7 — Reports | Property Register, Unit Availability (incl. units freeing up by a date), Tenant Register (outstanding rent, deposit held), Deposit Register, Property Profitability, Lead Source Analysis, Site Visit Conversion, Broker Commission Statement (agents see only their own), Vendor Performance. | All 18 reports run on demo data; test cross-checks figures against source records |
+| 8 — Production | **Role matrix**: Leasing Manager, Broker, Receptionist, Maintenance Technician added; Owner Statement opened to finance roles. **Console vs desk split**: portfolio-wide console APIs and dashboard for management roles only; scoped roles work through permission-checked desk forms. **71 database indexes** on the fields the scheduler, portals and reports filter on. | Role tests; full suite, upgrade rehearsal and HTTP checks re-run |
+
+Defects found and fixed in this round:
+
+| # | Defect | Impact | Fix |
+|---|---|---|---|
+| D10 | Lease duration used `month_diff`, which counts both end months | A one-year lease ending on its anniversary got **13 monthly installments**, and generated term charges of **13/12 of the annual rent** | `lease_months()` used for installments and term totals; unit-tested |
+| D11 | `/properties` offered unit type "4BR", which does not exist (the option is "4BR+"), and omitted Studio, 1BR and commercial types | The filter never matched 4-bedroom units | Options read from the Unit schema |
+| D12 | Property Owner reused any Supplier with the same name | Two owners with one name would share one payable ledger | Same guard as tenants |
+| D13 | Console endpoints use unfiltered queries | Sales agents would bypass lead ownership through the console | Console limited to portfolio-wide roles |
+| D14 | New checkbox settings read as 0 on upgraded sites until the form is saved | Defaults of 1 silently off | `utils.setting()` honours the declared default |
+
+## 11. Remaining work
+
+| Area | Remaining |
 |---|---|
-| 3 — Portal | Converge `/listings` and `/properties` into one public portal; map-based search; schedule-a-viewing from listing pages; owner self-service portal (no owner portal exists in the sources: owners have statements, but no login, role or pages) |
-| 4 — CRM | Property matching on the lead profile (re_voice has explainable matching to reuse); broker statements; sales targets |
-| 5 — Communications | One channel service over the two WhatsApp senders; one communication timeline per lead / tenant / owner / property; one AI provider configuration for chat and voice; recording consent and retention controls beyond audio purge |
-| 6 — Interface | Design system (navy / teal, components) and a rebuilt staff console replacing `/re-portal`; dashboard filters (company, property, location, period) |
-| 7 — Automation and reporting | Remaining reports (property valuation, profitability, deposit register, lead sources, site-visit conversion, broker commission, vendor performance); PDF/Excel exports where not native |
-| 8 — Production | The full role matrix from the brief (Company Administrator, Leasing Manager/Executive, Broker, Property Owner, Receptionist, …), mapped onto today's eight roles with company-level User Permissions; performance testing with realistic volumes; asset build and deployment on thinkNXG Cloud |
+| Public portal | `/listings` (visitor accounts, wishlist, saved searches) and `/properties` (SEO pages, feeds, viewing requests) are both live and share one CRM bridge; merging them into a single front end is still open. An interactive map view (coordinates are already returned by search) is open. |
+| Staff console | `/re-portal` (7,600-line single page) is kept as is; the new dashboard page covers the KPIs and charts. Rebuilding the console's forms on the design system is open. |
+| AI configuration | The listings chatbot (Portal Chat Settings) and voice layer (AI Settings) still configure their LLM providers separately. |
+| Localisation | Arabic translations of the new portal pages and reports. |
+| Deployment | Asset build, production deployment and load testing with realistic volumes were not possible in this environment (see §9). |

@@ -18,14 +18,18 @@ for old, new in LEGACY_METHODS.items():
 	LEGACY_BY_NEW.setdefault(new, []).append(old)
 
 SECTIONS = [
-	("Staff console API (desk users with an estate or accounts role)", "core/api.py"),
-	("CRM API (desk users with an estate or accounts role)", "crm/api.py"),
+	("Staff console API (portfolio-wide roles)", "core/api.py"),
+	("CRM console API (portfolio-wide roles)", "crm/api.py"),
 	("Public listings and visitor accounts (/listings)", "core/listing_portal_api/listing_portal.py"),
 	("Public listings, inquiries and AI chat (/properties)", "portal/api/listings.py"),
 	("Legacy inquiry form", "portal/api/inquiries.py"),
 	("Listings AI chat", "portal/api/chat.py"),
 	("Property Finder / Bayut feeds", "portal/api/feeds.py"),
 	("Tenant portal (website login, role Tenant)", "portal/api/tenant.py"),
+	("Owner portal (website login, role Property Owner)", "portal/api/owner.py"),
+	("Dashboard (portfolio-wide roles)", "core/dashboard.py"),
+	("Lead matching (any desk role, record permission checked)", "crm/matching.py"),
+	("Communication history (any desk role, record permission checked)", "channels/timeline.py"),
 	("Access-code tenant portal (opt-in)", "core/tenant_portal_api.py"),
 	("WhatsApp webhook (Meta Cloud API)", "voice/api/webhook.py"),
 	("Other", None),
@@ -40,9 +44,12 @@ def describe(node):
 	guest = "allow_guest=True" in wl
 	methods = "POST only" if "methods=['POST']" in wl or 'methods=["POST"]' in wl else "GET/POST"
 	staff = any(d == "staff_only" for d in decos)
+	desk = any(d == "desk_staff_only" for d in decos)
 	rl = next((d for d in decos if d.startswith("rate_limit")), None)
 	if staff:
 		access = "Estate staff"
+	elif desk:
+		access = "Any estate desk role"
 	elif guest:
 		access = "Public (guest)"
 	else:
@@ -81,9 +88,11 @@ def main():
 	       "`/api/method/<path>` with a session cookie (and the `X-Frappe-CSRF-Token` header for POST),",
 	       "or with token authentication (`Authorization: token <api_key>:<api_secret>`).", "",
 	       "Access levels:", "",
-	       "- **Estate staff**: desk (System User) accounts holding one of RE Manager, Property Manager,",
-	       "  Leasing Officer, Maintenance Supervisor, RE Sales Manager, RE Sales Agent, Voice Ops Manager,",
-	       "  Accounts User, Accounts Manager or System Manager. Document permissions still apply on top.",
+	       "- **Estate staff**: desk (System User) accounts with a portfolio-wide role: System Manager, RE Manager,",
+	       "  Property Manager, Leasing Manager, Leasing Officer, Maintenance Supervisor, RE Sales Manager,",
+	       "  Voice Ops Manager, Accounts User or Accounts Manager.",
+	       "- **Any estate desk role**: the above plus RE Sales Agent, Broker, Receptionist and Maintenance",
+	       "  Technician; the endpoint also checks permission on the record it reads.",
 	       "- **Public (guest)**: no login; every write is rate limited per IP.",
 	       "- **Logged-in user**: identity is resolved server-side from the session (tenant portal, visitor",
 	       "  account); IDs sent by the client are never trusted.", "",

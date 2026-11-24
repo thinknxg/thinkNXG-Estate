@@ -63,7 +63,8 @@
    "in_standard_filter": 1,
    "label": "Tenant",
    "options": "Tenant",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fetch_from": "tenant.tenant_name",
@@ -83,7 +84,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Unit",
-   "options": "Unit"
+   "options": "Unit",
+   "search_index": 1
   },
   {
    "description": "Auto-fetched from Unit when a Unit is set; otherwise select directly for a whole-property lease.",
@@ -92,7 +94,8 @@
    "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Property",
-   "options": "Property"
+   "options": "Property",
+   "search_index": 1
   },
   {
    "fetch_from": "property.owner_ref",
@@ -109,7 +112,8 @@
    "in_standard_filter": 1,
    "label": "Company",
    "options": "Company",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fieldname": "term_sb",
@@ -127,7 +131,8 @@
    "fieldname": "end_date",
    "fieldtype": "Date",
    "label": "End Date",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "duration_months",
@@ -159,7 +164,8 @@
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Draft\nActive\nExpiring\nExpired\nTerminated\nRenewed",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "default": "Admin",
@@ -283,7 +289,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Estate Leasing",
  "name": "Lease Contract",
@@ -344,6 +350,21 @@
    "print": 1,
    "read": 1,
    "role": "Tenant"
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Leasing Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1,
+   "delete": 1,
+   "cancel": 1,
+   "amend": 1
   }
  ],
  "row_format": "Dynamic",

@@ -23,7 +23,8 @@
    "label": "Lease Contract",
    "options": "Lease Contract",
    "read_only": 1,
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fetch_from": "lease_contract.tenant",
@@ -33,7 +34,8 @@
    "in_standard_filter": 1,
    "label": "Tenant",
    "options": "Tenant",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fetch_from": "lease_contract.company",
@@ -50,7 +52,8 @@
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Active\nCompleted\nCancelled",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fieldname": "inst_sb",
@@ -75,7 +78,7 @@
  "issingle": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Estate Finance",
  "name": "Rent Schedule",
@@ -136,6 +139,17 @@
    "report": 0,
    "role": "Tenant",
    "share": 0,
+   "write": 0
+  },
+  {
+   "create": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Leasing Manager",
+   "share": 1,
    "write": 0
   }
  ],

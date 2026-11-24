@@ -48,3 +48,26 @@ check 200 "tenant dashboard API" "$B/api/method/thinknxg_estate.portal.api.tenan
 echo "== guest listing detail"
 rm -f $J
 check 200 "published listing page /${LISTING_ROUTE}" "$B/${LISTING_ROUTE}"
+
+echo "== owner (session login)"
+rm -f $J; code -X POST -d "usr=smoke.owner@example.com&pwd=Smoke%23Owner2026" $B/api/method/login >/dev/null
+check 200 "owner portal page /owner-portal" $B/owner-portal
+check 200 "owner dashboard API" "$B/api/method/thinknxg_estate.portal.api.owner.dashboard"
+grep -q '"property_count"' /tmp/body && echo "PASS     owner dashboard returns portfolio" || echo "FAIL     owner dashboard payload"
+check 403 "owner cannot read leases via REST" "$B/api/resource/Lease%20Contract/${OWN_LEASE}"
+check 403 "owner cannot use staff console API" "$B/api/method/thinknxg_estate.core.api.get_dashboard_stats"
+check "30[123]" "owner is redirected away from /re-portal" $B/re-portal
+check 403 "owner cannot open the tenant portal" $B/tenant-portal
+
+echo "== administrator: new features"
+rm -f $J; code -X POST -d 'usr=Administrator&pwd=admin' $B/api/method/login >/dev/null
+check 200 "dashboard overview API" "$B/api/method/thinknxg_estate.core.dashboard.get_overview"
+check 200 "dashboard overview filtered by city" "$B/api/method/thinknxg_estate.core.dashboard.get_overview?city=Muscat"
+check 200 "estate dashboard desk page loads" "$B/api/method/frappe.desk.desk_page.getpage?name=estate-dashboard"
+check 200 "lead matching API" "$B/api/method/thinknxg_estate.crm.matching.get_matching_units?lead=${LEAD}"
+check 200 "lead communication timeline" "$B/api/method/thinknxg_estate.channels.timeline.get_timeline?doctype=RE%20Lead&name=${LEAD}"
+for r in "Property%20Register" "Unit%20Availability" "Tenant%20Register" "Deposit%20Register" "Lead%20Source%20Analysis"; do
+  check 200 "report $r" "$B/api/method/frappe.desk.query_report.run?report_name=$r"
+done
+check 200 "report Property Profitability" "$B/api/method/frappe.desk.query_report.run?report_name=Property%20Profitability&filters=%7B%22from_date%22%3A%222026-01-01%22%2C%22to_date%22%3A%222026-12-31%22%7D"
+check 200 "search with new filters + sort" "$B/api/method/thinknxg_estate.portal.api.listings.search?bathrooms=1&sort=price_asc&min_area=10"

@@ -1,10 +1,12 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_months, date_diff, flt, getdate, month_diff
+from frappe.utils import add_days, add_months, date_diff, flt, getdate, month_diff
+from thinknxg_estate.core.charge_utils import lease_months
 from thinknxg_estate.core.security import requires_permission
 
 FREQUENCY_COUNT = {"Annual": 1, "Semi-Annual": 2, "Quarterly": 4}
+
 
 
 class LeaseContract(Document):
@@ -34,7 +36,7 @@ class LeaseContract(Document):
     def _validate_dates(self):
         if getdate(self.end_date) <= getdate(self.start_date):
             frappe.throw(_("End Date must be after Start Date."))
-        self.duration_months = month_diff(self.end_date, self.start_date)
+        self.duration_months = lease_months(self.start_date, self.end_date)
 
     def _validate_unit(self):
         if not self.unit:

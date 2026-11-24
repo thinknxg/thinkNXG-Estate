@@ -517,8 +517,9 @@ def create_lease_contract(tenant, property, unit=None, start_date=None, end_date
         # Frontend sent explicit (possibly edited) rows - use them as-is.
         charges = [c for c in charges if flt(c.get("amount"))]
     else:
-        duration_months = month_diff(end_date, start_date)
-        term_years = flt(duration_months) / 12
+        from thinknxg_estate.core.charge_utils import lease_months
+
+        term_years = flt(lease_months(start_date, end_date)) / 12
         charges = build_lease_term_charges(property, unit, start_date, end_date)
         if not charges:
             # Fallback: neither Property nor Unit has charges configured yet -

@@ -21,7 +21,18 @@
   "commission_type",
   "flat_amount",
   "percent",
-  "slabs"
+  "slabs",
+  "broker_sb",
+  "agent_type",
+  "brokerage_name",
+  "broker_licence_no",
+  "col_break_broker",
+  "brokerage_agreement",
+  "agreement_expiry",
+  "targets_sb",
+  "monthly_deal_target",
+  "col_break_targets",
+  "monthly_value_target"
  ],
  "fields": [
   {
@@ -116,6 +127,68 @@
    "fieldtype": "Table",
    "label": "Slabs",
    "options": "Commission Slab"
+  },
+  {
+   "fieldname": "broker_sb",
+   "fieldtype": "Section Break",
+   "label": "Broker / Agency"
+  },
+  {
+   "fieldname": "agent_type",
+   "fieldtype": "Select",
+   "options": "Employee Agent\nExternal Broker",
+   "default": "Employee Agent",
+   "label": "Agent Type",
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "brokerage_name",
+   "fieldtype": "Data",
+   "label": "Brokerage Name",
+   "depends_on": "eval:doc.agent_type=='External Broker'"
+  },
+  {
+   "fieldname": "broker_licence_no",
+   "fieldtype": "Data",
+   "label": "Broker Licence No.",
+   "depends_on": "eval:doc.agent_type=='External Broker'"
+  },
+  {
+   "fieldname": "col_break_broker",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "brokerage_agreement",
+   "fieldtype": "Attach",
+   "label": "Brokerage Agreement",
+   "depends_on": "eval:doc.agent_type=='External Broker'"
+  },
+  {
+   "fieldname": "agreement_expiry",
+   "fieldtype": "Date",
+   "label": "Agreement Expiry",
+   "depends_on": "eval:doc.agent_type=='External Broker'"
+  },
+  {
+   "fieldname": "targets_sb",
+   "fieldtype": "Section Break",
+   "label": "Monthly Targets"
+  },
+  {
+   "fieldname": "monthly_deal_target",
+   "fieldtype": "Int",
+   "label": "Deals Won per Month",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "col_break_targets",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "monthly_value_target",
+   "fieldtype": "Currency",
+   "label": "Won Value per Month",
+   "non_negative": 1
   }
  ],
  "index_web_pages_for_search": 0,
@@ -123,7 +196,7 @@
  "issingle": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Estate CRM",
  "name": "RE Agent",
@@ -163,6 +236,27 @@
    "role": "RE Sales Agent",
    "share": 1,
    "write": 0
+  },
+  {
+   "create": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Broker",
+   "share": 1,
+   "write": 0
+  },
+  {
+   "role": "Receptionist",
+   "permlevel": 0,
+   "print": 1,
+   "email": 1,
+   "report": 1,
+   "export": 1,
+   "share": 1,
+   "read": 1
   }
  ],
  "sort_field": "modified",

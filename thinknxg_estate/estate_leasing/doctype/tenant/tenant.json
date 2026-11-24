@@ -75,7 +75,8 @@
    "in_list_view": 1,
    "label": "Mobile",
    "options": "Phone",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "email",
@@ -101,7 +102,8 @@
    "fieldtype": "Link",
    "label": "Customer",
    "options": "Customer",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fieldname": "col_break_2",
@@ -125,7 +127,8 @@
    "fieldtype": "Link",
    "label": "Portal User",
    "options": "User",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fieldname": "kyc_sb",
@@ -171,7 +174,7 @@
  "issingle": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Estate Leasing",
  "name": "Tenant",
@@ -223,6 +226,28 @@
    "role": "Tenant",
    "share": 0,
    "write": 0
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Leasing Manager",
+   "share": 1,
+   "write": 1,
+   "delete": 1
+  },
+  {
+   "role": "Receptionist",
+   "permlevel": 0,
+   "print": 1,
+   "email": 1,
+   "report": 1,
+   "export": 1,
+   "share": 1,
+   "read": 1
   }
  ],
  "search_fields": "tenant_name,mobile,email",

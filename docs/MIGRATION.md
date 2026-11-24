@@ -76,6 +76,19 @@ mode no exported JSON is removed from the legacy apps' folders.
 - **Access-code sessions are invalidated** once: only token hashes are stored now, so tenants
   using `/tenant-self-service` sign in again.
 - `/tenant-self-service` redirects to `/tenant-portal` when the access-code portal is off.
+- **Sales agents and brokers see only their own leads, deals and site visits** (RE CRM Settings
+  → *Sales Agents See Only Their Own Leads*, on by default). Make sure each RE Agent record has its
+  user, or turn the setting off to keep the old behaviour.
+- **The staff console (`/re-portal`) and dashboard are for portfolio-wide roles.** Sales agents
+  work in the desk forms (Leads, Deals, Site Visits), where lead matching and communication
+  history are available.
+- **Lease terms are counted correctly.** A lease from 24 Nov to 24 Nov the next year is now 12
+  months (it was 13, giving 13 monthly installments and 13/12 of the annual rent in generated
+  charges). Submitted leases and existing rent schedules are not changed; check draft leases
+  created before the upgrade.
+- **WhatsApp business messages outside Meta's 24-hour window need an approved template.**
+  Messages without one are logged as *Skipped* with the reason (they used to be attempted and
+  rejected by Meta). Register templates under WhatsApp Template with a purpose.
 
 ## Integrations keep working
 

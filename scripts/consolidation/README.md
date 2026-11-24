@@ -10,6 +10,8 @@ and are not needed to install or run it.
 | `fold_custom_fields.py` | Turns legacy Custom Fields / Property Setters on the platform's own DocTypes into standard fields |
 | `add_fields.py` | Schema additions made during consolidation (CRM lead links, enquiry contact fields, tenant-portal settings) |
 | `build_navigation.py` | Unified workspaces, KPI cards, v16 Sidebar and desktop icon |
+| `build_reports.py` | Generates the Phase 7 Script Reports (JSON, filters, Python) |
+| `apply_role_matrix.py` | Adds the Leasing Manager, Broker, Receptionist and Maintenance Technician permissions and opens Owner Statement to finance roles |
 | `upgrade_rehearsal.sh` | Restores a legacy-site backup and runs the upgrade, comparing row counts and checking legacy code stays untouched |
 | `smoke.sh` | HTTP checks (guest, staff, tenant, legacy URLs, webhook, feeds, pages) against a running server |
 

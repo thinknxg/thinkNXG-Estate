@@ -1,7 +1,7 @@
 """Shared helpers for Property Unit Charge rows (used by Property, Unit,
 and Lease Contract auto-population)."""
 
-from frappe.utils import flt
+from frappe.utils import add_days, flt, getdate
 
 FREQUENCY_PERIODS_PER_YEAR = {
     "Monthly": 12,
@@ -35,10 +35,20 @@ def get_primary_rent_frequency(charge_rows):
     return None
 
 
+def lease_months(start_date, end_date):
+    """Whole months a lease covers. A lease ending the day before its anniversary
+    (1 Jan - 31 Dec) and one ending on the anniversary (24 Nov - 24 Nov) are both 12 months;
+    a remainder of half a month or more counts as a month. (month_diff counts both end
+    months, which gave 13 monthly installments for a one-year lease.)"""
+    from dateutil.relativedelta import relativedelta
+
+    delta = relativedelta(getdate(add_days(end_date, 1)), getdate(start_date))
+    months = delta.years * 12 + delta.months + (1 if delta.days >= 15 else 0)
+    return max(months, 1)
+
+
 def term_years_between(start_date, end_date):
-    from frappe.utils import month_diff
-    duration_months = month_diff(end_date, start_date) or 1
-    return flt(duration_months) / 12
+    return flt(lease_months(start_date, end_date)) / 12
 
 
 def per_period_to_term_total(amount, frequency, start_date, end_date):

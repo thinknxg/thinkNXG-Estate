@@ -36,7 +36,8 @@ class RELead(Document):
                 self.mobile,
                 _("Hi {0}, thanks for your inquiry! One of our property consultants "
                   "will contact you shortly.").format(self.full_name),
-                reference_doctype=self.doctype, reference_name=self.name)
+                reference_doctype=self.doctype, reference_name=self.name,
+                purpose="Lead Welcome", variables=[self.full_name])
 
     def _notify_agent(self, agent):
         user = frappe.db.get_value("RE Agent", agent, "user")

@@ -1,6 +1,6 @@
 {% extends "templates/web.html" %}
 {% block page_content %}
-<div class="py-4">
+<div class="estate-page py-4">
   <a href="/properties" class="small text-muted">&larr; All properties</a>
   <h1 class="mt-2 mb-1">{{ doc.title }}</h1>
   <div class="text-muted mb-3">{{ doc.locality or "" }}{{ ", " if doc.locality }}{{ doc.city or "" }}
@@ -43,31 +43,63 @@
     </div>
 
     <div class="col-md-4">
-      <div class="card p-3">
-        <h6 class="mb-3">Inquire about this property</h6>
-        <div id="inq-done" class="alert alert-success d-none">Thanks — we'll be in touch shortly.</div>
+      <div class="estate-card">
+        <div class="estate-tabs" role="tablist">
+          <button type="button" class="active" data-mode="General">{{ _("Inquire") }}</button>
+          <button type="button" data-mode="Viewing">{{ _("Schedule a viewing") }}</button>
+        </div>
+        <div id="inq-done" class="alert alert-success d-none"></div>
         <div id="inq-form">
-          <input class="form-control form-control-sm mb-2" id="inq-name" placeholder="Full name">
-          <input class="form-control form-control-sm mb-2" id="inq-mobile" placeholder="Mobile (e.g. +968...)">
-          <input class="form-control form-control-sm mb-2" id="inq-email" placeholder="Email (optional)">
-          <textarea class="form-control form-control-sm mb-2" id="inq-msg" rows="3"
-                    placeholder="Message (optional)"></textarea>
+          <input class="estate-field" id="inq-name" placeholder="{{ _('Full name') }}" autocomplete="name">
+          <input class="estate-field" id="inq-mobile" placeholder="{{ _('Mobile (e.g. +968...)') }}" autocomplete="tel">
+          <input class="estate-field" id="inq-email" placeholder="{{ _('Email (optional)') }}" autocomplete="email">
+          <div id="inq-viewing" class="d-none">
+            <label class="small text-muted">{{ _("Preferred date") }}</label>
+            <input type="date" class="estate-field" id="inq-date" min="{{ min_viewing_date }}">
+            <select class="estate-field" id="inq-slot">
+              {% for slot in ["10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00", "16:00 - 18:00"] %}
+              <option value="{{ slot }}">{{ slot }}</option>{% endfor %}
+            </select>
+          </div>
+          <textarea class="estate-field" id="inq-msg" rows="3" placeholder="{{ _('Message (optional)') }}"></textarea>
           <input type="text" id="inq-website-url" style="display:none" tabindex="-1" autocomplete="off">
-          <button class="btn btn-primary btn-sm w-100" id="inq-send">Send Inquiry</button>
+          <button class="estate-btn w-100" id="inq-send">{{ _("Send inquiry") }}</button>
           <div id="inq-err" class="small text-danger mt-2"></div>
         </div>
         {% if contact_whatsapp %}
-        <a class="btn btn-outline-success btn-sm w-100 mt-2" target="_blank" rel="noopener"
+        <a class="estate-btn secondary w-100 mt-2" target="_blank" rel="noopener"
            href="https://wa.me/{{ contact_whatsapp | replace('+','') | replace(' ','') }}?text=Inquiry:%20{{ doc.title | urlencode }}">
           WhatsApp Us</a>
         {% endif %}
       </div>
     </div>
   </div>
+  {% if related %}
+  <h5 class="mt-5">{{ _("Similar properties") }}</h5>
+  <div class="row g-3">
+    {% for r in related %}
+    <div class="col-md-4"><a class="estate-card d-block text-decoration-none h-100" href="/{{ r.route }}">
+      {% if r.cover %}<div style="background:#eee url('{{ r.cover }}') center/cover;height:150px;border-radius:10px" class="mb-2"></div>{% endif %}
+      <strong>{{ r.title }}</strong><div class="small text-muted">{{ r.locality or "" }} · {{ r.unit_type or "" }}{% if r.bedrooms %} · {{ r.bedrooms }} {{ _("BR") }}{% endif %}</div>
+      <div class="mt-1">{{ currency }} {{ money(r.headline_price) }} <span class="small text-muted">{{ r.price_period }}</span></div>
+    </a></div>
+    {% endfor %}
+  </div>
+  {% endif %}
 </div>
 <script>
 (function () {
   var rendered = new Date().toISOString().slice(0, 19).replace("T", " ");
+  var mode = "General";
+  document.querySelectorAll(".estate-tabs button").forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      document.querySelectorAll(".estate-tabs button").forEach(function (t) { t.classList.remove("active"); });
+      tab.classList.add("active");
+      mode = tab.dataset.mode;
+      document.getElementById("inq-viewing").classList.toggle("d-none", mode !== "Viewing");
+      document.getElementById("inq-send").innerText = mode === "Viewing" ? {{ _("Request viewing") | tojson }} : {{ _("Send inquiry") | tojson }};
+    });
+  });
   document.getElementById("inq-send").addEventListener("click", function () {
     var btn = this; btn.disabled = true;
     frappe.call({
@@ -80,16 +112,23 @@
         listing: "{{ doc.name }}",
         website_url: document.getElementById("inq-website-url").value,
         form_ts: rendered,
+        inquiry_type: mode,
+        preferred_date: mode === "Viewing" ? document.getElementById("inq-date").value : null,
+        preferred_time_slot: mode === "Viewing" ? document.getElementById("inq-slot").value : null,
       },
       callback: function () {
+        var done = document.getElementById("inq-done");
+        done.innerText = mode === "Viewing"
+          ? {{ _("Thanks. We'll call you to confirm the viewing.") | tojson }}
+          : {{ _("Thanks. We'll be in touch shortly.") | tojson }};
         document.getElementById("inq-form").classList.add("d-none");
-        document.getElementById("inq-done").classList.remove("d-none");
+        done.classList.remove("d-none");
       },
       error: function (r) {
         btn.disabled = false;
         document.getElementById("inq-err").innerText =
-          (r && r._server_messages) ? "Please check your details and try again."
-                                    : "Something went wrong — please try again.";
+          (r && r._server_messages) ? {{ _("Please check your details and try again.") | tojson }}
+                                    : {{ _("Something went wrong. Please try again.") | tojson }};
       },
     });
   });

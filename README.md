@@ -12,8 +12,9 @@ under one install, one navigation, one role model and one data model.
 | Estate Leasing | Tenants and KYC, lease contracts (submittable), charges, move-in/out inspections |
 | Estate Finance | Rent schedules and installments, rent invoicing (Sales Invoice), PDCs, security deposits, bulk rent payments, credit balances, owner statements, property expenses |
 | Estate Maintenance | Maintenance requests and jobs (vendor or in-house, billable or not) |
-| Estate CRM | Leads, deals (kanban pipeline), site visits, reservations, agents and brokers, commission plans and entries, WhatsApp messaging |
-| Estate Portal | Public listings (`/properties`, `/property/<route>`, `/listings`), enquiries, AI listings chat, tenant portal (`/tenant-portal`), Property Finder / Bayut feeds |
+| Estate CRM | Leads with property matching, deals (kanban pipeline), site visits, reservations, agents and brokers with targets, commission plans and entries, lead ownership, WhatsApp messaging, communication history |
+| Estate Portal | Public listings (`/properties`, `/property/<route>`, `/listings`) with viewing requests, enquiries, AI listings chat, tenant portal (`/tenant-portal`), owner portal (`/owner-portal`), Property Finder / Bayut feeds |
+| Dashboard and reports | Filtered live dashboard (`/app/estate-dashboard`) and 18 reports across finance, leasing, property, CRM, maintenance and voice |
 | Estate Voice | WhatsApp voice-first CRM: voice commands, ASR + translation, intent engine, lead scoring, sentiment, customer threads |
 
 ## Install (new site)

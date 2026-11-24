@@ -20,6 +20,18 @@
   },
   {
    "type": "Link",
+   "label": "Live Dashboard",
+   "link_to": "estate-dashboard",
+   "link_type": "Page",
+   "icon": "chart-column",
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "idx": 2
+  },
+  {
+   "type": "Link",
    "label": "Finance & Collections",
    "link_to": "Estate Finance",
    "link_type": "Workspace",
@@ -28,7 +40,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 2
+   "idx": 3
   },
   {
    "type": "Link",
@@ -40,7 +52,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 3
+   "idx": 4
   },
   {
    "type": "Link",
@@ -52,7 +64,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 4
+   "idx": 5
   },
   {
    "type": "Section Break",
@@ -65,7 +77,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 5
+   "idx": 6
   },
   {
    "type": "Link",
@@ -77,7 +89,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 6
+   "idx": 7
   },
   {
    "type": "Link",
@@ -89,7 +101,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 7
+   "idx": 8
   },
   {
    "type": "Link",
@@ -101,7 +113,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 8
+   "idx": 9
   },
   {
    "type": "Link",
@@ -113,7 +125,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 9
+   "idx": 10
   },
   {
    "type": "Link",
@@ -125,7 +137,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 10
+   "idx": 11
   },
   {
    "type": "Link",
@@ -137,7 +149,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 11
+   "idx": 12
   },
   {
    "type": "Section Break",
@@ -150,7 +162,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 12
+   "idx": 13
   },
   {
    "type": "Link",
@@ -162,7 +174,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 13
+   "idx": 14
   },
   {
    "type": "Link",
@@ -174,7 +186,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 14
+   "idx": 15
   },
   {
    "type": "Link",
@@ -186,7 +198,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 15
+   "idx": 16
   },
   {
    "type": "Section Break",
@@ -199,7 +211,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 16
+   "idx": 17
   },
   {
    "type": "Link",
@@ -211,7 +223,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 17
+   "idx": 18
   },
   {
    "type": "Link",
@@ -223,7 +235,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 18
+   "idx": 19
   },
   {
    "type": "Link",
@@ -235,7 +247,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 19
+   "idx": 20
   },
   {
    "type": "Link",
@@ -247,7 +259,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 20
+   "idx": 21
   },
   {
    "type": "Link",
@@ -259,7 +271,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 21
+   "idx": 22
   },
   {
    "type": "Link",
@@ -271,7 +283,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 22
+   "idx": 23
   },
   {
    "type": "Link",
@@ -283,7 +295,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 23
+   "idx": 24
   },
   {
    "type": "Link",
@@ -295,7 +307,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 24
+   "idx": 25
   },
   {
    "type": "Link",
@@ -307,7 +319,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 25
+   "idx": 26
   },
   {
    "type": "Section Break",
@@ -320,7 +332,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 26
+   "idx": 27
   },
   {
    "type": "Link",
@@ -332,7 +344,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 27
+   "idx": 28
   },
   {
    "type": "Link",
@@ -344,7 +356,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 28
+   "idx": 29
   },
   {
    "type": "Section Break",
@@ -357,7 +369,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 29
+   "idx": 30
   },
   {
    "type": "Link",
@@ -369,7 +381,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 30
+   "idx": 31
   },
   {
    "type": "Link",
@@ -381,7 +393,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 31
+   "idx": 32
   },
   {
    "type": "Link",
@@ -392,7 +404,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 32,
+   "idx": 33,
    "url": "/app/re-deal/view/kanban/Deal Pipeline"
   },
   {
@@ -405,7 +417,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 33
+   "idx": 34
   },
   {
    "type": "Link",
@@ -417,7 +429,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 34
+   "idx": 35
   },
   {
    "type": "Link",
@@ -429,7 +441,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 35
+   "idx": 36
   },
   {
    "type": "Link",
@@ -441,7 +453,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 36
+   "idx": 37
   },
   {
    "type": "Link",
@@ -453,7 +465,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 37
+   "idx": 38
   },
   {
    "type": "Section Break",
@@ -466,7 +478,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 38
+   "idx": 39
   },
   {
    "type": "Link",
@@ -478,7 +490,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 39
+   "idx": 40
   },
   {
    "type": "Link",
@@ -490,7 +502,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 40
+   "idx": 41
   },
   {
    "type": "Link",
@@ -502,7 +514,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 41
+   "idx": 42
   },
   {
    "type": "Link",
@@ -514,7 +526,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 42
+   "idx": 43
   },
   {
    "type": "Link",
@@ -526,7 +538,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 43
+   "idx": 44
   },
   {
    "type": "Link",
@@ -537,8 +549,20 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 44,
+   "idx": 45,
    "url": "/properties"
+  },
+  {
+   "type": "Link",
+   "label": "Owner Portal",
+   "url": "/owner-portal",
+   "link_type": "URL",
+   "child": 1,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "idx": 46
   },
   {
    "type": "Section Break",
@@ -551,7 +575,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 45
+   "idx": 47
   },
   {
    "type": "Link",
@@ -563,7 +587,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 46
+   "idx": 48
   },
   {
    "type": "Link",
@@ -575,7 +599,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 47
+   "idx": 49
   },
   {
    "type": "Link",
@@ -587,7 +611,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 48
+   "idx": 50
   },
   {
    "type": "Link",
@@ -599,7 +623,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 49
+   "idx": 51
   },
   {
    "type": "Link",
@@ -611,7 +635,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 50
+   "idx": 52
   },
   {
    "type": "Link",
@@ -623,7 +647,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 51
+   "idx": 53
   },
   {
    "type": "Link",
@@ -635,7 +659,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 52
+   "idx": 54
   },
   {
    "type": "Section Break",
@@ -648,7 +672,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 53
+   "idx": 55
   },
   {
    "type": "Link",
@@ -660,7 +684,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 54
+   "idx": 56
   },
   {
    "type": "Link",
@@ -672,7 +696,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 55
+   "idx": 57
   },
   {
    "type": "Link",
@@ -684,7 +708,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 56
+   "idx": 58
   },
   {
    "type": "Link",
@@ -696,7 +720,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 57
+   "idx": 59
   },
   {
    "type": "Link",
@@ -708,7 +732,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 58
+   "idx": 60
   },
   {
    "type": "Link",
@@ -720,7 +744,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 59
+   "idx": 61
   },
   {
    "type": "Link",
@@ -732,7 +756,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 60
+   "idx": 62
   },
   {
    "type": "Link",
@@ -744,7 +768,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 61
+   "idx": 63
   },
   {
    "type": "Link",
@@ -756,7 +780,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 62
+   "idx": 64
   },
   {
    "type": "Link",
@@ -768,7 +792,115 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 63
+   "idx": 65
+  },
+  {
+   "type": "Link",
+   "label": "Property Register",
+   "link_to": "Property Register",
+   "link_type": "Report",
+   "child": 1,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "idx": 66
+  },
+  {
+   "type": "Link",
+   "label": "Unit Availability",
+   "link_to": "Unit Availability",
+   "link_type": "Report",
+   "child": 1,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "idx": 67
+  },
+  {
+   "type": "Link",
+   "label": "Tenant Register",
+   "link_to": "Tenant Register",
+   "link_type": "Report",
+   "child": 1,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "idx": 68
+  },
+  {
+   "type": "Link",
+   "label": "Deposit Register",
+   "link_to": "Deposit Register",
+   "link_type": "Report",
+   "child": 1,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "idx": 69
+  },
+  {
+   "type": "Link",
+   "label": "Property Profitability",
+   "link_to": "Property Profitability",
+   "link_type": "Report",
+   "child": 1,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "idx": 70
+  },
+  {
+   "type": "Link",
+   "label": "Lead Source Analysis",
+   "link_to": "Lead Source Analysis",
+   "link_type": "Report",
+   "child": 1,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "idx": 71
+  },
+  {
+   "type": "Link",
+   "label": "Site Visit Conversion",
+   "link_to": "Site Visit Conversion",
+   "link_type": "Report",
+   "child": 1,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "idx": 72
+  },
+  {
+   "type": "Link",
+   "label": "Broker Commissions",
+   "link_to": "Broker Commission Statement",
+   "link_type": "Report",
+   "child": 1,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "idx": 73
+  },
+  {
+   "type": "Link",
+   "label": "Vendor Performance",
+   "link_to": "Vendor Performance",
+   "link_type": "Report",
+   "child": 1,
+   "collapsible": 1,
+   "doctype": "Sidebar Item",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "idx": 74
   },
   {
    "type": "Section Break",
@@ -781,7 +913,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 64
+   "idx": 75
   },
   {
    "type": "Link",
@@ -793,7 +925,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 65
+   "idx": 76
   },
   {
    "type": "Link",
@@ -805,7 +937,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 66
+   "idx": 77
   },
   {
    "type": "Link",
@@ -817,7 +949,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 67
+   "idx": 78
   },
   {
    "type": "Link",
@@ -829,7 +961,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 68
+   "idx": 79
   },
   {
    "type": "Link",
@@ -841,7 +973,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 69
+   "idx": 80
   },
   {
    "type": "Link",
@@ -853,7 +985,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 70
+   "idx": 81
   },
   {
    "type": "Link",
@@ -865,7 +997,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 71
+   "idx": 82
   },
   {
    "type": "Link",
@@ -877,7 +1009,7 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 72
+   "idx": 83
   },
   {
    "type": "Link",
@@ -889,10 +1021,10 @@
    "doctype": "Sidebar Item",
    "parentfield": "items",
    "parenttype": "Sidebar",
-   "idx": 73
+   "idx": 84
   }
  ],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "thinkNXG Estate",
  "name": "thinkNXG Estate",

@@ -23,7 +23,8 @@
    "in_list_view": 1,
    "label": "Deal",
    "options": "RE Deal",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "unit",
@@ -38,14 +39,16 @@
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Visit Datetime",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "agent",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Agent",
-   "options": "RE Agent"
+   "options": "RE Agent",
+   "search_index": 1
   },
   {
    "fetch_from": "deal.mobile",
@@ -80,7 +83,7 @@
  "issingle": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Estate CRM",
  "name": "Site Visit",
@@ -88,8 +91,6 @@
  "owner": "Administrator",
  "permissions": [
   {
-   "amend": 1,
-   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -99,12 +100,9 @@
    "report": 1,
    "role": "RE Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   },
   {
-   "amend": 1,
-   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -114,7 +112,6 @@
    "report": 1,
    "role": "RE Sales Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   },
   {
@@ -129,8 +126,6 @@
    "write": 1
   },
   {
-   "amend": 1,
-   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -140,8 +135,28 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Broker",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "role": "Receptionist",
+   "permlevel": 0,
+   "print": 1,
+   "email": 1,
+   "report": 1,
+   "export": 1,
+   "share": 1,
+   "read": 1
   }
  ],
  "sort_field": "modified",

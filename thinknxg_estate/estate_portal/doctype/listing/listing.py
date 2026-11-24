@@ -41,6 +41,16 @@ class Listing(WebsiteGenerator):
             "Property", self.property_ref,
             ["latitude", "longitude", "address_line"], as_dict=True) or frappe._dict()
         context.update(prop)
+        context.related = frappe.get_all(
+            "Listing",
+            filters={"is_published": 1, "name": ["!=", self.name], "listing_type": self.listing_type,
+                     "city": self.city},
+            fields=["title", "route", "headline_price", "price_period", "unit_type", "bedrooms", "locality"],
+            order_by="featured desc, published_on desc", limit=3)
+        for row in context.related:
+            row["cover"] = frappe.db.get_value("Listing Photo", {"parent": frappe.db.get_value(
+                "Listing", {"route": row.route}, "name")}, "image", order_by="idx asc")
+        context.min_viewing_date = frappe.utils.add_days(frappe.utils.nowdate(), 1)
         context.metatags = {
             "title": self.meta_title or self.title,
             "description": self.meta_description or frappe.utils.strip_html(

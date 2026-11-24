@@ -12,6 +12,8 @@
   "owner_type",
   "mobile",
   "email",
+  "enable_portal",
+  "portal_user",
   "col_break_1",
   "company",
   "supplier",
@@ -57,6 +59,20 @@
    "fieldtype": "Data",
    "label": "Email",
    "options": "Email"
+  },
+  {
+   "fieldname": "enable_portal",
+   "fieldtype": "Check",
+   "label": "Enable Owner Portal",
+   "description": "Creates a website login (role Property Owner) for this email: properties, occupancy, leases, income, expenses, statements and maintenance at /owner-portal."
+  },
+  {
+   "fieldname": "portal_user",
+   "fieldtype": "Link",
+   "options": "User",
+   "label": "Portal User",
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fieldname": "col_break_1",
@@ -131,7 +147,7 @@
  "issingle": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-24 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Estate Property",
  "name": "Property Owner",
@@ -171,6 +187,16 @@
    "role": "Accounts User",
    "share": 1,
    "write": 0
+  },
+  {
+   "role": "Leasing Manager",
+   "permlevel": 0,
+   "print": 1,
+   "email": 1,
+   "report": 1,
+   "export": 1,
+   "share": 1,
+   "read": 1
   }
  ],
  "search_fields": "owner_name,mobile",

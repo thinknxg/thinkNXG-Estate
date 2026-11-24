@@ -89,7 +89,20 @@ def purge_expired_audio():
             frappe.db.set_value("Voice Message", row.name,
                                 {"audio_file": None, "status": "Audio Purged"})
         except Exception:
-            frappe.log_error(title="re_voice: audio purge failed", message=row.name)
+            frappe.log_error(title="thinkNXG Estate: audio purge failed", message=row.name)
+
+
+def purge_expired_transcripts():
+    """Clear transcript text past its retention window (AI Settings); 0 keeps transcripts."""
+    days = frappe.db.get_single_value("AI Settings", "transcript_retention_days")
+    if not days:
+        return
+    cutoff = add_days(nowdate(), -int(days))
+    for name in frappe.get_all("Voice Message",
+                               filters={"creation": ["<", cutoff], "transcript": ["is", "set"]},
+                               pluck="name", limit=1000):
+        frappe.db.set_value("Voice Message", name, {"transcript": None, "translation": None},
+                            update_modified=False)
 
 
 def reset_monthly_spend():
