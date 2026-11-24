@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_months, date_diff, flt, getdate, month_diff
+from thinknxg_estate.core.security import requires_permission
 
 FREQUENCY_COUNT = {"Annual": 1, "Semi-Annual": 2, "Quarterly": 4}
 
@@ -198,6 +199,7 @@ class LeaseContract(Document):
 
     # ------------------------------------------------------------ actions
     @frappe.whitelist()
+    @requires_permission("write")
     def terminate(self, termination_date=None, reason=None, reasons=None,
                   outstanding_rent=None, mode_of_payment=None, apply_charge_to_tenant=None):
         """Early termination without cancelling the submitted document.

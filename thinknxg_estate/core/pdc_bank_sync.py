@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.model.mapper import get_payment_entry
+from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 
 
 def create_or_sync_payment_entry(pdc_doc, method=None):

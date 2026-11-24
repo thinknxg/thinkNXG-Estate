@@ -97,7 +97,7 @@
    "label": "Col Break 2"
   },
   {
-   "description": "Set automatically when re_crm is installed",
+   "description": "Set automatically: the CRM lead for this inquiry",
    "fieldname": "re_lead",
    "fieldtype": "Data",
    "label": "RE Lead",

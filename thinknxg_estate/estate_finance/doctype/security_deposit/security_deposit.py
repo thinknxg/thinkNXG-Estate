@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, nowdate
+from thinknxg_estate.core.security import requires_permission
 
 
 class SecurityDeposit(Document):
@@ -34,6 +35,8 @@ class SecurityDeposit(Document):
         return je.name
 
     @frappe.whitelist()
+
+    @requires_permission("submit")
     def refund(self, deduction_amount=0, deduction_reason=None):
         if self.docstatus != 1 or self.status != "Held":
             frappe.throw(_("Only Held deposits can be refunded."))

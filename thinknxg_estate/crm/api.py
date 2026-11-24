@@ -1,11 +1,13 @@
 import frappe
 from frappe import _
+from thinknxg_estate.core.security import staff_only
 
 
 # ─────────────────────────────────────────────
 # LEAD SOURCES
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_lead_sources():
     return frappe.get_all("Lead Source RE", fields=["name", "source_name"], order_by="source_name asc")
 
@@ -14,6 +16,7 @@ def get_lead_sources():
 # COMMISSION ENTRIES
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_commission_entries(agent=None, deal=None, status=None):
     filters = {}
     if agent:
@@ -43,6 +46,7 @@ def get_commission_entries(agent=None, deal=None, status=None):
 
 
 @frappe.whitelist()
+@staff_only
 def create_commission_entry(agent, base_amount, commission_amount, deal=None,
                              lease_contract=None, company=None, remarks=None):
     doc = frappe.get_doc({
@@ -60,6 +64,7 @@ def create_commission_entry(agent, base_amount, commission_amount, deal=None,
 
 
 @frappe.whitelist()
+@staff_only
 def update_commission_status(name, status):
     doc = frappe.get_doc("Commission Entry", name)
     doc.status = status
@@ -71,6 +76,7 @@ def update_commission_status(name, status):
 # COMMISSION SLABS (child table on RE Agent via 'slabs')
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_commission_slabs(agent):
     doc = frappe.get_doc("RE Agent", agent)
     return [
@@ -85,6 +91,7 @@ def get_commission_slabs(agent):
 
 
 @frappe.whitelist()
+@staff_only
 def set_commission_slabs(agent, slabs):
     # slabs: JSON list of {from_amount, to_amount, percent}
     if isinstance(slabs, str):
@@ -101,6 +108,7 @@ def set_commission_slabs(agent, slabs):
 # WHATSAPP MESSAGE LOG
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_whatsapp_logs(reference_doctype=None, reference_name=None, status=None):
     filters = {}
     if reference_doctype:
@@ -125,6 +133,7 @@ def get_whatsapp_logs(reference_doctype=None, reference_name=None, status=None):
 # AGENTS LIST (for pickers)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_agents_list():
     return frappe.get_all("RE Agent", fields=["name", "agent_name"], order_by="agent_name asc")
 
@@ -133,6 +142,7 @@ def get_agents_list():
 # RE LEAD — CREATE (CRM "New Inquiry")
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def create_lead(full_name, mobile, email=None, source=None, assigned_agent=None,
                  interest_type=None, preferred_property_type=None, preferred_location=None,
                  budget_min=None, budget_max=None, unit_of_interest=None):
@@ -158,6 +168,7 @@ def create_lead(full_name, mobile, email=None, source=None, assigned_agent=None,
 # RE DEAL LIST (for Site Visit picker)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_deals_list():
     return frappe.get_all(
         "RE Deal",
@@ -173,6 +184,7 @@ DEAL_PIPELINE_STAGES = ["New", "Contacted", "Site Visit Scheduled", "Negotiation
 
 
 @frappe.whitelist()
+@staff_only
 def update_deal_stage(deal, new_stage, lost_reason=None):
     if new_stage not in DEAL_PIPELINE_STAGES:
         frappe.throw(_("Invalid pipeline stage: {0}").format(new_stage))
@@ -187,6 +199,7 @@ def update_deal_stage(deal, new_stage, lost_reason=None):
 
 
 @frappe.whitelist()
+@staff_only
 def get_leads_list():
     return frappe.get_all(
         "RE Lead",
@@ -200,6 +213,7 @@ def get_leads_list():
 
 
 @frappe.whitelist()
+@staff_only
 def convert_lead_to_deal(lead):
     lead_doc = frappe.get_doc("RE Lead", lead)
     if lead_doc.deal:
@@ -237,6 +251,7 @@ def convert_lead_to_deal(lead):
 # SITE VISIT — CREATE (CRM "Schedule Viewing")
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def create_site_visit(client_name, mobile, unit, visit_datetime, agent=None):
     # Reuse an existing open Deal for this client+unit if one exists, else create one.
     existing = frappe.get_all(

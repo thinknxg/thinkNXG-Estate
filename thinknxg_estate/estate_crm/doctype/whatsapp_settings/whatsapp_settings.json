@@ -84,6 +84,13 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "role": "Voice Ops Manager",
+   "read": 1,
+   "print": 1,
+   "write": 1,
+   "create": 1
   }
  ],
  "sort_field": "modified",

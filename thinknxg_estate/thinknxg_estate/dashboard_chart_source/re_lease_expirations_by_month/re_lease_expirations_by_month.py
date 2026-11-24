@@ -1,9 +1,11 @@
 import frappe
 
 from thinknxg_estate.core.ops_dashboard import lease_expirations_chart
+from thinknxg_estate.core.security import staff_only
 
 
 @frappe.whitelist()
+@staff_only
 def get(
 	chart_name=None,
 	chart=None,

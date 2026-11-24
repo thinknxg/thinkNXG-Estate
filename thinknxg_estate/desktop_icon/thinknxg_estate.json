@@ -1,0 +1,21 @@
+{
+ "app": "thinknxg_estate",
+ "bg_color": "blue",
+ "creation": "2026-11-24 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "organization",
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "thinkNXG Estate",
+ "link_to": "thinkNXG Estate",
+ "link_type": "Workspace Sidebar",
+ "modified": "2026-11-24 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "thinkNXG Estate",
+ "owner": "Administrator",
+ "restrict_removal": 0,
+ "roles": [],
+ "standard": 1
+}

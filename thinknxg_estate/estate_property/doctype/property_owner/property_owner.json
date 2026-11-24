@@ -64,7 +64,7 @@
    "label": "Col Break 1"
   },
   {
-   "description": "ERPNext Company that owns this landlord's financials",
+   "description": "Company that holds this landlord's books",
    "fieldname": "company",
    "fieldtype": "Link",
    "in_standard_filter": 1,

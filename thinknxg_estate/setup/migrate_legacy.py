@@ -135,20 +135,31 @@ def keep_access_code_portal():
 
 
 def remove_legacy_navigation(legacy):
+	"""Workspaces, sidebars and desktop icons of the legacy apps. Deleted at database level:
+	their on_trash hooks delete the exported JSON from the owning app's folder in developer
+	mode, and the legacy app code must stay untouched (it may be needed for a rollback)."""
 	removed = []
 	for name in LEGACY_WORKSPACES:
 		if frappe.db.exists("Workspace", name):
-			frappe.delete_doc("Workspace", name, force=True, ignore_permissions=True)
+			_purge("Workspace", name)
 			removed.append(f"Workspace:{name}")
-	for doctype in ("Workspace Sidebar", "Desktop Icon"):
+	for doctype in ("Workspace Sidebar", "Sidebar", "Desktop Icon"):
 		if not frappe.db.table_exists(doctype):
 			continue
 		names = set(frappe.get_all(doctype, filters={"app": ["in", list(legacy)]}, pluck="name"))
 		names |= {n for n in LEGACY_SIDEBARS if frappe.db.exists(doctype, n)}
 		for name in names:
-			frappe.delete_doc(doctype, name, force=True, ignore_permissions=True)
+			_purge(doctype, name)
 			removed.append(f"{doctype}:{name}")
+	frappe.clear_cache()
 	return removed
+
+
+def _purge(doctype, name):
+	"""Delete a document and its child rows without running document hooks."""
+	for df in frappe.get_meta(doctype).get_table_fields():
+		frappe.db.delete(df.options, {"parent": name, "parenttype": doctype})
+	frappe.db.delete(doctype, {"name": name})
 
 
 def remove_legacy_jobs():

@@ -7,10 +7,12 @@ from frappe.model.document import Document
 from frappe.utils import flt, nowdate
 
 from thinknxg_estate.core.api import record_partial_payment
+from thinknxg_estate.core.security import requires_permission
 
 
 class TenancyBulkPayment(Document):
     @frappe.whitelist()
+    @requires_permission("write")
     def fetch_due_installments(self):
         if not (self.property or self.unit):
             frappe.throw(_("Select either a Property or a Unit before fetching installments."))

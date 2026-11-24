@@ -91,7 +91,8 @@ def submit_inquiry(full_name, mobile, listing=None, email=None, message=None,
     inquiry.email = (email or "").strip() or None
     inquiry.listing = listing
     inquiry.message = frappe.utils.strip_html(message or "")[:1000]
-    inquiry.client_meta = f"{frappe.local.request_ip} | {frappe.get_request_header('User-Agent', '')[:180]}"
+    user_agent = frappe.get_request_header("User-Agent", "") if frappe.request else ""
+    inquiry.client_meta = f"{frappe.local.request_ip} | {(user_agent or '')[:180]}"
     inquiry.flags.ignore_permissions = True
     inquiry.insert(ignore_permissions=True)
 

@@ -180,6 +180,13 @@
    "role": "RE Sales Agent",
    "share": 1,
    "write": 0
+  },
+  {
+   "role": "Voice Ops Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1
   }
  ],
  "search_fields": "from_number,transcript",

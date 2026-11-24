@@ -2,6 +2,7 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_ent
 import frappe
 from frappe import _
 from frappe.utils import add_days, today, flt
+from thinknxg_estate.core.security import staff_only
 
 VAT_RATES = {
     "Oman": 5,
@@ -22,6 +23,7 @@ COUNTRY_CURRENCY = {
 
 
 @frappe.whitelist()
+@staff_only
 def get_properties_list():
     properties = frappe.get_all(
         "Property",
@@ -59,6 +61,7 @@ def get_properties_list():
 
 
 @frappe.whitelist()
+@staff_only
 def get_sidebar_counts():
     return {
         "units": frappe.db.count("Unit"),
@@ -68,6 +71,7 @@ def get_sidebar_counts():
 
 
 @frappe.whitelist(methods=["POST"])
+@staff_only
 def mark_notifications_read(document_type):
     doc_types = frappe.parse_json(document_type) if isinstance(document_type, str) and document_type.startswith("[") else document_type
     if isinstance(doc_types, str):
@@ -83,6 +87,7 @@ def mark_notifications_read(document_type):
 
 
 @frappe.whitelist()
+@staff_only
 def get_notifications():
     items = []
 
@@ -186,6 +191,7 @@ def get_notifications():
 
 
 @frappe.whitelist()
+@staff_only
 def get_dashboard_stats():
     total_properties = frappe.db.count("Property")
 
@@ -257,6 +263,7 @@ def get_dashboard_stats():
 # UNITS
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_units_list():
     total = frappe.db.count("Unit")
     occupied = frappe.db.count("Unit", {"status": "Occupied"})
@@ -287,6 +294,7 @@ def get_units_list():
 
 
 @frappe.whitelist()
+@staff_only
 def get_units_for_dropdown():
     rows = frappe.get_all(
         "Unit",
@@ -309,6 +317,7 @@ def get_units_for_dropdown():
 # TENANTS
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def global_search(query):
     query = (query or "").strip()
     if not query or len(query) < 2:
@@ -345,6 +354,7 @@ def global_search(query):
 
 
 @frappe.whitelist()
+@staff_only
 def get_tenants_list():
     active_tenants = frappe.db.count("Tenant", {"disabled": 0})
 
@@ -422,6 +432,7 @@ def get_tenants_list():
 
 
 @frappe.whitelist()
+@staff_only
 def get_portal_tenants_list():
     """Tenant profiles auto-created from portal signups (via lease requests),
     kept separate from the main Tenant Register to avoid confusing them with
@@ -443,6 +454,7 @@ def get_portal_tenants_list():
 # LEASE CONTRACT FORM (create screen)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_lease_form_options():
     properties = frappe.get_all("Property", fields=["name", "property_name", "country"])
     tenants = frappe.get_all("Tenant", filters={"disabled": 0}, fields=["name", "tenant_name"])
@@ -451,6 +463,7 @@ def get_lease_form_options():
 
 
 @frappe.whitelist()
+@staff_only
 def get_units_for_property(property):
     return frappe.get_all(
         "Unit",
@@ -460,6 +473,7 @@ def get_units_for_property(property):
 
 
 @frappe.whitelist()
+@staff_only
 def compute_charge_term_total(amount, frequency, start_date, end_date):
     """Convert a per-period charge amount into a lease-term total, for live
     recalculation as the admin edits Frequency/Amount on the Lease Contract
@@ -469,6 +483,7 @@ def compute_charge_term_total(amount, frequency, start_date, end_date):
 
 
 @frappe.whitelist()
+@staff_only
 def get_lease_term_charges_preview(property=None, unit=None, start_date=None, end_date=None):
     """Preview what Lease Contract charges would auto-populate from the
     Property's and Unit's Charges tables, for a given lease term."""
@@ -482,6 +497,7 @@ def get_lease_term_charges_preview(property=None, unit=None, start_date=None, en
 
 
 @frappe.whitelist()
+@staff_only
 def create_lease_contract(tenant, property, unit=None, start_date=None, end_date=None,
                            annual_rent=None, payment_frequency=None, security_deposit=None,
                            agent=None, owner_ref=None, notice_period_days=None, auto_renew=None,
@@ -544,6 +560,7 @@ def create_lease_contract(tenant, property, unit=None, start_date=None, end_date
 
 
 @frappe.whitelist()
+@staff_only
 def submit_lease_contract(name):
     doc = frappe.get_doc("Lease Contract", name)
     if doc.docstatus != 0:
@@ -582,6 +599,7 @@ def _draft_portal_commission(lease_contract_doc, agent):
 # INVOICES & PDC SCHEDULE
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_invoices_list():
     month_start = frappe.utils.get_first_day(today())
     month_end = frappe.utils.get_last_day(today())
@@ -674,12 +692,14 @@ def get_invoices_list():
 # Adjust the city keywords below if your data uses different naming.
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def delete_invoice(name):
     frappe.delete_doc("Sales Invoice", name)
     return {"deleted": name}
 
 
 @frappe.whitelist()
+@staff_only
 def get_compliance_status():
     def reg_block(filters, ref_field):
         total = frappe.db.count("Property", filters)
@@ -703,6 +723,7 @@ def get_compliance_status():
 # CRM PIPELINE
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_crm_pipeline():
     open_inquiries = frappe.db.count("RE Lead", {"status": ["in", ["New", "Contacted"]]})
 
@@ -762,6 +783,7 @@ def get_crm_pipeline():
 # VIEWINGS (SITE VISITS)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_viewings_list():
     visits = frappe.get_all(
         "Site Visit",
@@ -843,6 +865,7 @@ def get_portal_listings():
 # MAINTENANCE
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_maintenance_list():
     open_wo = frappe.db.count("Maintenance Request", {"status": ["in", ["Open", "In Progress", "On Hold"]]})
 
@@ -918,6 +941,7 @@ def get_maintenance_list():
 # PROPERTY DETAIL
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_property_detail(property):
     p = frappe.get_doc("Property", property)
 
@@ -1018,6 +1042,7 @@ def get_property_detail(property):
 # PROPERTY DOCUMENTS
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_property_documents(property):
     return frappe.get_all(
         "Property Document",
@@ -1028,6 +1053,7 @@ def get_property_documents(property):
 
 
 @frappe.whitelist()
+@staff_only
 def create_property_document(property, document_type, attachment, expiry_date=None, notes=None):
     doc = frappe.get_doc({
         "doctype": "Property Document",
@@ -1042,6 +1068,7 @@ def create_property_document(property, document_type, attachment, expiry_date=No
 
 
 @frappe.whitelist()
+@staff_only
 def delete_property_document(name):
     frappe.delete_doc("Property Document", name)
     return {"deleted": name}
@@ -1051,6 +1078,7 @@ def delete_property_document(name):
 # UNIT PORTAL PUBLISH TOGGLE
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def set_unit_portal_publish(unit, published):
     published = 1 if int(published) else 0
     frappe.db.set_value("Unit", unit, "published_to_portal", published)
@@ -1072,6 +1100,7 @@ def set_unit_portal_publish(unit, published):
 #  instead; this endpoint refuses to touch those to avoid confusion.)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def set_property_portal_publish(property, published):
     published = 1 if int(published) else 0
 
@@ -1095,6 +1124,7 @@ def set_property_portal_publish(property, published):
 # PROPERTY FINANCIALS (scoped Rent Installment view)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_property_financials(property):
     month_start = frappe.utils.get_first_day(today())
     month_end = frappe.utils.get_last_day(today())
@@ -1150,6 +1180,7 @@ def get_property_financials(property):
 # POST DATED CHEQUES
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_pdc_list(tenant=None, lease_contract=None, status=None, from_date=None, to_date=None,
                   property=None, unit=None):
     filters = {}
@@ -1205,6 +1236,7 @@ def get_pdc_list(tenant=None, lease_contract=None, status=None, from_date=None, 
 
 
 @frappe.whitelist()
+@staff_only
 def get_bank_accounts():
     return frappe.get_all(
         "Account",
@@ -1216,6 +1248,7 @@ def get_bank_accounts():
 
 
 @frappe.whitelist()
+@staff_only
 def get_modes_of_payment():
     return frappe.get_all(
         "Mode of Payment",
@@ -1226,6 +1259,7 @@ def get_modes_of_payment():
 
 
 @frappe.whitelist()
+@staff_only
 def update_pdc_status(name, status, deposit_date=None, clearance_date=None, bounce_reason=None,
                        deposit_account=None, mode_of_payment=None):
     doc = frappe.get_doc("Post Dated Cheque", name)
@@ -1258,12 +1292,14 @@ def update_pdc_status(name, status, deposit_date=None, clearance_date=None, boun
 # RENT SCHEDULE (with nested Rent Installment rows)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def delete_pdc(name):
     frappe.delete_doc("Post Dated Cheque", name)
     return {"deleted": name}
 
 
 @frappe.whitelist()
+@staff_only
 def get_rent_schedule(lease_contract=None, tenant=None, status=None):
     filters = {}
     if lease_contract:
@@ -1310,6 +1346,7 @@ def get_rent_schedule(lease_contract=None, tenant=None, status=None):
 
 
 @frappe.whitelist()
+@staff_only
 def get_rent_schedule_detail(name):
     doc = frappe.get_doc("Rent Schedule", name)
     installments = [
@@ -1341,6 +1378,7 @@ def get_rent_schedule_detail(name):
 # SECURITY DEPOSITS
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_security_deposits(tenant=None, lease_contract=None, status=None):
     filters = {}
     if tenant:
@@ -1376,6 +1414,7 @@ def get_security_deposits(tenant=None, lease_contract=None, status=None):
 
 
 @frappe.whitelist()
+@staff_only
 def update_security_deposit(name, status=None, deduction_amount=None, deduction_reason=None, refunded_amount=None):
     from thinknxg_estate.core.security_deposit_accounting import process_refund_or_forfeit
 
@@ -1406,12 +1445,14 @@ def update_security_deposit(name, status=None, deduction_amount=None, deduction_
 # LEASE CHARGES (child table on Lease Contract via 'charges')
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def delete_security_deposit(name):
     frappe.delete_doc("Security Deposit", name)
     return {"deleted": name}
 
 
 @frappe.whitelist()
+@staff_only
 def get_lease_charges(lease_contract):
     doc = frappe.get_doc("Lease Contract", lease_contract)
     return [
@@ -1427,6 +1468,7 @@ def get_lease_charges(lease_contract):
 
 
 @frappe.whitelist()
+@staff_only
 def add_lease_charge(lease_contract, charge_type, description, amount, item_tax_template=None):
     doc = frappe.get_doc("Lease Contract", lease_contract)
     doc.append("charges", {
@@ -1443,6 +1485,7 @@ def add_lease_charge(lease_contract, charge_type, description, amount, item_tax_
 # PROPERTY PHOTOS (child table on Property via 'photos')
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_property_photos(property, unit=None):
     doc = frappe.get_doc("Property", property)
     rows = doc.photos
@@ -1461,6 +1504,7 @@ def get_property_photos(property, unit=None):
 
 
 @frappe.whitelist()
+@staff_only
 def add_property_photo(property, image, unit=None, caption=None, is_cover=0):
     doc = frappe.get_doc("Property", property)
     doc.append("photos", {
@@ -1474,6 +1518,7 @@ def add_property_photo(property, image, unit=None, caption=None, is_cover=0):
 
 
 @frappe.whitelist()
+@staff_only
 def set_cover_photo(property, row_name):
     doc = frappe.get_doc("Property", property)
     for row in doc.photos:
@@ -1483,6 +1528,7 @@ def set_cover_photo(property, row_name):
 
 
 @frappe.whitelist()
+@staff_only
 def delete_property_photo(property, row_name):
     doc = frappe.get_doc("Property", property)
     doc.photos = [row for row in doc.photos if row.name != row_name]
@@ -1494,11 +1540,13 @@ def delete_property_photo(property, row_name):
 # AMENITIES (standalone list + Property's Table MultiSelect via 'amenities')
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_amenities():
     return frappe.get_all("Amenity", fields=["name", "amenity_name", "icon"], order_by="amenity_name asc")
 
 
 @frappe.whitelist()
+@staff_only
 def get_property_amenities(property):
     doc = frappe.get_doc("Property", property)
     amenity_names = [row.amenity for row in doc.amenities]
@@ -1512,6 +1560,7 @@ def get_property_amenities(property):
 
 
 @frappe.whitelist()
+@staff_only
 def set_property_amenities(property, amenities):
     # amenities: list of Amenity names (JSON list or comma-separated string)
     if isinstance(amenities, str):
@@ -1528,6 +1577,7 @@ def set_property_amenities(property, amenities):
 # UTILITY ACCOUNTS (standalone, linked to Unit)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_utility_accounts(unit=None):
     filters = {}
     if unit:
@@ -1545,6 +1595,7 @@ def get_utility_accounts(unit=None):
 
 
 @frappe.whitelist()
+@staff_only
 def add_utility_account(unit, utility_type, provider=None, account_number=None,
                          meter_number=None, in_tenant_name=0):
     doc = frappe.get_doc({
@@ -1560,6 +1611,7 @@ def add_utility_account(unit, utility_type, provider=None, account_number=None,
 
 
 @frappe.whitelist()
+@staff_only
 def update_utility_account(name, utility_type=None, provider=None, account_number=None,
                             meter_number=None, in_tenant_name=None):
     doc = frappe.get_doc("Utility Account", name)
@@ -1581,6 +1633,7 @@ def update_utility_account(name, utility_type=None, provider=None, account_numbe
 # TENANT KYC DOCUMENTS (child table on Tenant via 'kyc_documents')
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_tenant_kyc_documents(tenant):
     doc = frappe.get_doc("Tenant", tenant)
     return [
@@ -1596,6 +1649,7 @@ def get_tenant_kyc_documents(tenant):
 
 
 @frappe.whitelist()
+@staff_only
 def add_tenant_kyc_document(tenant, id_type, id_number=None, expiry_date=None, attachment=None):
     doc = frappe.get_doc("Tenant", tenant)
     doc.append("kyc_documents", {
@@ -1609,6 +1663,7 @@ def add_tenant_kyc_document(tenant, id_type, id_number=None, expiry_date=None, a
 
 
 @frappe.whitelist()
+@staff_only
 def delete_tenant_kyc_document(tenant, row_name):
     doc = frappe.get_doc("Tenant", tenant)
     doc.kyc_documents = [row for row in doc.kyc_documents if row.name != row_name]
@@ -1620,6 +1675,7 @@ def delete_tenant_kyc_document(tenant, row_name):
 # MOVE IN / OUT INSPECTIONS (standalone, with nested Inspection Item rows)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_inspections(lease_contract=None, unit=None, inspection_type=None):
     filters = {}
     if lease_contract:
@@ -1641,6 +1697,7 @@ def get_inspections(lease_contract=None, unit=None, inspection_type=None):
 
 
 @frappe.whitelist()
+@staff_only
 def get_inspection_detail(name):
     doc = frappe.get_doc("Move In Out Inspection", name)
     return {
@@ -1668,6 +1725,7 @@ def get_inspection_detail(name):
 
 
 @frappe.whitelist()
+@staff_only
 def create_inspection(inspection_type, lease_contract, unit, inspection_date,
                        inspected_by=None, tenant_present=0, items=None):
     # items: JSON list of {room, item, condition, photo, remarks}
@@ -1690,6 +1748,7 @@ def create_inspection(inspection_type, lease_contract, unit, inspection_date,
 
 
 @frappe.whitelist()
+@staff_only
 def update_inspection(name, estimated_damage_cost=None, summary=None, tenant_signature=None):
     doc = frappe.get_doc("Move In Out Inspection", name)
     if estimated_damage_cost is not None:
@@ -1706,6 +1765,7 @@ def update_inspection(name, estimated_damage_cost=None, summary=None, tenant_sig
 # LEASE CONTRACTS LIST (for pickers)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def terminate_lease_contract(name, termination_date=None, reason=None, reasons=None,
                               outstanding_rent=None, mode_of_payment=None,
                               apply_charge_to_tenant=None):
@@ -1721,12 +1781,14 @@ def terminate_lease_contract(name, termination_date=None, reason=None, reasons=N
     return {"name": doc.name, "status": status, "unit": doc.unit, "reasons": reasons}
 
 @frappe.whitelist()
+@staff_only
 def get_lease_outstanding_rent(name, upto_date=None):
     doc = frappe.get_doc("Lease Contract", name)
     return doc.get_outstanding_rent(upto_date=upto_date)
 
 
 @frappe.whitelist()
+@staff_only
 def get_lease_request_detail(name):
     doc = frappe.get_doc("Lease Contract", name)
     if doc.docstatus != 0:
@@ -1765,6 +1827,7 @@ def get_lease_request_detail(name):
 
 
 @frappe.whitelist()
+@staff_only
 def update_lease_request(name, start_date=None, end_date=None, owner_ref=None, company=None,
                           notice_period_days=None, auto_renew=None, payment_frequency=None,
                           custom_installments=None, security_deposit_amount=None,
@@ -1788,6 +1851,7 @@ def update_lease_request(name, start_date=None, end_date=None, owner_ref=None, c
 
 
 @frappe.whitelist()
+@staff_only
 def reject_lease_contract(name):
     doc = frappe.get_doc("Lease Contract", name)
     if doc.docstatus != 0:
@@ -1797,6 +1861,7 @@ def reject_lease_contract(name):
 
 
 @frappe.whitelist()
+@staff_only
 def get_property_enquiries_list(status=None):
     filters = {}
     if status:
@@ -1826,6 +1891,7 @@ def get_property_enquiries_list(status=None):
 
 
 @frappe.whitelist()
+@staff_only
 def update_property_enquiry(name, status=None, assigned_to_user=None):
     doc = frappe.get_doc("Property Enquiry", name)
     if status is not None:
@@ -1837,6 +1903,7 @@ def update_property_enquiry(name, status=None, assigned_to_user=None):
 
 
 @frappe.whitelist()
+@staff_only
 def get_site_visit_bookings_list(status=None):
     filters = {}
     if status:
@@ -1866,6 +1933,7 @@ def get_site_visit_bookings_list(status=None):
 
 
 @frappe.whitelist()
+@staff_only
 def update_site_visit_booking(name, status=None, assigned_agent=None):
     doc = frappe.get_doc("Site Visit Booking", name)
     if status is not None:
@@ -1877,6 +1945,7 @@ def update_site_visit_booking(name, status=None, assigned_agent=None):
 
 
 @frappe.whitelist()
+@staff_only
 def get_lease_contracts_list(source="Admin"):
     filters = {}
     if source and source != "All":
@@ -1918,6 +1987,7 @@ def get_lease_contracts_list(source="Admin"):
 
 
 @frappe.whitelist()
+@staff_only
 def get_lease_contract(name):
     doc = frappe.get_doc("Lease Contract", name)
 
@@ -1948,6 +2018,7 @@ def get_lease_contract(name):
 
 
 @frappe.whitelist()
+@staff_only
 def update_lease_contract(name, start_date=None, end_date=None, notice_period_days=None,
                            auto_renew=None, payment_frequency=None, custom_installments=None,
                            security_deposit_amount=None, broker_commission=None,
@@ -1972,6 +2043,7 @@ def update_lease_contract(name, start_date=None, end_date=None, notice_period_da
 # PDC — CREATE
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_pdc_suggested_amount(lease_contract):
     schedule_name = frappe.db.get_value("Rent Schedule", {"lease_contract": lease_contract}, "name")
     if schedule_name:
@@ -1996,6 +2068,7 @@ def get_pdc_suggested_amount(lease_contract):
 
 
 @frappe.whitelist()
+@staff_only
 def get_lease_installments(lease_contract):
     schedule_name = frappe.db.get_value("Rent Schedule", {"lease_contract": lease_contract}, "name")
     if not schedule_name:
@@ -2010,6 +2083,7 @@ def get_lease_installments(lease_contract):
 
 
 @frappe.whitelist()
+@staff_only
 def link_pdc_to_installment(pdc, installment_name):
     parent = frappe.db.get_value("Rent Installment", installment_name, "parent")
     if not parent:
@@ -2035,6 +2109,7 @@ def link_pdc_to_installment(pdc, installment_name):
 
 
 @frappe.whitelist()
+@staff_only
 def create_pdc(tenant, cheque_no, bank, cheque_date, amount, lease_contract=None,
                 company=None):
     # New PDCs always start at "Received" - all further transitions must go
@@ -2074,6 +2149,7 @@ def create_pdc(tenant, cheque_no, bank, cheque_date, amount, lease_contract=None
 # RENT SCHEDULE — CREATE + INSTALLMENT UPDATE
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def create_rent_schedule(lease_contract, tenant=None, company=None, status="Active",
                           total_amount=None, installments=None):
     if isinstance(installments, str):
@@ -2093,6 +2169,7 @@ def create_rent_schedule(lease_contract, tenant=None, company=None, status="Acti
 
 
 @frappe.whitelist()
+@staff_only
 def update_installment_status(rent_schedule, row_name, status, sales_invoice=None, pdc=None, remarks=None):
     doc = frappe.get_doc("Rent Schedule", rent_schedule)
     for row in doc.installments:
@@ -2112,6 +2189,7 @@ def update_installment_status(rent_schedule, row_name, status, sales_invoice=Non
 # SECURITY DEPOSIT — CREATE
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def update_rent_schedule_status(name, status):
     doc = frappe.get_doc("Rent Schedule", name)
     doc.status = status
@@ -2120,12 +2198,14 @@ def update_rent_schedule_status(name, status):
 
 
 @frappe.whitelist()
+@staff_only
 def delete_rent_schedule(name):
     frappe.delete_doc("Rent Schedule", name)
     return {"deleted": name}
 
 
 @frappe.whitelist()
+@staff_only
 def create_security_deposit(tenant, lease_contract, amount, company=None,
                              received_date=None, status="Held"):
     doc = frappe.get_doc({
@@ -2144,6 +2224,7 @@ def create_security_deposit(tenant, lease_contract, amount, company=None,
 # LEASE CHARGES — DELETE (edit parity with add_lease_charge)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def delete_lease_charge(lease_contract, row_name):
     doc = frappe.get_doc("Lease Contract", lease_contract)
     doc.charges = [row for row in doc.charges if row.name != row_name]
@@ -2155,6 +2236,7 @@ def delete_lease_charge(lease_contract, row_name):
 # AMENITIES — CREATE (master data)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def create_amenity(amenity_name, icon=None):
     doc = frappe.get_doc({
         "doctype": "Amenity",
@@ -2168,6 +2250,7 @@ def create_amenity(amenity_name, icon=None):
 # TENANT KYC — UPDATE (edit parity with add/delete)
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def update_tenant_kyc_document(tenant, row_name, id_type=None, id_number=None,
                                 expiry_date=None, attachment=None):
     doc = frappe.get_doc("Tenant", tenant)
@@ -2189,6 +2272,7 @@ def update_tenant_kyc_document(tenant, row_name, id_type=None, id_number=None,
 # INSPECTIONS — UPDATE ITEMS
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def update_inspection_items(name, items):
     if isinstance(items, str):
         items = frappe.parse_json(items)
@@ -2204,16 +2288,19 @@ def update_inspection_items(name, items):
 # PROPERTY — CREATE
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_companies():
     return frappe.get_all("Company", fields=["name"], order_by="name")
 
 
 @frappe.whitelist()
+@staff_only
 def get_property_owners_list():
     return frappe.get_all("Property Owner", fields=["name", "owner_name"], order_by="owner_name asc")
 
 
 @frappe.whitelist()
+@staff_only
 def create_property(property_name, property_type, owner_ref, country, company=None,
                      status="Active", city=None, area=None, address_line=None,
                      latitude=None, longitude=None,
@@ -2268,6 +2355,7 @@ def create_property(property_name, property_type, owner_ref, country, company=No
 
 
 @frappe.whitelist()
+@staff_only
 def update_property(name, property_name=None, property_type=None, owner_ref=None, country=None,
                      company=None, status=None, city=None, area=None, address_line=None,
                      latitude=None, longitude=None,
@@ -2310,6 +2398,7 @@ def update_property(name, property_name=None, property_type=None, owner_ref=None
 # UNIT — CREATE
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def create_unit(property, unit_no, unit_type, unit_title=None, floor=None, usage=None,
                  status="Vacant", area_sqm=None, bedrooms=None, bathrooms=None,
                  furnishing=None, parking_slots=None, annual_rent=None,
@@ -2348,6 +2437,7 @@ def create_unit(property, unit_no, unit_type, unit_title=None, floor=None, usage
 
 
 @frappe.whitelist()
+@staff_only
 def update_unit(name, unit_type=None, unit_title=None, floor=None, usage=None, status=None,
                  area_sqm=None, bedrooms=None, bathrooms=None, furnishing=None, parking_slots=None,
                  annual_rent=None, current_lease=None, company=None,
@@ -2376,6 +2466,7 @@ def update_unit(name, unit_type=None, unit_title=None, floor=None, usage=None, s
 
 
 @frappe.whitelist()
+@staff_only
 def delete_unit(name):
     frappe.delete_doc("Unit", name)
     return {"deleted": name}
@@ -2385,6 +2476,7 @@ def delete_unit(name):
 # TENANT — CREATE
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def create_tenant(tenant_name, mobile, tenant_type=None, nationality=None,
                    email=None, whatsapp_number=None):
     doc = frappe.get_doc({
@@ -2403,6 +2495,7 @@ def create_tenant(tenant_name, mobile, tenant_type=None, nationality=None,
 # MAINTENANCE REQUEST — CREATE
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def update_tenant(name, tenant_name=None, tenant_type=None, nationality=None, mobile=None,
                    email=None, whatsapp_number=None, enable_portal=None,
                    emergency_contact_name=None, emergency_contact_mobile=None, disabled=None):
@@ -2432,12 +2525,14 @@ def update_tenant(name, tenant_name=None, tenant_type=None, nationality=None, mo
 
 
 @frappe.whitelist()
+@staff_only
 def delete_tenant(name):
     frappe.delete_doc("Tenant", name)
     return {"deleted": name}
 
 
 @frappe.whitelist()
+@staff_only
 def create_maintenance_request(unit, category, description, property=None, tenant=None,
                                 priority="Medium", status="Open"):
     doc = frappe.get_doc({
@@ -2455,6 +2550,7 @@ def create_maintenance_request(unit, category, description, property=None, tenan
 
 
 @frappe.whitelist()
+@staff_only
 def record_partial_payment(installment_name, amount, mode_of_payment="Cash", payment_date=None, remarks=None):
 	amount = flt(amount)
 	if amount <= 0:
@@ -2578,6 +2674,7 @@ def record_partial_payment(installment_name, amount, mode_of_payment="Cash", pay
 # BULK PDC PAYMENT ENTRY
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_bulk_pdc_due_installments(property=None, unit=None, from_date=None, to_date=None):
     if not property and not unit:
         frappe.throw(_("Select either a Property or a Unit."))
@@ -2607,6 +2704,7 @@ def get_bulk_pdc_due_installments(property=None, unit=None, from_date=None, to_d
 
 
 @frappe.whitelist()
+@staff_only
 def submit_bulk_pdc_payments(property=None, unit=None, rows=None, mode_of_payment="Cash", company=None):
     if isinstance(rows, str):
         rows = frappe.parse_json(rows)
@@ -2696,6 +2794,7 @@ def _resolve_expense_account(expense_type, company):
 
 
 @frappe.whitelist()
+@staff_only
 def get_purchase_invoices_list(property=None):
     filters = {}
     if property:
@@ -2713,11 +2812,13 @@ def get_purchase_invoices_list(property=None):
 
 
 @frappe.whitelist()
+@staff_only
 def get_suppliers_list():
     return frappe.get_all("Supplier", fields=["name", "supplier_name"], order_by="supplier_name asc", limit_page_length=500)
 
 
 @frappe.whitelist()
+@staff_only
 def create_purchase_invoice(supplier, property, amount, expense_type=None, description=None,
                              posting_date=None, tenancy=None, sales_invoice=None, loan=0, company=None):
     amount = flt(amount)
@@ -2757,6 +2858,7 @@ def create_purchase_invoice(supplier, property, amount, expense_type=None, descr
 # EXPENSE PROPERTY
 # ─────────────────────────────────────────────
 @frappe.whitelist()
+@staff_only
 def get_expense_properties_list(property=None):
     filters = {}
     if property:
@@ -2774,6 +2876,7 @@ def get_expense_properties_list(property=None):
 
 
 @frappe.whitelist()
+@staff_only
 def create_expense_property(property, expense_type, amount, supplier, description=None, expense_date=None, company=None):
     amount = flt(amount)
     if amount <= 0:
@@ -2794,6 +2897,7 @@ def create_expense_property(property, expense_type, amount, supplier, descriptio
 
 
 @frappe.whitelist()
+@staff_only
 def submit_expense_property(name):
     doc = frappe.get_doc("Expense Property", name)
     doc.submit()
@@ -2801,6 +2905,7 @@ def submit_expense_property(name):
 
 
 @frappe.whitelist()
+@staff_only
 def record_expense_partial_payment(expense_property, paid_amount, payment_date=None, remarks=None):
     from thinknxg_estate.estate_finance.doctype.expense_property.expense_property import record_partial_payment as _record_expense_payment
     return _record_expense_payment(

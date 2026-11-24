@@ -5,6 +5,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, nowdate
+from thinknxg_estate.core.security import staff_only
 
 EXPENSE_ACCOUNT_MAP = {
     "Maintenance": "Repairs and Maintenance",
@@ -77,6 +78,7 @@ class ExpenseProperty(Document):
 
 
 @frappe.whitelist()
+@staff_only
 def record_partial_payment(expense_property, paid_amount, payment_date=None, remarks=None):
     doc = frappe.get_doc("Expense Property", expense_property)
 

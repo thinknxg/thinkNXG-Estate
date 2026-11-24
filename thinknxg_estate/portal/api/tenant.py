@@ -111,6 +111,9 @@ def terminate_lease(termination_date, reasons, outstanding_rent=None,
         _notify_leasing_team(doc, note)
         return {"ok": True, "status": "Requested", "unit": doc.unit, "reasons": reasons}
 
+    # Ownership was verified above (lease resolved from the session tenant) and the
+    # setting allows online termination, so the tenant may run this staff action.
+    doc.flags.ignore_permissions = True
     status = doc.terminate(
         termination_date=termination_date,
         reasons=reasons,

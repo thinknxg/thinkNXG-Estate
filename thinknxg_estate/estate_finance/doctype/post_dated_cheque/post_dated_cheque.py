@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import nowdate
+from thinknxg_estate.core.security import requires_permission
 
 TRANSITIONS = {
     "Received": {"Deposited", "Returned", "Replaced"},
@@ -17,12 +18,16 @@ class PostDatedCheque(Document):
         self.db_set("status", new_status)
 
     @frappe.whitelist()
+
+    @requires_permission("submit")
     def mark_deposited(self):
         self._check_submitted()
         self._move("Deposited")
         self.db_set("deposit_date", nowdate())
 
     @frappe.whitelist()
+
+    @requires_permission("submit")
     def mark_cleared(self):
         self._check_submitted()
         self._move("Cleared")
@@ -44,6 +49,8 @@ class PostDatedCheque(Document):
         create_owner_remittance(si)
 
     @frappe.whitelist()
+
+    @requires_permission("submit")
     def mark_bounced(self, reason=None):
         self._check_submitted()
         self._move("Bounced")

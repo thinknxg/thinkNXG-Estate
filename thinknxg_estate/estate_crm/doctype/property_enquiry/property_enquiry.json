@@ -77,7 +77,7 @@
    "label": "Message"
   },
   {
-   "description": "Auto-created in re_crm when this enquiry is submitted",
+   "description": "ERPNext Lead of the portal visitor (legacy /listings accounts)",
    "fieldname": "linked_lead",
    "fieldtype": "Link",
    "label": "Linked Lead",

@@ -126,7 +126,7 @@
    "default": 0,
    "fieldname": "wa_rent_reminders",
    "fieldtype": "Check",
-   "label": "Rent Due Reminders (uses re_core schedules)"
+   "label": "Rent Due Reminders"
   },
   {
    "default": 5,

@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import nowdate
+from thinknxg_estate.core.security import requires_permission
 
 
 class CommissionEntry(Document):
@@ -33,6 +34,8 @@ class CommissionEntry(Document):
         return je.name
 
     @frappe.whitelist()
+
+    @requires_permission("submit")
     def mark_paid(self):
         if self.docstatus != 1 or self.status != "Approved":
             frappe.throw(_("Only Approved commissions can be marked Paid."))

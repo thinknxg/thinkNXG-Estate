@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_to_date, now_datetime
+from thinknxg_estate.core.security import requires_permission
 
 
 class RELead(Document):
@@ -48,6 +49,8 @@ class RELead(Document):
         }).insert(ignore_permissions=True)
 
     @frappe.whitelist()
+
+    @requires_permission("write")
     def make_deal(self):
         if self.deal:
             frappe.throw(_("Deal {0} already exists for this lead.").format(self.deal))

@@ -1,6 +1,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from thinknxg_estate.core.security import requires_permission
 
 
 class MaintenanceRequest(Document):
@@ -18,6 +19,8 @@ class MaintenanceRequest(Document):
                 frappe.throw(_("You can only raise requests for a unit you currently lease."))
 
     @frappe.whitelist()
+
+    @requires_permission("write")
     def make_job(self):
         if self.maintenance_job:
             frappe.throw(_("A job already exists for this request."))

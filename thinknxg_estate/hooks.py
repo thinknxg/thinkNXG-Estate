@@ -40,8 +40,6 @@ fixtures = [
 	{"dt": "Role", "filters": [["name", "in", ESTATE_ROLES]]},
 	{"dt": "Custom Field", "filters": [["module", "=", "thinkNXG Estate"]]},
 	{"dt": "Print Format", "filters": [["name", "in", ["Lease Contract Standard", "Tenant Rent Invoice"]]]},
-	{"dt": "Workspace Sidebar", "filters": [["name", "=", "thinkNXG Estate"]]},
-	{"dt": "Desktop Icon", "filters": [["name", "=", "thinkNXG Estate"]]},
 ]
 
 # ----------------------------------------------------------------------------- website
