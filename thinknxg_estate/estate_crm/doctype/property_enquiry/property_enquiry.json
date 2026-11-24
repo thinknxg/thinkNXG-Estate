@@ -1,0 +1,121 @@
+{
+ "autoname": "field:enquiry_id",
+ "custom": 0,
+ "doctype": "DocType",
+ "fields": [
+  {
+   "fieldname": "enquiry_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Enquiry ID"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "Unit",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "unit.property",
+   "fieldname": "property",
+   "fieldtype": "Link",
+   "label": "Property",
+   "options": "Property",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 0
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "options": "Phone",
+   "label": "Mobile"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "options": "Email",
+   "label": "Email"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "General Enquiry",
+   "fieldname": "enquiry_type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "General Enquiry\nSite Visit Request\nPrice Negotiation"
+  },
+  {
+   "default": "New",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "New\nAssigned\nIn Progress\nClosed"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "message",
+   "fieldtype": "Small Text",
+   "label": "Message"
+  },
+  {
+   "description": "Auto-created in re_crm when this enquiry is submitted",
+   "fieldname": "linked_lead",
+   "fieldtype": "Link",
+   "label": "Linked Lead",
+   "options": "Lead",
+   "read_only": 1
+  },
+  {
+   "fieldname": "re_lead",
+   "fieldtype": "Link",
+   "options": "RE Lead",
+   "label": "CRM Lead",
+   "in_standard_filter": 1,
+   "description": "The unified CRM lead for this visitor."
+  },
+  {
+   "fieldname": "assigned_to_user",
+   "fieldtype": "Link",
+   "label": "Assigned To",
+   "options": "User"
+  }
+ ],
+ "module": "Estate CRM",
+ "name": "Property Enquiry",
+ "naming_rule": "By fieldname",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Sales User",
+   "write": 1
+  }
+ ],
+ "modified": "2026-11-24 12:00:00.000000"
+}

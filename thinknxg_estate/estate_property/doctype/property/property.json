@@ -1,0 +1,526 @@
+{
+ "actions": [],
+ "autoname": "format:PROP-{YYYY}-{####}",
+ "creation": "2026-01-01 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "basic_sb",
+  "property_name",
+  "property_type",
+  "status",
+  "ownership_section",
+  "ownership_type",
+  "portal_section",
+  "is_live",
+  "published_on",
+  "portal_visibility",
+  "col_break_1",
+  "owner_ref",
+  "column_break_ownership",
+  "management_fee_type",
+  "management_fee_value",
+  "onetime_commission",
+  "no_of_floors",
+  "company",
+  "total_units",
+  "addr_sb",
+  "country",
+  "city",
+  "area",
+  "address_line",
+  "col_break_2",
+  "latitude",
+  "longitude",
+  "compliance_sb",
+  "municipality_ref",
+  "ejari_number",
+  "col_break_3",
+  "rera_permit",
+  "tawtheeq_ref",
+  "media_sb",
+  "cover_image",
+  "photos",
+  "amenities",
+  "notes_sb",
+  "notes",
+  "usage_status_sb",
+  "usage",
+  "column_break_usage",
+  "published_to_portal",
+  "specs_sb",
+  "area_sqm",
+  "bedrooms",
+  "bathrooms",
+  "column_break_specs",
+  "furnishing",
+  "parking_slots",
+  "fin_sb",
+  "annual_rent",
+  "column_break_financials",
+  "current_lease",
+  "charges",
+  "rent_frequency",
+  "is_featured"
+ ],
+ "fields": [
+  {
+   "fieldname": "basic_sb",
+   "fieldtype": "Section Break",
+   "label": "Property"
+  },
+  {
+   "fieldname": "property_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Property Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property_type",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Property Type",
+   "options": "\nApartment Building\nVilla\nVilla Compound\nCommercial Tower\nMixed Use\nLand",
+   "reqd": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Active\nUnder Development\nSold\nArchived"
+  },
+  {
+   "fieldname": "ownership_section",
+   "fieldtype": "Section Break",
+   "label": "Ownership & Billing",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "ownership_type",
+   "fieldtype": "Select",
+   "label": "Ownership Type",
+   "options": "Company\nLandlord",
+   "default": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "portal_section",
+   "fieldtype": "Section Break",
+   "label": "Listing Portal",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "is_live",
+   "fieldtype": "Check",
+   "label": "Live on Portal",
+   "default": "0",
+   "description": "Toggle to publish this property on the customer listing portal"
+  },
+  {
+   "fieldname": "published_on",
+   "fieldtype": "Datetime",
+   "label": "Published On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "portal_visibility",
+   "fieldtype": "Select",
+   "label": "Portal Visibility",
+   "options": "Draft\nLive\nUnder Offer\nSold - Hidden",
+   "default": "Draft",
+   "description": "Draft/Sold-Hidden never show on portal even if Live checkbox is on. Under Offer shows with a badge but blocks new enquiries."
+  },
+  {
+   "fieldname": "col_break_1",
+   "fieldtype": "Column Break",
+   "label": "Col Break 1"
+  },
+  {
+   "fieldname": "owner_ref",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Owner",
+   "mandatory_depends_on": "eval:doc.ownership_type != \"Company\"",
+   "options": "Property Owner"
+  },
+  {
+   "fieldname": "column_break_ownership",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "management_fee_type",
+   "fieldtype": "Select",
+   "label": "Management Fee Type",
+   "options": "Percentage\nFixed Amount",
+   "default": "Percentage",
+   "depends_on": "eval:doc.ownership_type=='Landlord'"
+  },
+  {
+   "fieldname": "management_fee_value",
+   "fieldtype": "Float",
+   "label": "Management Fee Value",
+   "description": "If type is Percentage, enter e.g. 10 for 10%. If Fixed Amount, enter the flat currency value deducted each cycle.",
+   "depends_on": "eval:doc.ownership_type=='Landlord'"
+  },
+  {
+   "fieldname": "onetime_commission",
+   "fieldtype": "Currency",
+   "label": "Onetime Commission",
+   "description": "Deducted only once, alongside the first tenant invoice for each new lease.",
+   "depends_on": "eval:doc.ownership_type=='Landlord'"
+  },
+  {
+   "fieldname": "no_of_floors",
+   "fieldtype": "Int",
+   "label": "No. of Floors"
+  },
+  {
+   "fetch_from": "owner_ref.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_units",
+   "fieldtype": "Int",
+   "label": "Total Units",
+   "read_only": 1
+  },
+  {
+   "fieldname": "addr_sb",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "default": "Oman",
+   "fieldname": "country",
+   "fieldtype": "Select",
+   "label": "Country",
+   "options": "\nOman\nUnited Arab Emirates\nSaudi Arabia\nBahrain\nQatar\nKuwait",
+   "reqd": 1
+  },
+  {
+   "default": "Muscat",
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "City"
+  },
+  {
+   "fieldname": "area",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Area / Wilaya"
+  },
+  {
+   "fieldname": "address_line",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "col_break_2",
+   "fieldtype": "Column Break",
+   "label": "Col Break 2"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Float",
+   "label": "Latitude",
+   "precision": "6"
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Float",
+   "label": "Longitude",
+   "precision": "6"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "compliance_sb",
+   "fieldtype": "Section Break",
+   "label": "Compliance"
+  },
+  {
+   "fieldname": "municipality_ref",
+   "fieldtype": "Data",
+   "label": "Municipality Reference"
+  },
+  {
+   "depends_on": "eval:doc.country=='United Arab Emirates'",
+   "fieldname": "ejari_number",
+   "fieldtype": "Data",
+   "label": "Ejari Number"
+  },
+  {
+   "fieldname": "col_break_3",
+   "fieldtype": "Column Break",
+   "label": "Col Break 3"
+  },
+  {
+   "depends_on": "eval:doc.country=='United Arab Emirates'",
+   "fieldname": "rera_permit",
+   "fieldtype": "Data",
+   "label": "RERA Permit"
+  },
+  {
+   "depends_on": "eval:doc.country=='United Arab Emirates'",
+   "fieldname": "tawtheeq_ref",
+   "fieldtype": "Data",
+   "label": "Tawtheeq Reference"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "media_sb",
+   "fieldtype": "Section Break",
+   "label": "Media & Amenities"
+  },
+  {
+   "fieldname": "cover_image",
+   "fieldtype": "Attach Image",
+   "label": "Cover Image"
+  },
+  {
+   "fieldname": "photos",
+   "fieldtype": "Table",
+   "label": "Photos",
+   "options": "Property Photo"
+  },
+  {
+   "fieldname": "amenities",
+   "fieldtype": "Table MultiSelect",
+   "label": "Amenities",
+   "options": "Property Amenity"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "notes_sb",
+   "fieldtype": "Section Break",
+   "label": "Notes Sb"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text Editor",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "usage_status_sb",
+   "fieldtype": "Section Break",
+   "label": "Usage & Availability"
+  },
+  {
+   "default": "Residential",
+   "description": "Drives VAT treatment: Oman residential leases are VAT-exempt",
+   "fieldname": "usage",
+   "fieldtype": "Select",
+   "label": "Usage",
+   "options": "Residential\nCommercial"
+  },
+  {
+   "fieldname": "column_break_usage",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "description": "Show this property on the public listings portal",
+   "fieldname": "published_to_portal",
+   "fieldtype": "Check",
+   "label": "Published to Portal"
+  },
+  {
+   "fieldname": "specs_sb",
+   "fieldtype": "Section Break",
+   "label": "Specifications"
+  },
+  {
+   "fieldname": "area_sqm",
+   "fieldtype": "Float",
+   "label": "Area (sqm)"
+  },
+  {
+   "fieldname": "bedrooms",
+   "fieldtype": "Int",
+   "label": "Bedrooms"
+  },
+  {
+   "fieldname": "bathrooms",
+   "fieldtype": "Int",
+   "label": "Bathrooms"
+  },
+  {
+   "fieldname": "column_break_specs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Unfurnished",
+   "fieldname": "furnishing",
+   "fieldtype": "Select",
+   "label": "Furnishing",
+   "options": "Unfurnished\nSemi Furnished\nFully Furnished"
+  },
+  {
+   "fieldname": "parking_slots",
+   "fieldtype": "Int",
+   "label": "Parking Slots"
+  },
+  {
+   "fieldname": "fin_sb",
+   "fieldtype": "Section Break",
+   "label": "Financials"
+  },
+  {
+   "description": "Auto-computed from Charges below (Rent rows, annualized).",
+   "fieldname": "annual_rent",
+   "fieldtype": "Currency",
+   "label": "Asking Annual Rent",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_financials",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "current_lease",
+   "fieldtype": "Link",
+   "label": "Current Lease",
+   "options": "Lease Contract",
+   "read_only": 1
+  },
+  {
+   "fieldname": "charges",
+   "fieldtype": "Table",
+   "label": "Charges",
+   "options": "Property Unit Charge"
+  },
+  {
+   "description": "Auto-derived from the first 'Rent' row in Charges below.",
+   "fieldname": "rent_frequency",
+   "fieldtype": "Select",
+   "label": "Rent Frequency",
+   "options": "\nMonthly\nQuarterly\nSemi-Annual\nAnnual",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "description": "Show in the highlighted Featured row at the top of the public listings page.",
+   "fieldname": "is_featured",
+   "fieldtype": "Check",
+   "label": "Featured on Portal"
+  }
+ ],
+ "image_field": "cover_image",
+ "links": [
+  {
+   "group": "Leasing",
+   "link_doctype": "Unit",
+   "link_fieldname": "property"
+  },
+  {
+   "group": "Documents",
+   "link_doctype": "Property Document",
+   "link_fieldname": "property"
+  },
+  {
+   "group": "Leasing",
+   "link_doctype": "Lease Contract",
+   "link_fieldname": "property"
+  },
+  {
+   "group": "Maintenance",
+   "link_doctype": "Maintenance Request",
+   "link_fieldname": "property"
+  },
+  {
+   "group": "Maintenance",
+   "link_doctype": "Maintenance Job",
+   "link_fieldname": "property"
+  },
+  {
+   "group": "Maintenance",
+   "link_doctype": "Move In Out Inspection",
+   "link_fieldname": "property"
+  },
+  {
+   "group": "Utilities",
+   "link_doctype": "Utility Account",
+   "link_fieldname": "property"
+  },
+  {
+   "group": "Interest",
+   "link_doctype": "Property Enquiry",
+   "link_fieldname": "property"
+  },
+  {
+   "group": "Interest",
+   "link_doctype": "Property Wishlist",
+   "link_fieldname": "property"
+  },
+  {
+   "group": "Interest",
+   "link_doctype": "Site Visit Booking",
+   "link_fieldname": "property"
+  }
+ ],
+ "modified": "2026-11-24 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Estate Property",
+ "name": "Property",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RE Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Property Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Leasing Officer",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Supervisor",
+   "share": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "property_name,city,area",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "property_name",
+ "track_changes": 1
+}

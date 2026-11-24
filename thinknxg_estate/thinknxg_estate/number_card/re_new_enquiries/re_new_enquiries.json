@@ -1,0 +1,22 @@
+{
+ "creation": "2026-11-24 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "idx": 0,
+ "modified": "2026-11-24 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "thinkNXG Estate",
+ "name": "RE New Enquiries",
+ "owner": "Administrator",
+ "label": "New Enquiries",
+ "document_type": "Listing Inquiry",
+ "function": "Count",
+ "filters_json": "[[\"Listing Inquiry\", \"status\", \"=\", \"New\"]]",
+ "is_public": 1,
+ "is_standard": 1,
+ "show_percentage_stats": 1,
+ "stats_time_interval": "Monthly",
+ "type": "Document Type",
+ "color": "#FFA00A",
+ "show_full_number": 0
+}

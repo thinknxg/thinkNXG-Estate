@@ -1,0 +1,343 @@
+{
+ "actions": [],
+ "autoname": "format:UNIT-{#####}",
+ "creation": "2026-01-01 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "basic_sb",
+  "property",
+  "ownership_section",
+  "ownership_type",
+  "owner_ref",
+  "column_break_ownership",
+  "management_fee_type",
+  "management_fee_value",
+  "onetime_commission",
+  "unit_no",
+  "unit_title",
+  "floor",
+  "col_break_1",
+  "unit_type",
+  "usage",
+  "status",
+  "published_to_portal",
+  "specs_sb",
+  "area_sqm",
+  "bedrooms",
+  "bathrooms",
+  "col_break_2",
+  "furnishing",
+  "parking_slots",
+  "fin_sb",
+  "annual_rent",
+  "col_break_3",
+  "current_lease",
+  "company",
+  "charges",
+  "rent_frequency"
+ ],
+ "fields": [
+  {
+   "fieldname": "basic_sb",
+   "fieldtype": "Section Break",
+   "label": "Unit"
+  },
+  {
+   "fieldname": "property",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Property",
+   "options": "Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ownership_section",
+   "fieldtype": "Section Break",
+   "label": "Ownership & Billing",
+   "description": "Auto-populated from Property when this Unit's Property field is set. Values below are editable per-unit overrides (e.g. 2BR vs luxury units billed at different rates).",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "ownership_type",
+   "fieldtype": "Select",
+   "label": "Ownership Type",
+   "options": "Company\nLandlord",
+   "read_only": 1,
+   "description": "Fetched from Property - not editable here."
+  },
+  {
+   "fieldname": "owner_ref",
+   "fieldtype": "Link",
+   "label": "Owner",
+   "options": "Property Owner",
+   "read_only": 1,
+   "depends_on": "eval:doc.ownership_type=='Landlord'"
+  },
+  {
+   "fieldname": "column_break_ownership",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "management_fee_type",
+   "fieldtype": "Select",
+   "label": "Management Fee Type",
+   "options": "Percentage\nFixed Amount",
+   "description": "Editable override - defaults from Property but can differ per unit.",
+   "depends_on": "eval:doc.ownership_type=='Landlord'"
+  },
+  {
+   "fieldname": "management_fee_value",
+   "fieldtype": "Float",
+   "label": "Management Fee Value",
+   "depends_on": "eval:doc.ownership_type=='Landlord'"
+  },
+  {
+   "fieldname": "onetime_commission",
+   "fieldtype": "Currency",
+   "label": "Onetime Commission",
+   "depends_on": "eval:doc.ownership_type=='Landlord'"
+  },
+  {
+   "fieldname": "unit_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "unit_title",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Unit Title",
+   "read_only": 1
+  },
+  {
+   "fieldname": "floor",
+   "fieldtype": "Select",
+   "label": "Floor",
+   "options": "Ground Floor\nFirst Floor\nSecond Floor\nThird Floor\nFourth Floor\nFifth Floor\nSixth Floor\nSeventh Floor"
+  },
+  {
+   "fieldname": "col_break_1",
+   "fieldtype": "Column Break",
+   "label": "Col Break 1"
+  },
+  {
+   "fieldname": "unit_type",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Unit Type",
+   "options": "\nStudio\n1BR\n2BR\n3BR\n4BR+\nPenthouse\nShop\nOffice\nWarehouse",
+   "reqd": 1
+  },
+  {
+   "default": "Residential",
+   "description": "Drives VAT treatment: Oman residential leases are VAT-exempt",
+   "fieldname": "usage",
+   "fieldtype": "Select",
+   "label": "Usage",
+   "options": "Residential\nCommercial"
+  },
+  {
+   "default": "Vacant",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Vacant\nReserved\nOccupied\nUnder Maintenance\nBlocked",
+   "read_only": 1
+  },
+  {
+   "fieldname": "published_to_portal",
+   "fieldtype": "Check",
+   "label": "Published to Portal",
+   "default": "0",
+   "description": "Show this unit on the public listings portal"
+  },
+  {
+   "fieldname": "specs_sb",
+   "fieldtype": "Section Break",
+   "label": "Specifications"
+  },
+  {
+   "fieldname": "area_sqm",
+   "fieldtype": "Float",
+   "label": "Area (sqm)"
+  },
+  {
+   "fieldname": "bedrooms",
+   "fieldtype": "Int",
+   "label": "Bedrooms"
+  },
+  {
+   "fieldname": "bathrooms",
+   "fieldtype": "Int",
+   "label": "Bathrooms"
+  },
+  {
+   "fieldname": "col_break_2",
+   "fieldtype": "Column Break",
+   "label": "Col Break 2"
+  },
+  {
+   "default": "Unfurnished",
+   "fieldname": "furnishing",
+   "fieldtype": "Select",
+   "label": "Furnishing",
+   "options": "Unfurnished\nSemi Furnished\nFully Furnished"
+  },
+  {
+   "fieldname": "parking_slots",
+   "fieldtype": "Int",
+   "label": "Parking Slots"
+  },
+  {
+   "fieldname": "fin_sb",
+   "fieldtype": "Section Break",
+   "label": "Financials"
+  },
+  {
+   "description": "Auto-computed from Charges below (Rent rows, annualized).",
+   "fieldname": "annual_rent",
+   "fieldtype": "Currency",
+   "label": "Asking Annual Rent",
+   "read_only": 1
+  },
+  {
+   "fieldname": "col_break_3",
+   "fieldtype": "Column Break",
+   "label": "Col Break 3"
+  },
+  {
+   "fieldname": "current_lease",
+   "fieldtype": "Link",
+   "label": "Current Lease",
+   "options": "Lease Contract",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "property.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "charges",
+   "fieldtype": "Table",
+   "label": "Charges",
+   "options": "Property Unit Charge"
+  },
+  {
+   "description": "Auto-derived from the first 'Rent' row in Charges below.",
+   "fieldname": "rent_frequency",
+   "fieldtype": "Select",
+   "label": "Rent Frequency",
+   "options": "\nMonthly\nQuarterly\nSemi-Annual\nAnnual",
+   "read_only": 1
+  }
+ ],
+ "links": [
+  {
+   "group": "Leasing",
+   "link_doctype": "Lease Contract",
+   "link_fieldname": "unit"
+  },
+  {
+   "group": "Maintenance",
+   "link_doctype": "Maintenance Request",
+   "link_fieldname": "unit"
+  },
+  {
+   "group": "Maintenance",
+   "link_doctype": "Maintenance Job",
+   "link_fieldname": "unit"
+  },
+  {
+   "group": "Maintenance",
+   "link_doctype": "Move In Out Inspection",
+   "link_fieldname": "unit"
+  },
+  {
+   "group": "Utilities",
+   "link_doctype": "Utility Account",
+   "link_fieldname": "unit"
+  },
+  {
+   "group": "Interest",
+   "link_doctype": "Property Enquiry",
+   "link_fieldname": "unit"
+  },
+  {
+   "group": "Interest",
+   "link_doctype": "Property Wishlist",
+   "link_fieldname": "unit"
+  },
+  {
+   "group": "Interest",
+   "link_doctype": "Site Visit Booking",
+   "link_fieldname": "unit"
+  }
+ ],
+ "modified": "2026-11-24 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Estate Property",
+ "name": "Unit",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RE Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Property Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Leasing Officer",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Supervisor",
+   "share": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "unit_no,property",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "unit_title",
+ "track_changes": 1
+}

@@ -1,0 +1,75 @@
+{
+ "custom": 0,
+ "doctype": "DocType",
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 0
+  },
+  {
+   "description": "Auto-linked when a portal visitor without a Customer profile creates this record",
+   "fieldname": "lead",
+   "fieldtype": "Link",
+   "label": "Lead",
+   "options": "Lead",
+   "read_only": 1
+  },
+  {
+   "fieldname": "re_lead",
+   "fieldtype": "Link",
+   "options": "RE Lead",
+   "label": "CRM Lead",
+   "in_standard_filter": 1,
+   "description": "The unified CRM lead for this visitor."
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Unit",
+   "options": "Unit",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "unit.property",
+   "fieldname": "property",
+   "fieldtype": "Link",
+   "label": "Property",
+   "options": "Property",
+   "read_only": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "saved_on",
+   "fieldtype": "Datetime",
+   "label": "Saved On",
+   "read_only": 1
+  }
+ ],
+ "module": "Estate CRM",
+ "name": "Property Wishlist",
+ "naming_rule": "Autoincrement",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "if_owner": 1,
+   "read": 1,
+   "role": "Customer",
+   "write": 1
+  }
+ ],
+ "restrict_to_domain": "",
+ "modified": "2026-11-24 12:00:00.000000"
+}
