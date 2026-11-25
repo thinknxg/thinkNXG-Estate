@@ -1,0 +1,593 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-11-25 08:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "t_design",
+  "sb_tpl",
+  "theme_name",
+  "template",
+  "c1",
+  "description",
+  "is_live",
+  "published_on",
+  "published_by",
+  "sb_col",
+  "primary_color",
+  "accent_color",
+  "tone",
+  "c2",
+  "background_color",
+  "surface_color",
+  "text_color",
+  "heading_color",
+  "sb_typo",
+  "font_style",
+  "font_scale",
+  "corner_style",
+  "c3",
+  "button_style",
+  "shadow_style",
+  "t_brand",
+  "sb_brand",
+  "brand_name",
+  "tagline",
+  "logo",
+  "c4",
+  "favicon",
+  "footer_text",
+  "show_powered_by",
+  "sb_head",
+  "header_style",
+  "header_sticky",
+  "sb_links",
+  "links",
+  "t_home",
+  "sb_hero",
+  "hero_style",
+  "hero_headline",
+  "hero_subtext",
+  "c5",
+  "hero_image",
+  "hero_overlay",
+  "show_hero_stats",
+  "show_popular_searches",
+  "sb_sections",
+  "sections",
+  "sb_cta",
+  "cta_title",
+  "cta_text",
+  "c6",
+  "cta_primary_label",
+  "cta_primary_url",
+  "cta_secondary_label",
+  "cta_secondary_url",
+  "t_list",
+  "sb_cards",
+  "card_style",
+  "results_columns",
+  "filters_layout",
+  "c7",
+  "default_view",
+  "enable_map_view",
+  "enable_compare",
+  "sb_detail",
+  "detail_layout",
+  "show_similar",
+  "show_recently_viewed",
+  "t_seo",
+  "sb_seo",
+  "seo_title",
+  "seo_description",
+  "og_image",
+  "t_adv",
+  "sb_css",
+  "custom_css",
+  "published_snapshot",
+  "previous_snapshot"
+ ],
+ "fields": [
+  {
+   "fieldname": "t_design",
+   "fieldtype": "Tab Break",
+   "label": "Design"
+  },
+  {
+   "fieldname": "sb_tpl",
+   "fieldtype": "Section Break",
+   "label": "Template"
+  },
+  {
+   "fieldname": "theme_name",
+   "fieldtype": "Data",
+   "label": "Theme Name",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "template",
+   "fieldtype": "Select",
+   "label": "Base Template",
+   "options": "Classic\nModern\nLuxury\nMarketplace",
+   "reqd": 1,
+   "in_list_view": 1,
+   "description": "Sets the layout and starting values. Use Apply Template to reset the design fields.",
+   "default": "Classic"
+  },
+  {
+   "fieldname": "c1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Internal Note"
+  },
+  {
+   "fieldname": "is_live",
+   "fieldtype": "Check",
+   "label": "Live",
+   "read_only": 1,
+   "in_list_view": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "published_on",
+   "fieldtype": "Datetime",
+   "label": "Last Published",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "published_by",
+   "fieldtype": "Link",
+   "label": "Published By",
+   "options": "User",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "sb_col",
+   "fieldtype": "Section Break",
+   "label": "Colours",
+   "description": "Leave a field empty to use the template's colour. Text and buttons are checked for readable contrast when you save."
+  },
+  {
+   "fieldname": "primary_color",
+   "fieldtype": "Color",
+   "label": "Primary (header, hero, footer)"
+  },
+  {
+   "fieldname": "accent_color",
+   "fieldtype": "Color",
+   "label": "Accent (buttons, links)"
+  },
+  {
+   "fieldname": "tone",
+   "fieldtype": "Select",
+   "label": "Colour Mode",
+   "options": "\nLight\nDark"
+  },
+  {
+   "fieldname": "c2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "background_color",
+   "fieldtype": "Color",
+   "label": "Page Background"
+  },
+  {
+   "fieldname": "surface_color",
+   "fieldtype": "Color",
+   "label": "Cards and Panels"
+  },
+  {
+   "fieldname": "text_color",
+   "fieldtype": "Color",
+   "label": "Body Text"
+  },
+  {
+   "fieldname": "heading_color",
+   "fieldtype": "Color",
+   "label": "Headings and Prices"
+  },
+  {
+   "fieldname": "sb_typo",
+   "fieldtype": "Section Break",
+   "label": "Typography and Shape"
+  },
+  {
+   "fieldname": "font_style",
+   "fieldtype": "Select",
+   "label": "Font",
+   "options": "\nModern sans\nSystem\nSerif headings"
+  },
+  {
+   "fieldname": "font_scale",
+   "fieldtype": "Select",
+   "label": "Text Size",
+   "options": "\nCompact\nDefault\nLarge"
+  },
+  {
+   "fieldname": "corner_style",
+   "fieldtype": "Select",
+   "label": "Corners",
+   "options": "\nSharp\nSoft\nRound"
+  },
+  {
+   "fieldname": "c3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "button_style",
+   "fieldtype": "Select",
+   "label": "Buttons",
+   "options": "\nRounded\nPill\nSquare"
+  },
+  {
+   "fieldname": "shadow_style",
+   "fieldtype": "Select",
+   "label": "Shadows",
+   "options": "\nNone\nSoft\nRaised"
+  },
+  {
+   "fieldname": "t_brand",
+   "fieldtype": "Tab Break",
+   "label": "Branding and Header"
+  },
+  {
+   "fieldname": "sb_brand",
+   "fieldtype": "Section Break",
+   "label": "Brand"
+  },
+  {
+   "fieldname": "brand_name",
+   "fieldtype": "Data",
+   "label": "Site Name",
+   "description": "Defaults to the title in RE Portal Settings."
+  },
+  {
+   "fieldname": "tagline",
+   "fieldtype": "Data",
+   "label": "Tagline"
+  },
+  {
+   "fieldname": "logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo"
+  },
+  {
+   "fieldname": "c4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "favicon",
+   "fieldtype": "Attach Image",
+   "label": "Favicon"
+  },
+  {
+   "fieldname": "footer_text",
+   "fieldtype": "Small Text",
+   "label": "Footer Text"
+  },
+  {
+   "fieldname": "show_powered_by",
+   "fieldtype": "Check",
+   "label": "Show 'Powered by thinkNXG'"
+  },
+  {
+   "fieldname": "sb_head",
+   "fieldtype": "Section Break",
+   "label": "Header"
+  },
+  {
+   "fieldname": "header_style",
+   "fieldtype": "Select",
+   "label": "Header Style",
+   "options": "\nLight\nDark\nTransparent"
+  },
+  {
+   "fieldname": "header_sticky",
+   "fieldtype": "Check",
+   "label": "Keep Header Visible While Scrolling"
+  },
+  {
+   "fieldname": "sb_links",
+   "fieldtype": "Section Break",
+   "label": "Navigation and Footer Links",
+   "description": "Header links replace the automatic menu when at least one is enabled. Footer and social links are added to the footer."
+  },
+  {
+   "fieldname": "links",
+   "fieldtype": "Table",
+   "label": "Links",
+   "options": "Portal Theme Link"
+  },
+  {
+   "fieldname": "t_home",
+   "fieldtype": "Tab Break",
+   "label": "Home Page"
+  },
+  {
+   "fieldname": "sb_hero",
+   "fieldtype": "Section Break",
+   "label": "Hero"
+  },
+  {
+   "fieldname": "hero_style",
+   "fieldtype": "Select",
+   "label": "Hero Layout",
+   "options": "\nCentered\nSplit\nCompact"
+  },
+  {
+   "fieldname": "hero_headline",
+   "fieldtype": "Data",
+   "label": "Headline"
+  },
+  {
+   "fieldname": "hero_subtext",
+   "fieldtype": "Small Text",
+   "label": "Supporting Text"
+  },
+  {
+   "fieldname": "c5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hero_image",
+   "fieldtype": "Attach Image",
+   "label": "Hero Image"
+  },
+  {
+   "fieldname": "hero_overlay",
+   "fieldtype": "Int",
+   "label": "Image Overlay (%)",
+   "description": "0 to 90. Higher is darker."
+  },
+  {
+   "fieldname": "show_hero_stats",
+   "fieldtype": "Check",
+   "label": "Show Counts Under the Search"
+  },
+  {
+   "fieldname": "show_popular_searches",
+   "fieldtype": "Check",
+   "label": "Show Popular Locations"
+  },
+  {
+   "fieldname": "sb_sections",
+   "fieldtype": "Section Break",
+   "label": "Sections",
+   "description": "Drag rows to reorder. Switch a section off to hide it. A section with no data on the site is hidden automatically. The hero always comes first."
+  },
+  {
+   "fieldname": "sections",
+   "fieldtype": "Table",
+   "label": "Home Page Sections",
+   "options": "Portal Theme Section"
+  },
+  {
+   "fieldname": "sb_cta",
+   "fieldtype": "Section Break",
+   "label": "Call to Action"
+  },
+  {
+   "fieldname": "cta_title",
+   "fieldtype": "Data",
+   "label": "Title"
+  },
+  {
+   "fieldname": "cta_text",
+   "fieldtype": "Small Text",
+   "label": "Text"
+  },
+  {
+   "fieldname": "c6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cta_primary_label",
+   "fieldtype": "Data",
+   "label": "Main Button Label"
+  },
+  {
+   "fieldname": "cta_primary_url",
+   "fieldtype": "Data",
+   "label": "Main Button Link"
+  },
+  {
+   "fieldname": "cta_secondary_label",
+   "fieldtype": "Data",
+   "label": "Second Button Label"
+  },
+  {
+   "fieldname": "cta_secondary_url",
+   "fieldtype": "Data",
+   "label": "Second Button Link"
+  },
+  {
+   "fieldname": "t_list",
+   "fieldtype": "Tab Break",
+   "label": "Listings"
+  },
+  {
+   "fieldname": "sb_cards",
+   "fieldtype": "Section Break",
+   "label": "Search Results"
+  },
+  {
+   "fieldname": "card_style",
+   "fieldtype": "Select",
+   "label": "Property Card",
+   "options": "\nClassic\nCompact\nImmersive"
+  },
+  {
+   "fieldname": "results_columns",
+   "fieldtype": "Select",
+   "label": "Columns",
+   "options": "\n2\n3"
+  },
+  {
+   "fieldname": "filters_layout",
+   "fieldtype": "Select",
+   "label": "Filters",
+   "options": "\nSidebar\nDrawer"
+  },
+  {
+   "fieldname": "c7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_view",
+   "fieldtype": "Select",
+   "label": "Default View",
+   "options": "\nGrid\nList\nMap"
+  },
+  {
+   "fieldname": "enable_map_view",
+   "fieldtype": "Check",
+   "label": "Offer Map View"
+  },
+  {
+   "fieldname": "enable_compare",
+   "fieldtype": "Check",
+   "label": "Offer Compare"
+  },
+  {
+   "fieldname": "sb_detail",
+   "fieldtype": "Section Break",
+   "label": "Property Page"
+  },
+  {
+   "fieldname": "detail_layout",
+   "fieldtype": "Select",
+   "label": "Layout",
+   "options": "\nSidebar\nStacked"
+  },
+  {
+   "fieldname": "show_similar",
+   "fieldtype": "Check",
+   "label": "Show Similar Properties"
+  },
+  {
+   "fieldname": "show_recently_viewed",
+   "fieldtype": "Check",
+   "label": "Show Recently Viewed"
+  },
+  {
+   "fieldname": "t_seo",
+   "fieldtype": "Tab Break",
+   "label": "SEO"
+  },
+  {
+   "fieldname": "sb_seo",
+   "fieldtype": "Section Break",
+   "label": "Defaults for the Home Page"
+  },
+  {
+   "fieldname": "seo_title",
+   "fieldtype": "Data",
+   "label": "Page Title"
+  },
+  {
+   "fieldname": "seo_description",
+   "fieldtype": "Small Text",
+   "label": "Meta Description"
+  },
+  {
+   "fieldname": "og_image",
+   "fieldtype": "Attach Image",
+   "label": "Share Image"
+  },
+  {
+   "fieldname": "t_adv",
+   "fieldtype": "Tab Break",
+   "label": "Advanced"
+  },
+  {
+   "fieldname": "sb_css",
+   "fieldtype": "Section Break",
+   "label": "Custom CSS",
+   "description": "For designers. Only System Managers can edit this. It is checked and cannot load other sites."
+  },
+  {
+   "fieldname": "custom_css",
+   "fieldtype": "Code",
+   "label": "Custom CSS",
+   "options": "CSS",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "published_snapshot",
+   "fieldtype": "Long Text",
+   "label": "Published Snapshot",
+   "hidden": 1,
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "previous_snapshot",
+   "fieldtype": "Long Text",
+   "label": "Previous Snapshot",
+   "hidden": 1,
+   "read_only": 1,
+   "no_copy": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-25 08:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Estate Portal",
+ "name": "Portal Theme",
+ "owner": "Administrator",
+ "states": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "autoname": "field:theme_name",
+ "naming_rule": "By fieldname",
+ "permissions": [
+  {
+   "role": "RE Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "export": 1,
+   "report": 1,
+   "share": 1
+  },
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "export": 1,
+   "report": 1,
+   "share": 1
+  },
+  {
+   "role": "System Manager",
+   "permlevel": 1,
+   "read": 1,
+   "write": 1
+  },
+  {
+   "role": "RE Manager",
+   "permlevel": 1,
+   "read": 1
+  }
+ ],
+ "track_changes": 1,
+ "quick_entry": 0,
+ "title_field": "theme_name",
+ "search_fields": "theme_name,template"
+}

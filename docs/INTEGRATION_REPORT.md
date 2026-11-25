@@ -266,3 +266,25 @@ The public `/properties` experience and the property page were rebuilt on the ex
 **Verification.** 85 integration tests (7 new) and the Arabic coverage test pass; the visitor browser flow (sign up, save, save search, compare, viewing, lease request, account) passes; desktop, mobile (390 px) and Arabic RTL pages show no horizontal overflow or console errors apart from blocked map tiles in the sandbox.
 
 **Limits (data, not code).** Listings have no verified flag, so the site offers a "Permit on file" filter and badge instead (the hero text mentions verified listings as specified; review it before launch). There is no developer, possession date, agent or posted-by data, so New projects means properties under development and agents are not shown. Categories are the unit types in use (no plots, independent houses or "luxury"; Premium means highest priced). No image thumbnails are generated. Social links come from Website Settings footer items.
+
+## 14. Release 1.3 – Portal Template & Theme Settings (admin CMS)
+
+Administrators now change the look and layout of `/properties` from the desk, with no code. No DocType renames and no new frontend framework; schema changes are additive.
+
+**New DocTypes.** `Portal Theme` (the design: template, colours, typography, shape, header, branding, home sections, listing layout, SEO, custom CSS; version history on), child tables `Portal Theme Section` and `Portal Theme Link`, and the single `Portal Theme Settings` (live theme, template gallery).
+
+**Templates.** Classic Navy, Modern Light, Dark Luxury and Marketplace. One set of site templates serves all four; they differ by CSS variables and layout attributes (hero, card style, columns, filter placement, default view, detail layout), so ordinary edits never need a developer.
+
+**Draft, preview, publish.** Edits are drafts. Publishing stores a snapshot, which is what visitors see; the previous snapshot is kept so a theme can be reverted. `?theme_preview=NAME` (remembered by a cookie) shows a draft to RE Manager and System Manager only, with a banner and exit link. The live theme cannot be deleted.
+
+**Safeguards.** Colours must be valid hex; text and button contrast is checked on save (unreadable combinations are rejected, weak ones warn); link URLs are restricted; custom CSS (System Manager only) may not use `@import`, external `url()`, scripts or HTML.
+
+**Admin UI.** The theme form has Preview (page picker and device width), Publish, Duplicate, Apply Template and Revert. Theme Settings lists themes and templates and creates a theme from a template.
+
+**APIs** (`portal/api/theme_admin.py`, RE Manager / System Manager): `templates`, `gallery`, `create_from_template`, `apply_template`, `duplicate`, `publish`, `revert`, `preview_links`. Public endpoints are unchanged.
+
+**Upgrade.** Patch `v1_3.portal_themes` and `after_migrate` create one theme per template and publish Classic Navy, which matches the previous look.
+
+**Verification.** 97 integration tests (12 new in `test_portal_themes.py`) and the Arabic coverage test pass; all four templates render home, results, list, map and property pages with no horizontal overflow at 1366 px and 390 px.
+
+**Limits.** Admin-entered text is translated only through the Translation DocType. No export/import or scheduled publishing. The transparent header is non-sticky and applies on pages with a hero. Compare and map toggles are applied in CSS. Fonts are system or bundled only. Trust-section wording is fixed text.

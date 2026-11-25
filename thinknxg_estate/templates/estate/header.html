@@ -1,14 +1,13 @@
-<header class="eb-header" id="eb-header">
+<header class="eb-header" id="eb-header" data-header="{{ site.theme.header_style|lower }}" data-sticky="{{ 1 if site.theme.header_sticky else 0 }}">
   <div class="eb-wrap eb-header-in">
     <button type="button" class="eb-iconbtn eb-burger" id="eb-burger" aria-label="{{ _('Menu') }}" aria-expanded="false" aria-controls="eb-drawer">
       <svg class="i"><use href="#i-menu"/></svg></button>
     <a class="eb-brand" href="/properties" aria-label="{{ _('thinkNXG Estate home') }}">
-      <img src="/assets/thinknxg_estate/images/thinknxg_estate_logo.svg" alt="" width="34" height="34">
-      <span>think<b>NXG</b> <em>Estate</em></span>
+      {% include "templates/estate/brand.html" %}
     </a>
     <nav class="eb-nav" aria-label="{{ _('Main') }}">
       {% for n in site.nav %}
-      <a href="{{ n.url }}" class="{{ 'on' if site.active == n.key }}" {% if site.active == n.key %}aria-current="page"{% endif %}>{{ n.label }}</a>
+      <a href="{{ n.url }}" class="{{ 'on' if n.key and site.active == n.key }}" {% if n.key and site.active == n.key %}aria-current="page"{% endif %}{% if n.new_tab %} target="_blank" rel="noopener"{% endif %}>{{ n.label }}</a>
       {% endfor %}
     </nav>
     <div class="eb-tools">
@@ -46,7 +45,7 @@
     <div class="eb-drawer-head"><strong>{{ _("Menu") }}</strong>
       <button type="button" class="eb-iconbtn" data-close aria-label="{{ _('Close') }}"><svg class="i"><use href="#i-x"/></svg></button></div>
     <nav class="eb-drawer-nav">
-      {% for n in site.nav %}<a href="{{ n.url }}">{{ n.label }}<small>{{ n.count }}</small></a>{% endfor %}
+      {% for n in site.nav %}<a href="{{ n.url }}"{% if n.new_tab %} target="_blank" rel="noopener"{% endif %}>{{ n.label }}{% if n.count %}<small>{{ n.count }}</small>{% endif %}</a>{% endfor %}
       <a href="/properties">{{ _("All properties") }}<small>{{ site.counts.total }}</small></a>
       <hr>
       {% if site.visitor %}<a href="/properties/account">{{ _("My account") }}</a>

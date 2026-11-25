@@ -1,0 +1,3 @@
+{# Logo and name. An uploaded logo replaces the mark; a custom site name replaces "thinkNXG Estate". #}
+<img src="{{ site.logo or '/assets/thinknxg_estate/images/thinknxg_estate_logo.svg' }}" alt="" height="34" style="height:34px;width:auto;max-width:150px;object-fit:contain">
+{% if site.theme.brand_name %}<span><b>{{ site.title }}</b></span>{% else %}<span>think<b>NXG</b> <em>Estate</em></span>{% endif %}

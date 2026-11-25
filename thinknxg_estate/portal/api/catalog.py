@@ -253,11 +253,20 @@ def page_links(page, pages):
     return out
 
 
+def default_view():
+    """The view the published theme opens search results in (grid, list or map)."""
+    from thinknxg_estate.portal import themes
+
+    theme = themes.current_theme()[0]
+    view = (theme.default_view or "Grid").lower()
+    return "grid" if view == "map" and not theme.enable_map_view else view
+
+
 def query_string(args, view="grid"):
     from urllib.parse import urlencode
 
     params = dict(args)
-    if view != "grid":
+    if view != default_view():
         params["view"] = view
     return urlencode(params)
 

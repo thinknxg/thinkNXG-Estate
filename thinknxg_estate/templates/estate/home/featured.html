@@ -1,0 +1,17 @@
+{% if home.featured %}
+<section class="eb-section">
+  <div class="eb-wrap">
+    <div class="eb-sec-head">
+      <div>
+        <h2>{{ _(sec.title) if sec.title else (_("Exceptional Properties, Handpicked for You") if home.has_featured else _("Latest properties")) }}</h2>
+        <p>{{ _(sec.subtitle) if sec.subtitle else (_("Explore standout properties selected for quality, location, and value.") if home.has_featured else _("The newest properties on the market.")) }}</p>
+      </div>
+      <a class="eb-seeall" href="/properties{{ '?featured=1' if home.has_featured }}">{{ _("View all") }}<svg class="i i-dir"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="eb-rail {{ '' if sec.variant == 'Grid' else 'eb-rail-scroll' }}">
+      {% with rows=(home.featured[:sec.item_limit] if sec.item_limit else home.featured), layout="grid" %}{% include "templates/includes/property_cards.html" %}{% endwith %}
+    </div>
+  </div>
+</section>
+{% endif %}
+

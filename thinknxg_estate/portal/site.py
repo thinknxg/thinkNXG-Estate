@@ -4,6 +4,7 @@ footer links, language switch and the visitor's state. Pages call site_context()
 import frappe
 from frappe import _
 
+from thinknxg_estate.portal import themes
 from thinknxg_estate.portal.api import catalog
 from thinknxg_estate.portal.utils import amount, money
 
@@ -33,6 +34,12 @@ def site_context(context, active=None):
     # Rent is always offered; the others appear when the site has listings for them.
     nav = [{"key": k, "label": label, "url": url, "count": n} for k, label, url, n in nav if n or k == "rent"]
 
+    theme, preview = themes.current_theme()
+    themes.remember_preview()
+    custom = [l for l in theme.links if l["group"] == "Header"]
+    if custom:  # an administrator-defined menu replaces the automatic one
+        nav = [{"key": "", "label": _(l["label"]), "url": l["url"], "count": 0, "new_tab": l["new_tab"]} for l in custom]
+
     lang = frappe.local.lang or "en"
     other = "en" if lang.startswith("ar") else "ar"
     enabled = set(frappe.get_all("Language", filters={"enabled": 1}, pluck="name"))
@@ -46,10 +53,15 @@ def site_context(context, active=None):
             footer_links.append({"label": labels[key], "url": "/" + route})
     extra = frappe.get_cached_doc("Website Settings").get("footer_items") or []
     more = [{"label": _(i.label), "url": i.url} for i in extra if i.get("label") and i.get("url")]
+    more += [{"label": _(l["label"]), "url": l["url"], "new_tab": l["new_tab"]} for l in theme.links if l["group"] == "Footer"]
+    social = [{"label": _(l["label"]), "url": l["url"]} for l in theme.links if l["group"] == "Social"]
 
     context.site = frappe._dict(
-        title=_(settings.portal_title) if settings.portal_title else _("Properties"),
-        tagline=_(settings.portal_tagline) if settings.portal_tagline else "",
+        title=_(theme.brand_name or settings.portal_title) if (theme.brand_name or settings.portal_title) else _("Properties"),
+        tagline=_(theme.tagline or settings.portal_tagline) if (theme.tagline or settings.portal_tagline) else "",
+        theme=theme, theme_css=themes.css_for(theme), layout=themes.layout_attrs(theme), preview=preview,
+        logo=theme.logo, favicon=theme.favicon, footer_text=_(theme.footer_text) if theme.footer_text else "",
+        powered_by=bool(theme.show_powered_by), social=social,
         currency=settings.currency_label or "OMR", whatsapp=settings.contact_whatsapp,
         email=settings.contact_email, nav=nav, active=active, counts=counts,
         cities=catalog.facets()["cities"][:12], visitor=visitor, staff=staff, saved_count=saved,

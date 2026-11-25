@@ -46,7 +46,7 @@
     FLAGS.forEach(function (k) { var c = $('input[name="' + k + '"]', form); if (c) { c.checked = !!a[k]; } });
     $("#f-sort").value = a.sort || "relevance";
     state.extra = {}; EXTRA.forEach(function (k) { if (a[k]) { state.extra[k] = a[k]; } });
-    state.view = a.view || "grid"; state.page = parseInt(a.page, 10) || 1;
+    state.view = a.view || S.defaultView || "grid"; state.page = parseInt(a.page, 10) || 1;
     syncPrice(); syncLocalities(); syncViewButtons();
   }
 
@@ -74,7 +74,7 @@
   }
   function load(page, opts) {
     opts = opts || {}; var p = params(); state.page = page || 1;
-    var key = qs(p, { page: state.page > 1 ? state.page : "", view: state.view !== "grid" ? state.view : "" });
+    var key = qs(p, { page: state.page > 1 ? state.page : "", view: state.view !== (S.defaultView || "grid") ? state.view : "" });
     if (key === state.last && !opts.force) { return; }
     state.last = key;
     if (!opts.noPush) { history.pushState({}, "", key ? "?" + key : location.pathname); }
@@ -191,7 +191,7 @@
   $("#view-seg").addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) { return; } var v = b.dataset.view;
     if (v === state.view) { return; }
-    if (v === "map" || state.view === "map") { var p = params(); var k = qs(p, { view: v !== "grid" ? v : "" }); location.href = "/properties" + (k ? "?" + k : ""); return; }
+    if (v === "map" || state.view === "map") { var p = params(); var k = qs(p, { view: v !== (S.defaultView || "grid") ? v : "" }); location.href = "/properties" + (k ? "?" + k : ""); return; }
     state.view = v; syncViewButtons(); load(state.page, { force: true, scroll: false });
   });
   window.addEventListener("popstate", function () { fromUrl(); state.last = null; load(state.page, { noPush: true, force: true, scroll: false }); });

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: thinkNXG Estate VERSION\n"
 "Report-Msgid-Bugs-To: sales@kreatao.com\n"
-"POT-Creation-Date: 2026-11-25 07:31+0553\n"
-"PO-Revision-Date: 2026-11-25 07:31+0553\n"
+"POT-Creation-Date: 2026-11-25 07:49+0553\n"
+"PO-Revision-Date: 2026-11-25 07:49+0553\n"
 "Last-Translator: sales@kreatao.com\n"
 "Language-Team: sales@kreatao.com\n"
 "MIME-Version: 1.0\n"
@@ -138,6 +138,16 @@ msgstr ""
 msgid "+ Work Order"
 msgstr ""
 
+#. Description of the 'Link' (Data) field in DocType 'Portal Theme Link'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_link/portal_theme_link.json:40
+msgid "/page, https://..., mailto: or tel:"
+msgstr ""
+
+#. Description of the 'Image Overlay (%)' (Int) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:349
+msgid "0 to 90. Higher is darker."
+msgstr ""
+
 #. Label of a Card Break in the thinkNXG Estate Workspace
 #: thinknxg_estate/thinknxg_estate/workspace/thinknxg_estate/thinknxg_estate.json
 msgid "01 · Portfolio Management"
@@ -187,11 +197,11 @@ msgstr ""
 msgid "1 (Annual)"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:75
+#: thinknxg_estate/templates/estate/home/categories.html:8
 msgid "1 listing"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:116
+#: thinknxg_estate/templates/estate/home/locations.html:11
 msgid "1 property"
 msgstr ""
 
@@ -357,12 +367,17 @@ msgstr ""
 msgid "A job already exists for this request."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:175
+#: thinknxg_estate/templates/estate/home/trust.html:3
 msgid "A property site that works from the same records the property managers use."
 msgstr ""
 
 #: thinknxg_estate/estate_crm/doctype/re_deal/re_deal.py:20
 msgid "A submitted Lease Contract is required to mark a deal Won."
+msgstr ""
+
+#: thinknxg_estate/portal/api/theme_admin.py:82
+#, python-brace-format
+msgid "A theme named {0} already exists."
 msgstr ""
 
 #. Option for the 'Category' (Select) field in DocType 'Maintenance Request'
@@ -413,6 +428,15 @@ msgstr ""
 msgid "Abu Dhabi, UAE"
 msgstr ""
 
+#. Label of the accent_color (Color) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:166
+msgid "Accent (buttons, links)"
+msgstr ""
+
+#: thinknxg_estate/portal/themes.py:171
+msgid "Accent links on page background"
+msgstr ""
+
 #. Label of the access_token (Password) field in DocType 'WhatsApp Settings'
 #: thinknxg_estate/estate_crm/doctype/whatsapp_settings/whatsapp_settings.json:39
 msgid "Access Token"
@@ -425,6 +449,10 @@ msgstr ""
 
 #: thinknxg_estate/core/tenant_portal_api.py:39
 msgid "Access-code sign in is not enabled. Please use the tenant portal login."
+msgstr ""
+
+#: thinknxg_estate/portal/api/theme_admin.py:156
+msgid "Account"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:2208
@@ -470,7 +498,7 @@ msgstr ""
 msgid "Accounts User"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:177
+#: thinknxg_estate/templates/estate/home/trust.html:5
 msgid "Accurate, current listings"
 msgstr ""
 
@@ -486,6 +514,10 @@ msgstr ""
 msgid "Action Required"
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:18
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:19
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:25
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:26
 #: thinknxg_estate/www/re-portal/index.html:1765
 msgid "Actions"
 msgstr ""
@@ -561,7 +593,12 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:179
+#. Label of the t_adv (Tab Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:509
+msgid "Advanced"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home/trust.html:7
 msgid "Advanced search and filters"
 msgstr ""
 
@@ -731,12 +768,12 @@ msgstr ""
 msgid "All Units"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/header.html:20
+#: thinknxg_estate/templates/estate/header.html:19
 msgid "All locations"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/footer.html:16
-#: thinknxg_estate/templates/estate/header.html:50
+#: thinknxg_estate/templates/estate/footer.html:17
+#: thinknxg_estate/templates/estate/header.html:49
 msgid "All properties"
 msgstr ""
 
@@ -922,7 +959,7 @@ msgstr ""
 msgid "Anthropic"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:44
+#: thinknxg_estate/templates/estate/home/hero.html:42
 #: thinknxg_estate/templates/estate/results.html:42
 #: thinknxg_estate/templates/estate/results.html:81
 #: thinknxg_estate/templates/estate/results.html:85
@@ -930,7 +967,7 @@ msgstr ""
 msgid "Any"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:39
+#: thinknxg_estate/templates/estate/home/hero.html:37
 #: thinknxg_estate/www/properties/index.html:14
 msgid "Any budget"
 msgstr ""
@@ -943,7 +980,7 @@ msgstr ""
 msgid "Any status"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:33
+#: thinknxg_estate/templates/estate/home/hero.html:31
 msgid "Any type"
 msgstr ""
 
@@ -987,9 +1024,18 @@ msgstr ""
 msgid "Applications Under Review"
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:68
+msgid "Apply"
+msgstr ""
+
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.js:17
 #: thinknxg_estate/www/re-portal/index.html:1235
 msgid "Apply Charge to Tenant"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:19
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:68
+msgid "Apply Template"
 msgstr ""
 
 #. Label of the approval_status (Select) field in DocType 'WhatsApp Template'
@@ -1392,6 +1438,11 @@ msgstr ""
 msgid "Base Amount"
 msgstr ""
 
+#. Label of the template (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:113
+msgid "Base Template"
+msgstr ""
+
 #. Description of the 'Speech Endpoint' (Data) field in DocType 'AI Settings'
 #: thinknxg_estate/estate_voice/doctype/ai_settings/ai_settings.json:150
 msgid "Base URL for local Whisper, e.g. http://localhost:9000"
@@ -1433,7 +1484,7 @@ msgstr ""
 #: thinknxg_estate/estate_portal/doctype/listing/listing.json:137
 #: thinknxg_estate/estate_property/doctype/property/property.json:349
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:176
-#: thinknxg_estate/templates/estate/home.html:42
+#: thinknxg_estate/templates/estate/home/hero.html:40
 #: thinknxg_estate/templates/estate/results.html:80
 #: thinknxg_estate/templates/generators/listing.html:57
 #: thinknxg_estate/templates/generators/listing.html:58
@@ -1484,6 +1535,19 @@ msgstr ""
 msgid "Body Preview"
 msgstr ""
 
+#. Label of the text_color (Color) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:191
+msgid "Body Text"
+msgstr ""
+
+#: thinknxg_estate/portal/themes.py:168
+msgid "Body text on cards"
+msgstr ""
+
+#: thinknxg_estate/portal/themes.py:166
+msgid "Body text on page background"
+msgstr ""
+
 #. Label of the booking_fee (Currency) field in DocType 'Reservation'
 #: thinknxg_estate/estate_crm/doctype/reservation/reservation.json:59
 msgid "Booking Fee"
@@ -1527,9 +1591,19 @@ msgstr ""
 msgid "Bounced PDCs"
 msgstr ""
 
+#. Label of the sb_brand (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:245
+msgid "Brand"
+msgstr ""
+
 #. Label of the brand_sb (Section Break) field in DocType 'RE Portal Settings'
 #: thinknxg_estate/estate_portal/doctype/re_portal_settings/re_portal_settings.json:33
 msgid "Branding"
+msgstr ""
+
+#. Label of the t_brand (Tab Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:240
+msgid "Branding and Header"
 msgstr ""
 
 #: thinknxg_estate/templates/generators/listing.html:10
@@ -1610,15 +1684,15 @@ msgstr ""
 msgid "Browse properties"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:110
+#: thinknxg_estate/templates/estate/home/locations.html:5
 msgid "Browse properties in the cities where we have listings."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:188
+#: thinknxg_estate/templates/estate/home/trust.html:16
 msgid "Browse the whole site in English or Arabic, with full right-to-left layout."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:38
+#: thinknxg_estate/templates/estate/home/hero.html:36
 #: thinknxg_estate/templates/estate/results.html:69
 msgid "Budget"
 msgstr ""
@@ -1670,12 +1744,17 @@ msgstr ""
 msgid "Business messages outside the 24-hour window use the approved template with this purpose."
 msgstr ""
 
+#. Label of the button_style (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:228
+msgid "Buttons"
+msgstr ""
+
 #. Option for the 'Interest Type' (Select) field in DocType 'RE Deal'
 #. Option for the 'Interest Type' (Select) field in DocType 'RE Lead'
 #: thinknxg_estate/estate_crm/doctype/re_deal/re_deal.json:113
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.json:136
-#: thinknxg_estate/portal/site.py:30
-#: thinknxg_estate/templates/estate/home.html:12
+#: thinknxg_estate/portal/site.py:31
+#: thinknxg_estate/templates/estate/home/hero.html:10
 #: thinknxg_estate/templates/estate/results.html:23
 #: thinknxg_estate/templates/estate/results.html:42
 #: thinknxg_estate/www/re-portal/index.html:1533
@@ -1724,6 +1803,11 @@ msgstr ""
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.js:20
 #: thinknxg_estate/www/re-portal/index.html:1241
 msgid "Calculate Amount"
+msgstr ""
+
+#. Label of the sb_cta (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:376
+msgid "Call to Action"
 msgstr ""
 
 #: thinknxg_estate/voice/intent/dispatcher.py:176
@@ -1815,6 +1899,16 @@ msgstr ""
 msgid "Captured via WhatsApp feedback prompt"
 msgstr ""
 
+#. Label of the surface_color (Color) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:186
+msgid "Cards and Panels"
+msgstr ""
+
+#. Option for the 'Style' (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:56
+msgid "Carousel"
+msgstr ""
+
 #: thinknxg_estate/www/re-portal/index.html:1849
 msgid "Cash"
 msgstr ""
@@ -1828,6 +1922,17 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1666
 msgid "Category…"
+msgstr ""
+
+#. Option for the 'Hero Layout' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:324
+msgid "Centered"
+msgstr ""
+
+#. Description of the 'Live Theme' (Link) field in DocType 'Portal Theme
+#. Settings'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.json:26
+msgid "Change it with Publish on a theme. Visitors see the published copy, not unsaved edits."
 msgstr ""
 
 #. Label of the channel (Select) field in DocType 'Voice Intent'
@@ -1956,7 +2061,7 @@ msgstr ""
 msgid "Choose the unit being listed, or the property if it is let as a whole."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:61
+#: thinknxg_estate/templates/estate/home/hero.html:59
 #: thinknxg_estate/www/properties/index.html:15
 #: thinknxg_estate/www/properties/index.html:31
 msgid "Cities"
@@ -1973,7 +2078,7 @@ msgstr ""
 msgid "City"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:26
+#: thinknxg_estate/templates/estate/home/hero.html:24
 msgid "City / Location / Area"
 msgstr ""
 
@@ -1988,7 +2093,14 @@ msgstr ""
 msgid "Clarifying"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/footer.html:50
+#. Option for the 'Base Template' (Select) field in DocType 'Portal Theme'
+#. Option for the 'Property Card' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:114
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:426
+msgid "Classic"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/footer.html:51
 #: thinknxg_estate/www/re-portal/index.html:3002
 #: thinknxg_estate/www/re-portal/index.html:3169
 #: thinknxg_estate/www/re-portal/index.html:4970
@@ -2053,9 +2165,9 @@ msgstr ""
 msgid "Client Name, Unit and Date/Time are required."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/header.html:47
+#: thinknxg_estate/templates/estate/header.html:46
 #: thinknxg_estate/templates/estate/results.html:36
-#: thinknxg_estate/templates/generators/listing.html:185
+#: thinknxg_estate/templates/generators/listing.html:187
 #: thinknxg_estate/www/re-portal/index.html:1841
 msgid "Close"
 msgstr ""
@@ -2103,6 +2215,25 @@ msgstr ""
 msgid "Collection %"
 msgstr ""
 
+#. Label of the tone (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:171
+msgid "Colour Mode"
+msgstr ""
+
+#. Label of the sb_col (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:155
+msgid "Colours"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.py:47
+msgid "Colours are hard to read"
+msgstr ""
+
+#. Label of the results_columns (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:431
+msgid "Columns"
+msgstr ""
+
 #. Description of the 'Languages' (Small Text) field in DocType 'Voice Locale
 #. Profile'
 #: thinknxg_estate/estate_voice/doctype/voice_locale_profile/voice_locale_profile.json:35
@@ -2147,8 +2278,8 @@ msgstr ""
 #: thinknxg_estate/estate_portal/doctype/listing/listing.json:173
 #: thinknxg_estate/estate_property/doctype/property/property.json:323
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:143
-#: thinknxg_estate/portal/site.py:32
-#: thinknxg_estate/templates/estate/home.html:14
+#: thinknxg_estate/portal/site.py:33
+#: thinknxg_estate/templates/estate/home/hero.html:12
 #: thinknxg_estate/templates/estate/results.html:44
 #: thinknxg_estate/www/re-portal/index.html:628
 #: thinknxg_estate/www/re-portal/index.html:691
@@ -2261,6 +2392,15 @@ msgstr ""
 msgid "Communications"
 msgstr ""
 
+#. Option for the 'Text Size' (Select) field in DocType 'Portal Theme'
+#. Option for the 'Hero Layout' (Select) field in DocType 'Portal Theme'
+#. Option for the 'Property Card' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:213
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:324
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:426
+msgid "Compact"
+msgstr ""
+
 #. Label of the company (Link) field in DocType 'Commission Entry'
 #. Label of the company (Link) field in DocType 'Reservation'
 #. Label of the company (Link) field in DocType 'Expense Property'
@@ -2337,7 +2477,7 @@ msgstr ""
 msgid "Company…"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/footer.html:49
+#: thinknxg_estate/templates/estate/footer.html:50
 #: thinknxg_estate/templates/generators/listing.html:32
 #: thinknxg_estate/templates/includes/property_cards.html:49
 msgid "Compare"
@@ -2434,7 +2574,7 @@ msgstr ""
 msgid "Considering"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:180
+#: thinknxg_estate/templates/generators/listing.html:182
 #: thinknxg_estate/www/re-portal/index.html:1016
 #: thinknxg_estate/www/re-portal/index.html:1044
 #: thinknxg_estate/www/re-portal/index.html:1607
@@ -2446,7 +2586,7 @@ msgstr ""
 msgid "Contact Email"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:199
+#: thinknxg_estate/templates/estate/home/cta.html:7
 msgid "Contact Our Team"
 msgstr ""
 
@@ -2455,7 +2595,7 @@ msgstr ""
 msgid "Contact Whatsapp"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/footer.html:30
+#: thinknxg_estate/templates/estate/footer.html:31
 msgid "Contact us"
 msgstr ""
 
@@ -2552,6 +2692,11 @@ msgstr ""
 msgid "Copy of the approved body; used to preview, not to send"
 msgstr ""
 
+#. Label of the corner_style (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:218
+msgid "Corners"
+msgstr ""
+
 #. Label of the cost (Currency) field in DocType 'Voice Usage Log'
 #: thinknxg_estate/estate_voice/doctype/voice_usage_log/voice_usage_log.json:53
 msgid "Cost"
@@ -2610,6 +2755,7 @@ msgstr ""
 
 #: thinknxg_estate/estate_crm/doctype/re_deal/re_deal.js:7
 #: thinknxg_estate/estate_crm/doctype/re_deal/re_deal.js:13
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:59
 #: thinknxg_estate/public/js/property_live_toggle.js:24
 #: thinknxg_estate/public/js/unit_lease_contract.js:11
 msgid "Create"
@@ -2621,6 +2767,10 @@ msgstr ""
 
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_request/maintenance_request.js:5
 msgid "Create Job"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:39
+msgid "Create a Theme from This"
 msgstr ""
 
 #. Description of the 'Renewal Todo Days' (Int) field in DocType 'Property
@@ -2700,6 +2850,16 @@ msgstr ""
 msgid "Custom = any OpenAI-compatible chat completions endpoint (set the endpoint below)."
 msgstr ""
 
+#. Label of the sb_css (Section Break) field in DocType 'Portal Theme'
+#. Label of the custom_css (Code) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:514
+msgid "Custom CSS"
+msgstr ""
+
+#: thinknxg_estate/portal/themes.py:244
+msgid "Custom CSS may not use @import, external url(...), scripts or HTML."
+msgstr ""
+
 #. Label of the customer (Link) field in DocType 'Property Enquiry'
 #. Label of the customer (Link) field in DocType 'Property Wishlist'
 #. Name of a role
@@ -2737,6 +2897,14 @@ msgstr ""
 #: thinknxg_estate/estate_leasing/doctype/inspection_item/inspection_item.json:36
 #: thinknxg_estate/www/re-portal/index.html:6110
 msgid "Damaged"
+msgstr ""
+
+#. Option for the 'Colour Mode' (Select) field in DocType 'Portal Theme'
+#. Option for the 'Header Style' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:172
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:291
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:36
+msgid "Dark"
 msgstr ""
 
 #. Label of a Sidebar Item
@@ -2870,6 +3038,11 @@ msgstr ""
 msgid "Deduction of {0} staged on Security Deposit {1}."
 msgstr ""
 
+#. Option for the 'Text Size' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:213
+msgid "Default"
+msgstr ""
+
 #. Label of the default_country_code (Data) field in DocType 'WhatsApp
 #. Settings'
 #: thinknxg_estate/estate_crm/doctype/whatsapp_settings/whatsapp_settings.json:45
@@ -2896,14 +3069,29 @@ msgstr ""
 msgid "Default Model"
 msgstr ""
 
+#. Label of the default_view (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:447
+msgid "Default View"
+msgstr ""
+
 #. Label of the map_default_zoom (Int) field in DocType 'RE Portal Settings'
 #: thinknxg_estate/estate_portal/doctype/re_portal_settings/re_portal_settings.json:132
 msgid "Default Zoom"
 msgstr ""
 
+#. Label of the sb_seo (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:489
+msgid "Defaults for the Home Page"
+msgstr ""
+
 #. Description of the 'Whatsapp Number' (Data) field in DocType 'Tenant'
 #: thinknxg_estate/estate_leasing/doctype/tenant/tenant.json:87
 msgid "Defaults to mobile if left blank"
+msgstr ""
+
+#. Description of the 'Site Name' (Data) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:251
+msgid "Defaults to the title in RE Portal Settings."
 msgstr ""
 
 #: thinknxg_estate/www/properties/account.html:49
@@ -3063,6 +3251,11 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+#. Label of the t_design (Tab Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:95
+msgid "Design"
+msgstr ""
+
 #. Description of the 'User' (Link) field in DocType 'RE Agent'
 #: thinknxg_estate/estate_crm/doctype/re_agent/re_agent.json:51
 msgid "Desk user this agent logs in as"
@@ -3094,6 +3287,10 @@ msgstr ""
 msgid "Development status"
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:81
+msgid "Device"
+msgstr ""
+
 #: thinknxg_estate/voice/intent/dispatcher.py:164
 msgid "Did you mean:"
 msgstr ""
@@ -3110,11 +3307,11 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.py:72
+#: thinknxg_estate/www/properties/index.py:80
 msgid "Discover exceptional properties and request a viewing online."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:8
+#: thinknxg_estate/templates/estate/home/hero.html:6
 msgid "Discover exceptional properties, verified listings, and your next investment opportunity."
 msgstr ""
 
@@ -3179,6 +3376,9 @@ msgstr ""
 #: thinknxg_estate/estate_finance/doctype/security_deposit/security_deposit.json:85
 #: thinknxg_estate/estate_finance/doctype/tenancy_bulk_payment/tenancy_bulk_payment.json:96
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.json:164
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:13
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:14
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:25
 #: thinknxg_estate/estate_property/doctype/property/property.json:134
 #: thinknxg_estate/estate_voice/doctype/whatsapp_template/whatsapp_template.json:49
 #: thinknxg_estate/www/re-portal/index.html:701
@@ -3208,6 +3408,17 @@ msgstr ""
 #. Description of the 'Portal Visibility' (Select) field in DocType 'Property'
 #: thinknxg_estate/estate_property/doctype/property/property.json:136
 msgid "Draft/Sold-Hidden never show on portal even if Live checkbox is on. Under Offer shows with a badge but blocks new enquiries."
+msgstr ""
+
+#. Description of the 'Sections' (Section Break) field in DocType 'Portal
+#. Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:365
+msgid "Drag rows to reorder. Switch a section off to hide it. A section with no data on the site is hidden automatically. The hero always comes first."
+msgstr ""
+
+#. Option for the 'Filters' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:438
+msgid "Drawer"
 msgstr ""
 
 #. Description of the 'Usage' (Select) field in DocType 'Property'
@@ -3247,6 +3458,14 @@ msgstr ""
 msgid "Due Installments"
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:18
+msgid "Duplicate"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:59
+msgid "Duplicate Theme"
+msgstr ""
+
 #. Label of the duration_months (Int) field in DocType 'Lease Contract'
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.json:139
 msgid "Duration Months"
@@ -3270,6 +3489,7 @@ msgstr ""
 msgid "Each lease is automatically validated against country-specific requirements. Regulatory submissions are tracked per contract and alerted when approaching deadlines. ORN/BRN numbers are stored per property and validated against RERA/ADRA registries."
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:29
 #: thinknxg_estate/www/re-portal/index.html:2923
 #: thinknxg_estate/www/re-portal/index.html:3089
 #: thinknxg_estate/www/re-portal/index.html:3452
@@ -3514,7 +3734,7 @@ msgstr ""
 msgid "English Translation"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:187
+#: thinknxg_estate/templates/estate/home/trust.html:15
 msgid "English and Arabic"
 msgstr ""
 
@@ -3543,6 +3763,10 @@ msgstr ""
 
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.py:16
 msgid "Enter a mobile number or an email address for this lead."
+msgstr ""
+
+#: thinknxg_estate/portal/api/theme_admin.py:80
+msgid "Enter a name for the copy."
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:7451
@@ -3645,7 +3869,7 @@ msgstr ""
 msgid "Exact template name registered with Meta"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:94
+#: thinknxg_estate/templates/estate/home/featured.html:6
 msgid "Exceptional Properties, Handpicked for You"
 msgstr ""
 
@@ -3653,6 +3877,10 @@ msgstr ""
 #: thinknxg_estate/estate_voice/doctype/voice_intent/voice_intent.json:115
 #: thinknxg_estate/estate_voice/report/voice_command_analytics/voice_command_analytics.py:72
 msgid "Executed"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/base.html:20
+msgid "Exit preview"
 msgstr ""
 
 #. Label of the expected_close (Date) field in DocType 'RE Deal'
@@ -3760,15 +3988,15 @@ msgstr ""
 msgid "Expiry date (optional)"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/footer.html:13
+#: thinknxg_estate/templates/estate/footer.html:14
 msgid "Explore"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:110
+#: thinknxg_estate/templates/estate/home/locations.html:5
 msgid "Explore by Location"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:95
+#: thinknxg_estate/templates/estate/home/featured.html:7
 msgid "Explore standout properties selected for quality, location, and value."
 msgstr ""
 
@@ -4160,6 +4388,11 @@ msgstr ""
 msgid "Fair"
 msgstr ""
 
+#. Label of the favicon (Attach Image) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:270
+msgid "Favicon"
+msgstr ""
+
 #. Label of the featured (Check) field in DocType 'Listing'
 #: thinknxg_estate/estate_portal/doctype/listing/listing.json:102
 #: thinknxg_estate/portal/api/catalog.py:232
@@ -4175,6 +4408,16 @@ msgstr ""
 
 #: thinknxg_estate/templates/estate/results.html:113
 msgid "Featured only"
+msgstr ""
+
+#. Description of the 'Style' (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:57
+msgid "Featured properties only."
+msgstr ""
+
+#. Description of the 'How Many' (Int) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:50
+msgid "Featured, premium, locations and projects."
 msgstr ""
 
 #. Label of the feed_token (Data) field in DocType 'Listing Feed Settings'
@@ -4230,10 +4473,12 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:180
+#: thinknxg_estate/templates/estate/home/trust.html:8
 msgid "Filter by location, type, price, bedrooms, amenities and more, and switch between grid, list and map views."
 msgstr ""
 
+#. Label of the filters_layout (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:437
 #: thinknxg_estate/templates/estate/results.html:33
 #: thinknxg_estate/templates/estate/results.html:34
 #: thinknxg_estate/templates/estate/results.html:131
@@ -4272,11 +4517,11 @@ msgstr ""
 msgid "Find Your Next Home"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:7
+#: thinknxg_estate/templates/estate/home/hero.html:5
 msgid "Find a Place You'll Love to Call Home."
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.py:71
+#: thinknxg_estate/www/properties/index.py:78
 msgid "Find properties to rent and buy"
 msgstr ""
 
@@ -4333,13 +4578,34 @@ msgstr ""
 msgid "Follow Up"
 msgstr ""
 
+#. Label of the font_style (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:206
+msgid "Font"
+msgstr ""
+
+#. Option for the 'Where' (Select) field in DocType 'Portal Theme Link'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_link/portal_theme_link.json:19
+msgid "Footer"
+msgstr ""
+
+#. Label of the footer_text (Small Text) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:275
+msgid "Footer Text"
+msgstr ""
+
 #. Description of the 'Speech API Key' (Password) field in DocType 'AI
 #. Settings'
 #: thinknxg_estate/estate_voice/doctype/ai_settings/ai_settings.json:159
 msgid "For OpenAI Whisper. Leave empty to use the AI provider key when the provider is OpenAI."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/footer.html:26
+#. Description of the 'Custom CSS' (Section Break) field in DocType 'Portal
+#. Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:515
+msgid "For designers. Only System Managers can edit this. It is checked and cannot load other sites."
+msgstr ""
+
+#: thinknxg_estate/templates/estate/footer.html:27
 msgid "For owners"
 msgstr ""
 
@@ -4352,7 +4618,7 @@ msgstr ""
 
 #: thinknxg_estate/estate_portal/doctype/listing/listing.py:180
 #: thinknxg_estate/portal/api/catalog.py:211
-#: thinknxg_estate/templates/estate/home.html:62
+#: thinknxg_estate/templates/estate/home/hero.html:60
 #: thinknxg_estate/templates/generators/listing.html:19
 #: thinknxg_estate/templates/includes/property_cards.html:21
 msgid "For sale"
@@ -4521,6 +4787,10 @@ msgstr ""
 msgid "Generated Documents"
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:22
+msgid "Go back to the copy that was live before the last publish?"
+msgstr ""
+
 #. Option for the 'Condition' (Select) field in DocType 'Inspection Item'
 #: thinknxg_estate/estate_leasing/doctype/inspection_item/inspection_item.json:36
 #: thinknxg_estate/www/re-portal/index.html:6110
@@ -4532,6 +4802,10 @@ msgstr ""
 msgid "Great — {0} will call you shortly to confirm a time."
 msgstr ""
 
+#. Option for the 'Default View' (Select) field in DocType 'Portal Theme'
+#. Option for the 'Style' (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:448
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:56
 #: thinknxg_estate/templates/estate/results.html:137
 msgid "Grid"
 msgstr ""
@@ -4570,8 +4844,40 @@ msgstr ""
 msgid "Has Lease Request"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:196
+#: thinknxg_estate/templates/estate/home/cta.html:4
 msgid "Have a Property to Sell or Rent?"
+msgstr ""
+
+#. Label of the sb_head (Section Break) field in DocType 'Portal Theme'
+#. Option for the 'Where' (Select) field in DocType 'Portal Theme Link'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:285
+#: thinknxg_estate/estate_portal/doctype/portal_theme_link/portal_theme_link.json:19
+msgid "Header"
+msgstr ""
+
+#. Label of the header_style (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:290
+msgid "Header Style"
+msgstr ""
+
+#. Description of the 'Navigation and Footer Links' (Section Break) field in
+#. DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:302
+msgid "Header links replace the automatic menu when at least one is enabled. Footer and social links are added to the footer."
+msgstr ""
+
+#. Label of the heading_color (Color) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:196
+msgid "Headings and Prices"
+msgstr ""
+
+#: thinknxg_estate/portal/themes.py:167
+msgid "Headings on page background"
+msgstr ""
+
+#. Label of the hero_headline (Data) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:329
+msgid "Headline"
 msgstr ""
 
 #. Label of the headline_price (Currency) field in DocType 'Listing'
@@ -4585,6 +4891,21 @@ msgstr ""
 #: thinknxg_estate/www/re-portal/index.html:2044
 #: thinknxg_estate/www/re-portal/index.html:2059
 msgid "Held"
+msgstr ""
+
+#. Label of the sb_hero (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:318
+msgid "Hero"
+msgstr ""
+
+#. Label of the hero_image (Attach Image) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:343
+msgid "Hero Image"
+msgstr ""
+
+#. Label of the hero_style (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:323
+msgid "Hero Layout"
 msgstr ""
 
 #: thinknxg_estate/crm/matching.py:203
@@ -4627,8 +4948,22 @@ msgstr ""
 msgid "High"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:81
+#: thinknxg_estate/templates/estate/home/categories.html:14
 msgid "Highest priced first"
+msgstr ""
+
+#: thinknxg_estate/portal/api/theme_admin.py:151
+msgid "Home"
+msgstr ""
+
+#. Label of the t_home (Tab Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:313
+msgid "Home Page"
+msgstr ""
+
+#. Label of the sections (Table) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:370
+msgid "Home Page Sections"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1607
@@ -4645,6 +4980,11 @@ msgstr ""
 #. Label of the hot_threshold (Int) field in DocType 'Lead Score Model'
 #: thinknxg_estate/estate_voice/doctype/lead_score_model/lead_score_model.json:76
 msgid "Hot Threshold"
+msgstr ""
+
+#. Label of the item_limit (Int) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:49
+msgid "How Many"
 msgstr ""
 
 #: thinknxg_estate/voice/tasks.py:30
@@ -4760,6 +5100,16 @@ msgstr ""
 #: thinknxg_estate/estate_portal/doctype/listing_photo/listing_photo.json:18
 #: thinknxg_estate/estate_property/doctype/property_photo/property_photo.json:20
 msgid "Image"
+msgstr ""
+
+#. Label of the hero_overlay (Int) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:348
+msgid "Image Overlay (%)"
+msgstr ""
+
+#. Option for the 'Property Card' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:426
+msgid "Immersive"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Property Enquiry'
@@ -4880,7 +5230,7 @@ msgid "Inquirer"
 msgstr ""
 
 #: thinknxg_estate/templates/generators/listing.html:157
-#: thinknxg_estate/templates/generators/listing.html:179
+#: thinknxg_estate/templates/generators/listing.html:181
 msgid "Inquiry"
 msgstr ""
 
@@ -5048,6 +5398,11 @@ msgstr ""
 msgid "Interest…"
 msgstr ""
 
+#. Label of the description (Small Text) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:127
+msgid "Internal Note"
+msgstr ""
+
 #. Option for the 'Number System' (Select) field in DocType 'Voice Locale
 #. Profile'
 #: thinknxg_estate/estate_voice/doctype/voice_locale_profile/voice_locale_profile.json:47
@@ -5199,6 +5554,15 @@ msgstr ""
 msgid "KYC document"
 msgstr ""
 
+#. Label of the header_sticky (Check) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:296
+msgid "Keep Header Visible While Scrolling"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:65
+msgid "Keep my branding, text, links and section titles"
+msgstr ""
+
 #. Option for the 'Resolver' (Select) field in DocType 'Voice Intent'
 #: thinknxg_estate/estate_voice/doctype/voice_intent/voice_intent.json:90
 msgid "Keyword"
@@ -5233,7 +5597,9 @@ msgstr ""
 msgid "LLM"
 msgstr ""
 
+#. Label of the label (Data) field in DocType 'Portal Theme Link'
 #. Label of the label (Select) field in DocType 'Sentiment Reading'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_link/portal_theme_link.json:28
 #: thinknxg_estate/estate_voice/doctype/sentiment_reading/sentiment_reading.json:38
 msgid "Label"
 msgstr ""
@@ -5288,7 +5654,12 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: thinknxg_estate/portal/api/catalog.py:362
+#. Option for the 'Text Size' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:213
+msgid "Large"
+msgstr ""
+
+#: thinknxg_estate/portal/api/catalog.py:371
 msgid "Largest area"
 msgstr ""
 
@@ -5313,6 +5684,11 @@ msgstr ""
 msgid "Last Inbound At"
 msgstr ""
 
+#. Label of the published_on (Datetime) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:140
+msgid "Last Published"
+msgstr ""
+
 #. Label of the last_summary (Small Text) field in DocType 'Customer Thread'
 #: thinknxg_estate/estate_voice/doctype/customer_thread/customer_thread.json:92
 msgid "Last Summary"
@@ -5329,7 +5705,7 @@ msgstr ""
 msgid "Last search results and referenced documents, for follow-ups like 'book a visit for the second one'"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:94
+#: thinknxg_estate/templates/estate/home/featured.html:6
 msgid "Latest properties"
 msgstr ""
 
@@ -5337,6 +5713,11 @@ msgstr ""
 #: thinknxg_estate/estate_property/doctype/property/property.json:237
 #: thinknxg_estate/www/re-portal/index.html:675
 msgid "Latitude"
+msgstr ""
+
+#. Label of the detail_layout (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:468
+msgid "Layout"
 msgstr ""
 
 #. Label of the lead (Link) field in DocType 'Property Wishlist'
@@ -5626,7 +6007,7 @@ msgstr ""
 msgid "Lease request"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:203
+#: thinknxg_estate/templates/generators/listing.html:205
 msgid "Lease request sent. You can follow it in your account."
 msgstr ""
 
@@ -5713,6 +6094,11 @@ msgstr ""
 msgid "Leasing → Tenant Register"
 msgstr ""
 
+#. Description of the 'Colours' (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:156
+msgid "Leave a field empty to use the template's colour. Text and buttons are checked for readable contrast when you save."
+msgstr ""
+
 #. Description of the 'Unit' (Link) field in DocType 'Lease Contract'
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.json:81
 msgid "Leave blank for a whole-property lease (no unit subdivision)."
@@ -5730,6 +6116,11 @@ msgstr ""
 #. Description of the 'Unit' (Link) field in DocType 'Listing'
 #: thinknxg_estate/estate_portal/doctype/listing/listing.json:76
 msgid "Leave empty for a whole property let as one (a villa or a shop with no units)."
+msgstr ""
+
+#. Description of the 'Title' (Data) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:39
+msgid "Leave empty for the default."
 msgstr ""
 
 #. Description of the 'Endpoint' (Data) field in DocType 'AI Settings'
@@ -5757,15 +6148,24 @@ msgstr ""
 msgid "Lifecycle"
 msgstr ""
 
+#. Option for the 'Colour Mode' (Select) field in DocType 'Portal Theme'
+#. Option for the 'Header Style' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:172
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:291
+msgid "Light"
+msgstr ""
+
+#. Label of the url (Data) field in DocType 'Portal Theme Link'
 #. Option for the 'Entity Type' (Select) field in DocType 'Command Entity'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_link/portal_theme_link.json:36
 #: thinknxg_estate/estate_voice/doctype/command_entity/command_entity.json:29
 #: thinknxg_estate/www/re-portal/index.html:4911
 #: thinknxg_estate/www/re-portal/index.html:4920
 msgid "Link"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/base.html:32
-#: thinknxg_estate/templates/generators/listing.html:204
+#: thinknxg_estate/templates/estate/base.html:38
+#: thinknxg_estate/templates/generators/listing.html:206
 msgid "Link copied"
 msgstr ""
 
@@ -5788,7 +6188,9 @@ msgstr ""
 msgid "Linked successfully."
 msgstr ""
 
+#. Label of the links (Table) field in DocType 'Portal Theme'
 #. Label of the link_sb (Section Break) field in DocType 'Voice Message'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:307
 #: thinknxg_estate/estate_voice/doctype/voice_message/voice_message.json:93
 msgid "Links"
 msgstr ""
@@ -5799,11 +6201,13 @@ msgstr ""
 msgid "Links to core Bank Account doctype. Editable during cheque edit AND at submit time - see pdc_bank_sync.py for the submit-time Payment Entry sync."
 msgstr ""
 
+#. Option for the 'Default View' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:448
 #: thinknxg_estate/templates/estate/results.html:138
 msgid "List"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:198
+#: thinknxg_estate/templates/estate/home/cta.html:6
 msgid "List Your Property"
 msgstr ""
 
@@ -5811,9 +6215,9 @@ msgstr ""
 msgid "List view"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/footer.html:28
-#: thinknxg_estate/templates/estate/header.html:39
-#: thinknxg_estate/templates/estate/header.html:58
+#: thinknxg_estate/templates/estate/footer.html:29
+#: thinknxg_estate/templates/estate/header.html:38
+#: thinknxg_estate/templates/estate/header.html:57
 msgid "List your property"
 msgstr ""
 
@@ -5867,8 +6271,10 @@ msgstr ""
 msgid "Listing not found."
 msgstr ""
 
+#. Label of the t_list (Tab Break) field in DocType 'Portal Theme'
 #. Label of a Sidebar Item
 #. Label of a shortcut in the thinkNXG Estate Workspace
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:415
 #: thinknxg_estate/thinknxg_estate/sidebar/thinknxg_estate/thinknxg_estate.json:485
 #: thinknxg_estate/thinknxg_estate/workspace/thinknxg_estate/thinknxg_estate.json:261
 msgid "Listings"
@@ -5880,7 +6286,7 @@ msgstr ""
 msgid "Listings Portal"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:178
+#: thinknxg_estate/templates/estate/home/trust.html:6
 msgid "Listings come straight from the property register. A property disappears from the site as soon as it is leased or taken off the market."
 msgstr ""
 
@@ -5893,7 +6299,12 @@ msgstr ""
 msgid "Listings per page on /properties"
 msgstr ""
 
+#. Label of the is_live (Check) field in DocType 'Portal Theme'
 #. Option for the 'Portal Visibility' (Select) field in DocType 'Property'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:12
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:14
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:132
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:25
 #: thinknxg_estate/estate_property/doctype/property/property.json:134
 #: thinknxg_estate/www/re-portal/index.html:701
 #: thinknxg_estate/www/re-portal/index.html:4483
@@ -5903,6 +6314,13 @@ msgstr ""
 #. Label of a Sidebar Item
 #: thinknxg_estate/thinknxg_estate/sidebar/thinknxg_estate/thinknxg_estate.json:23
 msgid "Live Dashboard"
+msgstr ""
+
+#. Label of the sb_active (Section Break) field in DocType 'Portal Theme
+#. Settings'
+#. Label of the active_theme (Link) field in DocType 'Portal Theme Settings'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.json:18
+msgid "Live Theme"
 msgstr ""
 
 #. Label of the is_live (Check) field in DocType 'Property'
@@ -6021,7 +6439,7 @@ msgstr ""
 #. Label of the addr_sb (Section Break) field in DocType 'Property'
 #: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:66
 #: thinknxg_estate/estate_property/doctype/property/property.json:201
-#: thinknxg_estate/templates/estate/header.html:18
+#: thinknxg_estate/templates/estate/header.html:17
 #: thinknxg_estate/templates/estate/results.html:50
 #: thinknxg_estate/templates/generators/listing.html:105
 #: thinknxg_estate/www/re-portal/index.html:665
@@ -6039,6 +6457,11 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:503
 msgid "Log out"
+msgstr ""
+
+#. Label of the logo (Attach Image) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:261
+msgid "Logo"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:503
@@ -6075,12 +6498,27 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
+#. Option for the 'Base Template' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:114
+msgid "Luxury"
+msgstr ""
+
 #: thinknxg_estate/www/re-portal/index.html:1445
 msgid "Madmoun Verification"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/header.html:9
+#: thinknxg_estate/templates/estate/header.html:8
 msgid "Main"
+msgstr ""
+
+#. Label of the cta_primary_label (Data) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:395
+msgid "Main Button Label"
+msgstr ""
+
+#. Label of the cta_primary_url (Data) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:400
+msgid "Main Button Link"
 msgstr ""
 
 #. Option for the 'Expense Type' (Select) field in DocType 'Expense Property'
@@ -6238,8 +6676,11 @@ msgstr ""
 msgid "Management Fee Value"
 msgstr ""
 
+#. Option for the 'Default View' (Select) field in DocType 'Portal Theme'
 #. Label of the map_sb (Section Break) field in DocType 'RE Portal Settings'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:448
 #: thinknxg_estate/estate_portal/doctype/re_portal_settings/re_portal_settings.json:96
+#: thinknxg_estate/portal/api/theme_admin.py:153
 #: thinknxg_estate/templates/estate/results.html:139
 msgid "Map"
 msgstr ""
@@ -6305,6 +6746,11 @@ msgstr ""
 
 #: thinknxg_estate/voice/commands/lead.py:104
 msgid "Marked via voice command"
+msgstr ""
+
+#. Option for the 'Base Template' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:114
+msgid "Marketplace"
 msgstr ""
 
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.js:56
@@ -6378,8 +6824,8 @@ msgid "Medium"
 msgstr ""
 
 #: thinknxg_estate/templates/estate/header.html:3
+#: thinknxg_estate/templates/estate/header.html:44
 #: thinknxg_estate/templates/estate/header.html:45
-#: thinknxg_estate/templates/estate/header.html:46
 #: thinknxg_estate/www/re-portal/index.html:513
 msgid "Menu"
 msgstr ""
@@ -6430,7 +6876,9 @@ msgid "Meta Cloud API"
 msgstr ""
 
 #. Label of the meta_description (Small Text) field in DocType 'Listing'
+#. Label of the seo_description (Small Text) field in DocType 'Portal Theme'
 #: thinknxg_estate/estate_portal/doctype/listing/listing.json:255
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:499
 msgid "Meta Description"
 msgstr ""
 
@@ -6574,6 +7022,16 @@ msgstr ""
 msgid "Model"
 msgstr ""
 
+#. Option for the 'Base Template' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:114
+msgid "Modern"
+msgstr ""
+
+#. Option for the 'Font' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:207
+msgid "Modern sans"
+msgstr ""
+
 #. Option for the 'Entity Type' (Select) field in DocType 'Command Entity'
 #: thinknxg_estate/estate_voice/doctype/command_entity/command_entity.json:29
 msgid "Money"
@@ -6629,7 +7087,7 @@ msgstr ""
 msgid "Monthly equivalent"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/footer.html:35
+#: thinknxg_estate/templates/estate/footer.html:36
 msgid "More"
 msgstr ""
 
@@ -6723,8 +7181,8 @@ msgstr ""
 msgid "My Properties"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/header.html:34
-#: thinknxg_estate/templates/estate/header.html:52
+#: thinknxg_estate/templates/estate/header.html:33
+#: thinknxg_estate/templates/estate/header.html:51
 #: thinknxg_estate/www/properties/account.py:10
 msgid "My account"
 msgstr ""
@@ -6747,6 +7205,10 @@ msgstr ""
 
 #: thinknxg_estate/portal/api/inquiries.py:27
 msgid "Name and mobile number are required."
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:56
+msgid "Name of the copy"
 msgstr ""
 
 #. Option for the 'Id Type' (Select) field in DocType 'Tenant KYC Document'
@@ -6774,6 +7236,11 @@ msgstr ""
 #. Label of the transcript (Small Text) field in DocType 'Voice Message'
 #: thinknxg_estate/estate_voice/doctype/voice_message/voice_message.json:83
 msgid "Native Transcript"
+msgstr ""
+
+#. Label of the sb_links (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:301
+msgid "Navigation and Footer Links"
 msgstr ""
 
 #: thinknxg_estate/voice/customer/pipeline.py:15
@@ -6857,13 +7324,22 @@ msgstr ""
 msgid "New Lease Contract"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:128
+#: thinknxg_estate/templates/estate/home/projects.html:5
 msgid "New Projects & Developments"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:632
 #: thinknxg_estate/www/re-portal/index.html:6694
 msgid "New Property"
+msgstr ""
+
+#. Label of the open_in_new_tab (Check) field in DocType 'Portal Theme Link'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_link/portal_theme_link.json:45
+msgid "New Tab"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:7
+msgid "New Theme"
 msgstr ""
 
 #: thinknxg_estate/core/listing_portal_api/listing_portal.py:504
@@ -6893,8 +7369,8 @@ msgstr ""
 msgid "New listings match your saved search"
 msgstr ""
 
-#: thinknxg_estate/portal/site.py:31
-#: thinknxg_estate/templates/estate/home.html:15
+#: thinknxg_estate/portal/site.py:32
+#: thinknxg_estate/templates/estate/home/hero.html:13
 msgid "New projects"
 msgstr ""
 
@@ -6908,7 +7384,7 @@ msgstr ""
 msgid "New viewing request for {0}"
 msgstr ""
 
-#: thinknxg_estate/portal/api/catalog.py:361
+#: thinknxg_estate/portal/api/catalog.py:370
 msgid "Newest"
 msgstr ""
 
@@ -6920,7 +7396,7 @@ msgstr ""
 msgid "Next page"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:189
+#: thinknxg_estate/templates/generators/listing.html:191
 #: thinknxg_estate/templates/includes/property_cards.html:32
 msgid "Next photo"
 msgstr ""
@@ -7221,6 +7697,10 @@ msgstr ""
 msgid "No tenants yet."
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:43
+msgid "No themes yet."
+msgstr ""
+
 #: thinknxg_estate/www/re-portal/index.html:6963
 msgid "No unit data to export."
 msgstr ""
@@ -7284,8 +7764,10 @@ msgstr ""
 msgid "Non-stock service item used on rent Sales Invoices"
 msgstr ""
 
+#. Option for the 'Shadows' (Select) field in DocType 'Portal Theme'
 #. Option for the 'Provider' (Select) field in DocType 'AI Settings'
 #. Option for the 'Speech Provider' (Select) field in DocType 'AI Settings'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:235
 #: thinknxg_estate/estate_voice/doctype/ai_settings/ai_settings.json:55
 #: thinknxg_estate/estate_voice/doctype/ai_settings/ai_settings.json:147
 msgid "None"
@@ -7336,6 +7818,10 @@ msgstr ""
 #: thinknxg_estate/www/re-portal/index.html:1472
 #: thinknxg_estate/www/re-portal/index.html:1487
 msgid "Not set"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:13
+msgid "Not shown to visitors. Preview it, then publish."
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1445
@@ -7458,6 +7944,16 @@ msgstr ""
 msgid "Occupied Units by Property"
 msgstr ""
 
+#. Label of the enable_compare (Check) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:458
+msgid "Offer Compare"
+msgstr ""
+
+#. Label of the enable_map_view (Check) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:453
+msgid "Offer Map View"
+msgstr ""
+
 #. Option for the 'Preferred Property Type' (Select) field in DocType 'RE Lead'
 #. Option for the 'Unit Type' (Select) field in DocType 'Unit'
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.json:142
@@ -7558,6 +8054,10 @@ msgstr ""
 msgid "Only Tenants with an Active Lease"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/base.html:19
+msgid "Only you can see this. Visitors still see the live site."
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'Maintenance Request'
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_request/maintenance_request.json:87
 msgid "Open"
@@ -7576,6 +8076,11 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1505
 msgid "Open Leads"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:26
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:8
+msgid "Open Live Site"
 msgstr ""
 
 #. Label of a quick_list in the thinkNXG Estate Workspace
@@ -7614,10 +8119,14 @@ msgstr ""
 msgid "Open a lead or deal first."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/header.html:32
-#: thinknxg_estate/templates/estate/header.html:53
+#: thinknxg_estate/templates/estate/header.html:31
+#: thinknxg_estate/templates/estate/header.html:52
 #: thinknxg_estate/www/properties/account.html:33
 msgid "Open desk"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:84
+msgid "Open in New Tab"
 msgstr ""
 
 #: thinknxg_estate/www/owner-portal/index.html:26
@@ -7911,7 +8420,7 @@ msgstr ""
 msgid "Owner Type"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/footer.html:29
+#: thinknxg_estate/templates/estate/footer.html:30
 #: thinknxg_estate/www/owner-portal/index.html:6
 msgid "Owner portal"
 msgstr ""
@@ -8050,9 +8559,23 @@ msgstr ""
 msgid "PF Agent ID"
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:79
+msgid "Page"
+msgstr ""
+
+#. Label of the background_color (Color) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:181
+msgid "Page Background"
+msgstr ""
+
 #. Label of the page_size (Int) field in DocType 'RE Portal Settings'
 #: thinknxg_estate/estate_portal/doctype/re_portal_settings/re_portal_settings.json:80
 msgid "Page Size"
+msgstr ""
+
+#. Label of the seo_title (Data) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:494
+msgid "Page Title"
 msgstr ""
 
 #: thinknxg_estate/templates/estate/results.html:166
@@ -8433,11 +8956,11 @@ msgstr ""
 msgid "Photo 2"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:184
+#: thinknxg_estate/templates/generators/listing.html:186
 msgid "Photo gallery"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:204
+#: thinknxg_estate/templates/generators/listing.html:206
 #, python-brace-format
 msgid "Photo {0} of {1}"
 msgstr ""
@@ -8453,6 +8976,15 @@ msgstr ""
 #: thinknxg_estate/templates/generators/listing.html:50
 #: thinknxg_estate/templates/includes/property_cards.html:17
 msgid "Photos coming soon"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:7
+msgid "Pick a base template and a name, then save. The design fields fill in from the template."
+msgstr ""
+
+#. Option for the 'Buttons' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:229
+msgid "Pill"
 msgstr ""
 
 #. Label of a Sidebar Item
@@ -8471,7 +9003,7 @@ msgstr ""
 msgid "Planned"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:202
+#: thinknxg_estate/templates/generators/listing.html:204
 msgid "Please check your details and try again."
 msgstr ""
 
@@ -8563,7 +9095,7 @@ msgstr ""
 msgid "Please set the statement period."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/base.html:28
+#: thinknxg_estate/templates/estate/base.html:34
 msgid "Please sign in to save properties and searches."
 msgstr ""
 
@@ -8581,11 +9113,11 @@ msgstr ""
 msgid "Plumbing"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:54
+#: thinknxg_estate/templates/estate/home/hero.html:52
 msgid "Popular"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/footer.html:21
+#: thinknxg_estate/templates/estate/footer.html:22
 msgid "Popular locations"
 msgstr ""
 
@@ -8682,6 +9214,26 @@ msgstr ""
 msgid "Portal Tenants"
 msgstr ""
 
+#. Name of a DocType
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:545
+msgid "Portal Theme"
+msgstr ""
+
+#. Name of a DocType
+#: thinknxg_estate/estate_portal/doctype/portal_theme_link/portal_theme_link.json:60
+msgid "Portal Theme Link"
+msgstr ""
+
+#. Name of a DocType
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:64
+msgid "Portal Theme Section"
+msgstr ""
+
+#. Name of a DocType
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.json:51
+msgid "Portal Theme Settings"
+msgstr ""
+
 #. Label of the portal_title (Data) field in DocType 'RE Portal Settings'
 #: thinknxg_estate/estate_portal/doctype/re_portal_settings/re_portal_settings.json:39
 msgid "Portal Title"
@@ -8776,7 +9328,7 @@ msgstr ""
 msgid "Posting Date"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/footer.html:43
+#: thinknxg_estate/templates/estate/footer.html:44
 msgid "Powered by"
 msgstr ""
 
@@ -8832,23 +9384,40 @@ msgstr ""
 msgid "Preferred time"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:81
+#: thinknxg_estate/templates/estate/home/categories.html:14
 msgid "Premium"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:153
+#: thinknxg_estate/templates/estate/home/premium.html:5
 msgid "Premium Properties"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:16
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:92
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:30
+#: thinknxg_estate/templates/estate/base.html:19
+msgid "Preview"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1268
 msgid "Preview PDF"
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:77
+#, python-brace-format
+msgid "Preview: {0}"
+msgstr ""
+
+#. Label of the previous_snapshot (Long Text) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:535
+msgid "Previous Snapshot"
+msgstr ""
+
 #: thinknxg_estate/templates/estate/pager.html:2
 msgid "Previous page"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:187
+#: thinknxg_estate/templates/generators/listing.html:189
 #: thinknxg_estate/templates/includes/property_cards.html:31
 msgid "Previous photo"
 msgstr ""
@@ -8883,12 +9452,17 @@ msgstr ""
 msgid "Price {0} – {1}"
 msgstr ""
 
-#: thinknxg_estate/portal/api/catalog.py:362
+#: thinknxg_estate/portal/api/catalog.py:371
 msgid "Price: high to low"
 msgstr ""
 
-#: thinknxg_estate/portal/api/catalog.py:361
+#: thinknxg_estate/portal/api/catalog.py:370
 msgid "Price: low to high"
+msgstr ""
+
+#. Label of the primary_color (Color) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:161
+msgid "Primary (header, hero, footer)"
 msgstr ""
 
 #. Label of the priority (Select) field in DocType 'Maintenance Request'
@@ -8899,7 +9473,7 @@ msgstr ""
 msgid "Priority"
 msgstr ""
 
-#: thinknxg_estate/portal/site.py:41
+#: thinknxg_estate/portal/site.py:48
 msgid "Privacy policy"
 msgstr ""
 
@@ -8924,15 +9498,15 @@ msgstr ""
 msgid "Processing"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:140
+#: thinknxg_estate/templates/estate/home/projects.html:17
 msgid "Project details"
 msgstr ""
 
 #. Label of a Sidebar Item
 #. Label of a shortcut in the thinkNXG Estate Workspace
 #: thinknxg_estate/estate_portal/doctype/listing/listing.py:178
-#: thinknxg_estate/portal/api/catalog.py:348 thinknxg_estate/portal/site.py:51
-#: thinknxg_estate/templates/estate/home.html:60
+#: thinknxg_estate/portal/api/catalog.py:357 thinknxg_estate/portal/site.py:60
+#: thinknxg_estate/templates/estate/home/hero.html:58
 #: thinknxg_estate/thinknxg_estate/page/estate_dashboard/estate_dashboard.js:56
 #: thinknxg_estate/thinknxg_estate/page/estate_dashboard/estate_dashboard.js:109
 #: thinknxg_estate/thinknxg_estate/sidebar/thinknxg_estate/thinknxg_estate.json:71
@@ -8946,7 +9520,7 @@ msgstr ""
 msgid "Properties"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:128
+#: thinknxg_estate/templates/estate/home/projects.html:5
 msgid "Properties that are still under development, open for reservation."
 msgstr ""
 
@@ -9110,6 +9684,11 @@ msgstr ""
 msgid "Property Amenity"
 msgstr ""
 
+#. Label of the card_style (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:425
+msgid "Property Card"
+msgstr ""
+
 #: thinknxg_estate/www/re-portal/index.html:366
 #: thinknxg_estate/www/re-portal/index.html:2418
 msgid "Property Detail"
@@ -9202,6 +9781,11 @@ msgstr ""
 msgid "Property Owner"
 msgstr ""
 
+#. Label of the sb_detail (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:463
+msgid "Property Page"
+msgstr ""
+
 #. Name of a DocType
 #: thinknxg_estate/estate_property/doctype/property_photo/property_photo.json:51
 msgid "Property Photo"
@@ -9285,7 +9869,11 @@ msgstr ""
 msgid "Property not found or not published."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:31
+#: thinknxg_estate/portal/api/theme_admin.py:155
+msgid "Property page"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home/hero.html:29
 #: thinknxg_estate/templates/estate/results.html:64
 #: thinknxg_estate/templates/generators/listing.html:56
 #: thinknxg_estate/templates/generators/listing.html:73
@@ -9357,20 +9945,52 @@ msgstr ""
 msgid "Public URL path, e.g. property/sea-view-2br-qurum"
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:17
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:31
+msgid "Publish"
+msgstr ""
+
 #: thinknxg_estate/public/js/property_live_toggle.js:14
 msgid "Publish Live"
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:47
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:56
+#, python-brace-format
+msgid "Publish {0}? Visitors will see this design straight away."
+msgstr ""
+
 #. Label of the is_published (Check) field in DocType 'Listing'
 #: thinknxg_estate/estate_portal/doctype/listing/listing.json:96
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:58
 msgid "Published"
 msgstr ""
 
+#. Label of the published_by (Link) field in DocType 'Portal Theme'
+#. Label of the published_by (Link) field in DocType 'Portal Theme Settings'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:147
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.json:37
+msgid "Published By"
+msgstr ""
+
 #. Label of the published_on (Date) field in DocType 'Listing'
+#. Label of the published_on (Datetime) field in DocType 'Portal Theme
+#. Settings'
 #. Label of the published_on (Datetime) field in DocType 'Property'
 #: thinknxg_estate/estate_portal/doctype/listing/listing.json:107
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.json:31
 #: thinknxg_estate/estate_property/doctype/property/property.json:127
 msgid "Published On"
+msgstr ""
+
+#. Label of the published_snapshot (Long Text) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:527
+msgid "Published Snapshot"
+msgstr ""
+
+#: thinknxg_estate/portal/api/theme_admin.py:120
+#, python-brace-format
+msgid "Published by {0}"
 msgstr ""
 
 #. Label of the published_to_portal (Check) field in DocType 'Property'
@@ -9381,6 +10001,20 @@ msgstr ""
 #: thinknxg_estate/www/re-portal/index.html:837
 #: thinknxg_estate/www/re-portal/index.html:1748
 msgid "Published to Portal"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:27
+#, python-brace-format
+msgid "Published {0}"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:50
+#, python-brace-format
+msgid "Published. The site now uses {0}."
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:49
+msgid "Publishing"
 msgstr ""
 
 #. Label of the purchase_invoice (Link) field in DocType 'Owner Statement'
@@ -9527,6 +10161,8 @@ msgstr ""
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:181
 #: thinknxg_estate/estate_portal/doctype/portal_chat_session/portal_chat_session.json:149
 #: thinknxg_estate/estate_portal/doctype/portal_chat_settings/portal_chat_settings.json:144
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:554
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.json:59
 #: thinknxg_estate/estate_portal/doctype/re_portal_settings/re_portal_settings.json:156
 #: thinknxg_estate/estate_property/doctype/amenity/amenity.json:48
 #: thinknxg_estate/estate_property/doctype/property/property.json:485
@@ -9646,12 +10282,17 @@ msgstr ""
 msgid "REST API / Manual upload"
 msgstr ""
 
+#. Option for the 'Shadows' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:235
+msgid "Raised"
+msgstr ""
+
 #. Label of the rationale (Small Text) field in DocType 'Sentiment Reading'
 #: thinknxg_estate/estate_voice/doctype/sentiment_reading/sentiment_reading.json:50
 msgid "Rationale"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:196
+#: thinknxg_estate/templates/estate/home/cta.html:4
 msgid "Reach genuine property seekers and manage your listings with thinkNXG Estate."
 msgstr ""
 
@@ -9699,12 +10340,12 @@ msgstr ""
 msgid "Recent Activity"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:58
+#: thinknxg_estate/templates/estate/home/hero.html:56
 #: thinknxg_estate/www/properties/index.html:16
 msgid "Recent searches"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:172
+#: thinknxg_estate/templates/generators/listing.html:173
 msgid "Recently viewed"
 msgstr ""
 
@@ -9849,8 +10490,8 @@ msgstr ""
 msgid "Refunded Amount"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/header.html:37
-#: thinknxg_estate/templates/estate/header.html:54
+#: thinknxg_estate/templates/estate/header.html:36
+#: thinknxg_estate/templates/estate/header.html:53
 msgid "Register"
 msgstr ""
 
@@ -9907,7 +10548,7 @@ msgstr ""
 msgid "Related Sales Invoice"
 msgstr ""
 
-#: thinknxg_estate/portal/api/catalog.py:361
+#: thinknxg_estate/portal/api/catalog.py:370
 msgid "Relevance"
 msgstr ""
 
@@ -9964,7 +10605,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/base.html:29
+#: thinknxg_estate/templates/estate/base.html:35
 msgid "Removed from saved"
 msgstr ""
 
@@ -9995,8 +10636,8 @@ msgstr ""
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.js:18
 #: thinknxg_estate/estate_portal/doctype/listing/listing.json:84
 #: thinknxg_estate/estate_property/doctype/property_unit_charge/property_unit_charge.json:21
-#: thinknxg_estate/portal/site.py:29
-#: thinknxg_estate/templates/estate/home.html:13
+#: thinknxg_estate/portal/site.py:30
+#: thinknxg_estate/templates/estate/home/hero.html:11
 #: thinknxg_estate/templates/estate/results.html:22
 #: thinknxg_estate/templates/estate/results.html:42
 #: thinknxg_estate/templates/generators/listing.html:72
@@ -10256,11 +10897,11 @@ msgstr ""
 msgid "Request a viewing"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:182
+#: thinknxg_estate/templates/estate/home/trust.html:10
 msgid "Request a viewing online and our team confirms a time with you. Track every request in your account."
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:202
+#: thinknxg_estate/templates/generators/listing.html:204
 msgid "Request viewing"
 msgstr ""
 
@@ -10431,15 +11072,43 @@ msgstr ""
 msgid "Reverse link to the core Lead record this RE Lead was bridged from (portal-originated only)."
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:21
+msgid "Revert to Previous Version"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:24
+msgid "Reverted"
+msgstr ""
+
+#: thinknxg_estate/portal/api/theme_admin.py:136
+#, python-brace-format
+msgid "Reverted to the previous published version by {0}"
+msgstr ""
+
 #. Label of the room (Data) field in DocType 'Inspection Item'
 #: thinknxg_estate/estate_leasing/doctype/inspection_item/inspection_item.json:21
 #: thinknxg_estate/www/re-portal/index.html:6208
 msgid "Room"
 msgstr ""
 
+#. Option for the 'Corners' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:219
+msgid "Round"
+msgstr ""
+
+#. Option for the 'Buttons' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:229
+msgid "Rounded"
+msgstr ""
+
 #. Label of the route (Data) field in DocType 'Listing'
 #: thinknxg_estate/estate_portal/doctype/listing/listing.json:65
 msgid "Route"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.py:21
+#, python-brace-format
+msgid "Row {0}: the link must start with /, https://, mailto: or tel:."
 msgstr ""
 
 #. Label of the rows (Table) field in DocType 'Tenancy Bulk Payment'
@@ -10448,7 +11117,9 @@ msgid "Rows"
 msgstr ""
 
 #. Label of the seo_sb (Section Break) field in DocType 'Listing'
+#. Label of the t_seo (Tab Break) field in DocType 'Portal Theme'
 #: thinknxg_estate/estate_portal/doctype/listing/listing.json:245
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:484
 msgid "SEO"
 msgstr ""
 
@@ -10517,7 +11188,7 @@ msgid "Saudi Arabia"
 msgstr ""
 
 #: thinknxg_estate/templates/generators/listing.html:31
-#: thinknxg_estate/templates/generators/listing.html:203
+#: thinknxg_estate/templates/generators/listing.html:205
 #: thinknxg_estate/templates/includes/property_cards.html:28
 #: thinknxg_estate/www/re-portal/index.html:2940
 #: thinknxg_estate/www/re-portal/index.html:3112
@@ -10617,7 +11288,7 @@ msgstr ""
 msgid "Save Work Order"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:186
+#: thinknxg_estate/templates/estate/home/trust.html:14
 msgid "Save a search and we email you when new matching properties are listed."
 msgstr ""
 
@@ -10633,9 +11304,13 @@ msgstr ""
 msgid "Save this search"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/base.html:29
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:38
+msgid "Save your changes first?"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/base.html:35
 #: thinknxg_estate/templates/generators/listing.html:31
-#: thinknxg_estate/templates/generators/listing.html:203
+#: thinknxg_estate/templates/generators/listing.html:205
 msgid "Saved"
 msgstr ""
 
@@ -10654,8 +11329,8 @@ msgstr ""
 msgid "Saved Searches"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/header.html:29
-#: thinknxg_estate/templates/estate/header.html:55
+#: thinknxg_estate/templates/estate/header.html:28
+#: thinknxg_estate/templates/estate/header.html:54
 #: thinknxg_estate/www/properties/account.html:40
 msgid "Saved properties"
 msgstr ""
@@ -10664,7 +11339,7 @@ msgstr ""
 msgid "Saved searches"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:185
+#: thinknxg_estate/templates/estate/home/trust.html:13
 msgid "Saved-search alerts"
 msgstr ""
 
@@ -10726,7 +11401,7 @@ msgstr ""
 msgid "Score Visits"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:48
+#: thinknxg_estate/templates/estate/home/hero.html:46
 #: thinknxg_estate/templates/estate/results.html:17
 #: thinknxg_estate/www/re-portal/index.html:1626
 msgid "Search"
@@ -10735,6 +11410,11 @@ msgstr ""
 #. Label of the criteria_sb (Section Break) field in DocType 'Saved Search'
 #: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:61
 msgid "Search Criteria"
+msgstr ""
+
+#. Label of the sb_cards (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:420
+msgid "Search Results"
 msgstr ""
 
 #: thinknxg_estate/templates/estate/results.html:56
@@ -10758,7 +11438,7 @@ msgstr ""
 msgid "Search filters"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:11
+#: thinknxg_estate/templates/estate/home/hero.html:9
 msgid "Search for"
 msgstr ""
 
@@ -10770,6 +11450,10 @@ msgstr ""
 msgid "Search properties, tenants…"
 msgstr ""
 
+#: thinknxg_estate/portal/api/theme_admin.py:152
+msgid "Search results"
+msgstr ""
+
 #: thinknxg_estate/www/properties/index.html:27
 msgid "Search saved. We'll email you new matches."
 msgstr ""
@@ -10778,12 +11462,32 @@ msgstr ""
 msgid "Search this area"
 msgstr ""
 
+#. Label of the cta_secondary_label (Data) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:405
+msgid "Second Button Label"
+msgstr ""
+
+#. Label of the cta_secondary_url (Data) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:410
+msgid "Second Button Link"
+msgstr ""
+
 #. Option for the 'Floor' (Select) field in DocType 'Unit'
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:123
 msgid "Second Floor"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:183
+#. Label of the section_key (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:19
+msgid "Section"
+msgstr ""
+
+#. Label of the sb_sections (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:364
+msgid "Sections"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home/trust.html:11
 msgid "Secure inquiries"
 msgstr ""
 
@@ -10997,7 +11701,7 @@ msgstr ""
 
 #: thinknxg_estate/templates/generators/listing.html:136
 #: thinknxg_estate/templates/generators/listing.html:153
-#: thinknxg_estate/templates/generators/listing.html:202
+#: thinknxg_estate/templates/generators/listing.html:204
 msgid "Send inquiry"
 msgstr ""
 
@@ -11048,6 +11752,11 @@ msgstr ""
 #: thinknxg_estate/estate_finance/doctype/expense_property/expense_property.json:33
 #: thinknxg_estate/estate_finance/doctype/tenancy_bulk_payment/tenancy_bulk_payment.json:27
 msgid "Series"
+msgstr ""
+
+#. Option for the 'Font' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:207
+msgid "Serif headings"
 msgstr ""
 
 #. Option for the 'Charge Type' (Select) field in DocType 'Lease Charge'
@@ -11120,6 +11829,11 @@ msgstr ""
 msgid "Set the Rent Item in Property Settings first."
 msgstr ""
 
+#. Description of the 'Base Template' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:117
+msgid "Sets the layout and starting values. Use Apply Template to reset the design fields."
+msgstr ""
+
 #. Label of a Sidebar Item
 #. Label of a Card Break in the Estate CRM Workspace
 #: thinknxg_estate/thinknxg_estate/sidebar/thinknxg_estate/thinknxg_estate.json:907
@@ -11136,8 +11850,18 @@ msgstr ""
 msgid "Seventh Floor"
 msgstr ""
 
+#. Label of the shadow_style (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:234
+msgid "Shadows"
+msgstr ""
+
 #: thinknxg_estate/templates/generators/listing.html:33
 msgid "Share"
+msgstr ""
+
+#. Label of the og_image (Attach Image) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:504
+msgid "Share Image"
 msgstr ""
 
 #. Description of the 'Monthly AI Budget' (Currency) field in DocType 'AI
@@ -11152,6 +11876,11 @@ msgstr ""
 msgid "Shared secret appended to the feed URL (?token=...). Generate a long random value and register the full URL with the portal."
 msgstr ""
 
+#. Option for the 'Corners' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:219
+msgid "Sharp"
+msgstr ""
+
 #. Option for the 'Preferred Property Type' (Select) field in DocType 'RE Lead'
 #. Option for the 'Unit Type' (Select) field in DocType 'Unit'
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.json:142
@@ -11163,6 +11892,38 @@ msgstr ""
 
 #: thinknxg_estate/portal/api/listings.py:48
 msgid "Shops"
+msgstr ""
+
+#. Label of the enabled (Check) field in DocType 'Portal Theme Link'
+#. Label of the enabled (Check) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_link/portal_theme_link.json:50
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:28
+msgid "Show"
+msgstr ""
+
+#. Label of the show_powered_by (Check) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:280
+msgid "Show 'Powered by thinkNXG'"
+msgstr ""
+
+#. Label of the show_hero_stats (Check) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:354
+msgid "Show Counts Under the Search"
+msgstr ""
+
+#. Label of the show_popular_searches (Check) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:359
+msgid "Show Popular Locations"
+msgstr ""
+
+#. Label of the show_recently_viewed (Check) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:479
+msgid "Show Recently Viewed"
+msgstr ""
+
+#. Label of the show_similar (Check) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:474
+msgid "Show Similar Properties"
 msgstr ""
 
 #. Description of the 'Featured on Portal' (Check) field in DocType 'Property'
@@ -11205,8 +11966,15 @@ msgstr ""
 msgid "Shown to the LLM as the tool description"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/header.html:36
-#: thinknxg_estate/templates/estate/header.html:54
+#. Option for the 'Filters' (Select) field in DocType 'Portal Theme'
+#. Option for the 'Layout' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:438
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:469
+msgid "Sidebar"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/header.html:35
+#: thinknxg_estate/templates/estate/header.html:53
 #: thinknxg_estate/templates/generators/listing.html:124
 #: thinknxg_estate/www/properties/account.html:10
 #: thinknxg_estate/www/properties/account.html:14
@@ -11233,6 +12001,11 @@ msgstr ""
 
 #: thinknxg_estate/templates/generators/listing.html:167
 msgid "Similar properties"
+msgstr ""
+
+#. Label of the brand_name (Data) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:250
+msgid "Site Name"
 msgstr ""
 
 #. Name of a DocType
@@ -11312,7 +12085,7 @@ msgstr ""
 msgid "Sixth Floor"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/base.html:12
+#: thinknxg_estate/templates/estate/base.html:14
 msgid "Skip to content"
 msgstr ""
 
@@ -11342,6 +12115,18 @@ msgstr ""
 msgid "Slabs"
 msgstr ""
 
+#. Option for the 'Where' (Select) field in DocType 'Portal Theme Link'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_link/portal_theme_link.json:19
+msgid "Social"
+msgstr ""
+
+#. Option for the 'Corners' (Select) field in DocType 'Portal Theme'
+#. Option for the 'Shadows' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:219
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:235
+msgid "Soft"
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'Property'
 #: thinknxg_estate/estate_property/doctype/property/property.json:94
 #: thinknxg_estate/www/re-portal/index.html:644
@@ -11358,7 +12143,7 @@ msgstr ""
 msgid "Something went wrong running that command. It has been logged."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/base.html:30
+#: thinknxg_estate/templates/estate/base.html:36
 #: thinknxg_estate/www/properties/account.html:75
 msgid "Something went wrong. Please try again."
 msgstr ""
@@ -11445,6 +12230,21 @@ msgstr ""
 msgid "Spend This Month"
 msgstr ""
 
+#. Option for the 'Hero Layout' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:324
+msgid "Split"
+msgstr ""
+
+#. Option for the 'Buttons' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:229
+msgid "Square"
+msgstr ""
+
+#. Option for the 'Layout' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:469
+msgid "Stacked"
+msgstr ""
+
 #. Option for the 'Expense Type' (Select) field in DocType 'Expense Property'
 #: thinknxg_estate/estate_finance/doctype/expense_property/expense_property.json:60
 #: thinknxg_estate/www/re-portal/index.html:1896
@@ -11474,7 +12274,11 @@ msgstr ""
 msgid "Start date"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:139
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:44
+msgid "Start from a template"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home/projects.html:16
 msgid "Starting from"
 msgstr ""
 
@@ -11592,12 +12396,17 @@ msgstr ""
 #. Option for the 'Unit Type' (Select) field in DocType 'Unit'
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:134
 #: thinknxg_estate/portal/api/catalog.py:224
-#: thinknxg_estate/templates/estate/home.html:44
+#: thinknxg_estate/templates/estate/home/hero.html:42
 #: thinknxg_estate/templates/estate/results.html:81
 #: thinknxg_estate/templates/generators/listing.html:58
 #: thinknxg_estate/www/re-portal/index.html:803
 #: thinknxg_estate/www/re-portal/index.html:1714
 msgid "Studio"
+msgstr ""
+
+#. Label of the variant (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:55
+msgid "Style"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:3756
@@ -11641,6 +12450,11 @@ msgstr ""
 #: thinknxg_estate/www/re-portal/index.html:4080
 #: thinknxg_estate/www/re-portal/index.html:7216
 msgid "Submitting…"
+msgstr ""
+
+#. Label of the subtitle (Small Text) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:44
+msgid "Subtitle"
 msgstr ""
 
 #: thinknxg_estate/estate_voice/report/voice_command_analytics/voice_command_analytics.py:74
@@ -11710,6 +12524,16 @@ msgstr ""
 msgid "Supplier…"
 msgstr ""
 
+#. Label of the hero_subtext (Small Text) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:334
+msgid "Supporting Text"
+msgstr ""
+
+#. Option for the 'Font' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:207
+msgid "System"
+msgstr ""
+
 #. Name of a role
 #: thinknxg_estate/estate_crm/doctype/property_enquiry/property_enquiry.json:110
 #: thinknxg_estate/estate_crm/doctype/property_wishlist/property_wishlist.json:60
@@ -11728,6 +12552,8 @@ msgstr ""
 #: thinknxg_estate/estate_portal/doctype/listing_feed_settings/listing_feed_settings.json:158
 #: thinknxg_estate/estate_portal/doctype/portal_chat_session/portal_chat_session.json:169
 #: thinknxg_estate/estate_portal/doctype/portal_chat_settings/portal_chat_settings.json:155
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:566
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.json:67
 #: thinknxg_estate/estate_portal/doctype/re_portal_settings/re_portal_settings.json:167
 #: thinknxg_estate/estate_property/doctype/property_document/property_document.json:69
 #: thinknxg_estate/estate_property/doctype/property_settings/property_settings.json:162
@@ -11745,6 +12571,11 @@ msgstr ""
 #: thinknxg_estate/estate_voice/doctype/whatsapp_template/whatsapp_template.json:96
 #: thinknxg_estate/estate_voice/doctype/whatsapp_webhook_log/whatsapp_webhook_log.json:109
 msgid "System Manager"
+msgstr ""
+
+#. Label of the tagline (Data) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:256
+msgid "Tagline"
 msgstr ""
 
 #: thinknxg_estate/www/properties/account.html:42
@@ -11803,6 +12634,13 @@ msgstr ""
 msgid "Tax Template"
 msgstr ""
 
+#. Label of the sb_tpl (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:64
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:100
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:26
+msgid "Template"
+msgstr ""
+
 #. Label of the template_name (Data) field in DocType 'WhatsApp Template'
 #: thinknxg_estate/estate_voice/doctype/whatsapp_template/whatsapp_template.json:23
 msgid "Template Name"
@@ -11811,6 +12649,14 @@ msgstr ""
 #. Label of the template_used (Link) field in DocType 'Thread Message'
 #: thinknxg_estate/estate_voice/doctype/thread_message/thread_message.json:47
 msgid "Template Used"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:67
+msgid "Template applied"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:31
+msgid "Template changed. Use Actions > Apply Template to reset the design fields to it."
 msgstr ""
 
 #. Label of the custom_tenancy_id (Link) field in DocType 'Purchase Invoice'
@@ -12085,15 +12931,22 @@ msgstr ""
 msgid "Terms & Conditions"
 msgstr ""
 
-#: thinknxg_estate/portal/site.py:41
+#: thinknxg_estate/portal/site.py:48
 msgid "Terms and conditions"
 msgstr ""
 
+#. Label of the cta_text (Small Text) field in DocType 'Portal Theme'
 #. Option for the 'Entity Type' (Select) field in DocType 'Command Entity'
 #. Option for the 'Channel' (Select) field in DocType 'Voice Intent'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:386
 #: thinknxg_estate/estate_voice/doctype/command_entity/command_entity.json:29
 #: thinknxg_estate/estate_voice/doctype/voice_intent/voice_intent.json:70
 msgid "Text"
+msgstr ""
+
+#. Label of the font_scale (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:212
+msgid "Text Size"
 msgstr ""
 
 #: thinknxg_estate/voice/customer/pipeline.py:211
@@ -12104,11 +12957,11 @@ msgstr ""
 msgid "Thanks! I don't have an exact match right now — an agent will call you shortly with options."
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:201
+#: thinknxg_estate/templates/generators/listing.html:203
 msgid "Thanks. We'll be in touch shortly."
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:201
+#: thinknxg_estate/templates/generators/listing.html:203
 msgid "Thanks. We'll call you to confirm the viewing."
 msgstr ""
 
@@ -12142,11 +12995,11 @@ msgstr ""
 msgid "That property has no map coordinates saved."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:153
+#: thinknxg_estate/templates/estate/home/premium.html:5
 msgid "The highest-priced properties currently available."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:95
+#: thinknxg_estate/templates/estate/home/featured.html:7
 msgid "The newest properties on the market."
 msgstr ""
 
@@ -12159,6 +13012,24 @@ msgstr ""
 #: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:39
 #: thinknxg_estate/estate_crm/doctype/site_visit_booking/site_visit_booking.json:45
 msgid "The unified CRM lead for this visitor."
+msgstr ""
+
+#. Label of the theme_name (Data) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:105
+msgid "Theme Name"
+msgstr ""
+
+#: thinknxg_estate/portal/api/theme_admin.py:146
+msgid "Theme not found."
+msgstr ""
+
+#. Label of the gallery (HTML) field in DocType 'Portal Theme Settings'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.json:44
+msgid "Themes"
+msgstr ""
+
+#: thinknxg_estate/portal/api/theme_admin.py:132
+msgid "There is no earlier published version of this theme."
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1085
@@ -12178,6 +13049,10 @@ msgstr ""
 msgid "This contract will be auto-registered with Oman Municipality upon submission. Ejari / Tawtheeq registration is required for UAE properties within 30 days of lease commencement. PDC cheques must be logged individually under the PDC Schedule tab."
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.py:67
+msgid "This is the live theme. Publish another theme first, then delete this one."
+msgstr ""
+
 #: thinknxg_estate/portal/api/visitor.py:135
 msgid "This language is not available."
 msgstr ""
@@ -12193,6 +13068,10 @@ msgstr ""
 
 #: thinknxg_estate/portal/api/feeds.py:28
 msgid "This portal feed is not enabled."
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:93
+msgid "This shows the saved draft. Only you can see it; visitors still see the live site."
 msgstr ""
 
 #: thinknxg_estate/core/listing_portal_api/listing_portal.py:695
@@ -12238,9 +13117,13 @@ msgstr ""
 #. Label of the title (Data) field in DocType 'RE Deal'
 #. Label of the title (Data) field in DocType 'Lease Contract'
 #. Label of the title (Data) field in DocType 'Listing'
+#. Label of the cta_title (Data) field in DocType 'Portal Theme'
+#. Label of the title (Data) field in DocType 'Portal Theme Section'
 #: thinknxg_estate/estate_crm/doctype/re_deal/re_deal.json:44
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.json:56
 #: thinknxg_estate/estate_portal/doctype/listing/listing.json:58
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:381
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:36
 msgid "Title"
 msgstr ""
 
@@ -12399,6 +13282,11 @@ msgstr ""
 msgid "Translation"
 msgstr ""
 
+#. Option for the 'Header Style' (Select) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:291
+msgid "Transparent"
+msgstr ""
+
 #: thinknxg_estate/templates/estate/empty.html:3
 msgid "Try widening your search, or save it and we'll email you when something comes up."
 msgstr ""
@@ -12427,6 +13315,11 @@ msgstr ""
 msgid "Type…"
 msgstr ""
 
+#. Label of the sb_typo (Section Break) field in DocType 'Portal Theme'
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.json:201
+msgid "Typography and Shape"
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'Property'
 #: thinknxg_estate/estate_property/doctype/property/property.json:94
 #: thinknxg_estate/www/re-portal/index.html:643
@@ -12449,7 +13342,7 @@ msgid "Under Offer"
 msgstr ""
 
 #: thinknxg_estate/portal/api/catalog.py:215
-#: thinknxg_estate/templates/estate/home.html:134
+#: thinknxg_estate/templates/estate/home/projects.html:11
 #: thinknxg_estate/templates/estate/results.html:111
 #: thinknxg_estate/templates/generators/listing.html:22
 #: thinknxg_estate/templates/generators/listing.html:75
@@ -12762,6 +13655,11 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
+#: thinknxg_estate/portal/api/theme_admin.py:45
+#: thinknxg_estate/portal/api/theme_admin.py:64
+msgid "Unknown template."
+msgstr ""
+
 #: thinknxg_estate/public/js/property_live_toggle.js:14
 msgid "Unpublish"
 msgstr ""
@@ -13007,9 +13905,9 @@ msgstr ""
 msgid "View Items"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:97
-#: thinknxg_estate/templates/estate/home.html:129
-#: thinknxg_estate/templates/estate/home.html:154
+#: thinknxg_estate/templates/estate/home/featured.html:9
+#: thinknxg_estate/templates/estate/home/premium.html:6
+#: thinknxg_estate/templates/estate/home/projects.html:6
 #: thinknxg_estate/templates/generators/listing.html:167
 msgid "View all"
 msgstr ""
@@ -13031,7 +13929,7 @@ msgstr ""
 
 #. Option for the 'Inquiry Type' (Select) field in DocType 'Listing Inquiry'
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:119
-#: thinknxg_estate/templates/generators/listing.html:181
+#: thinknxg_estate/templates/generators/listing.html:183
 #: thinknxg_estate/www/properties/account.html:59
 msgid "Viewing"
 msgstr ""
@@ -13044,7 +13942,7 @@ msgstr ""
 msgid "Viewings This Week"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:181
+#: thinknxg_estate/templates/estate/home/trust.html:9
 msgid "Viewings made simple"
 msgstr ""
 
@@ -13109,6 +14007,10 @@ msgstr ""
 #. Label of the message_count (Int) field in DocType 'Portal Chat Session'
 #: thinknxg_estate/estate_portal/doctype/portal_chat_session/portal_chat_session.json:53
 msgid "Visitor Messages"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.js:12
+msgid "Visitors see the last published copy. Edits below are a draft until you publish."
 msgstr ""
 
 #. Label of the visits_target (Int) field in DocType 'Lead Score Model'
@@ -13352,7 +14254,7 @@ msgid "WhatsApp is disabled"
 msgstr ""
 
 #: thinknxg_estate/templates/generators/listing.html:157
-#: thinknxg_estate/templates/generators/listing.html:179
+#: thinknxg_estate/templates/generators/listing.html:181
 msgid "WhatsApp us"
 msgstr ""
 
@@ -13371,7 +14273,12 @@ msgstr ""
 msgid "When should I book it? For example 'tomorrow at 4pm'."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:27
+#. Label of the link_group (Select) field in DocType 'Portal Theme Link'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_link/portal_theme_link.json:18
+msgid "Where"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home/hero.html:25
 msgid "Where do you want to live?"
 msgstr ""
 
@@ -13434,12 +14341,16 @@ msgstr ""
 msgid "Which tier resolved this intent"
 msgstr ""
 
+#: thinknxg_estate/portal/themes.py:169
+msgid "White text on the primary colour (hero, footer)"
+msgstr ""
+
 #: thinknxg_estate/www/re-portal/index.html:3857
 #: thinknxg_estate/www/re-portal/index.html:3863
 msgid "Whole Property (no unit)"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:175
+#: thinknxg_estate/templates/estate/home/trust.html:3
 msgid "Why Choose thinkNXG Estate"
 msgstr ""
 
@@ -13525,7 +14436,7 @@ msgstr ""
 msgid "You are signed in as a staff user. Visitor accounts are for the public; open the desk to work with leads and listings."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/base.html:31
+#: thinknxg_estate/templates/estate/base.html:37
 msgid "You can compare up to three properties."
 msgstr ""
 
@@ -13554,7 +14465,7 @@ msgstr ""
 msgid "Your details go only to our team and are used to answer this inquiry."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:184
+#: thinknxg_estate/templates/estate/home/trust.html:12
 msgid "Your details go only to our team. Inquiry forms are protected against spam, and your account is private."
 msgstr ""
 
@@ -13570,6 +14481,10 @@ msgstr ""
 
 #: thinknxg_estate/www/tenant-portal/lease.html:144
 msgid "Your termination request has been sent to the leasing team. They will contact you to confirm the move-out date, inspection and deposit settlement."
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme_settings/portal_theme_settings.js:42
+msgid "Your themes"
 msgstr ""
 
 #. Option for the 'Language' (Select) field in DocType 'Portal Chat Session'
@@ -13599,12 +14514,22 @@ msgstr ""
 msgid "budget"
 msgstr ""
 
+#. Option for the 'Section' (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:20
+msgid "categories"
+msgstr ""
+
 #: thinknxg_estate/templates/generators/listing.html:96
 msgid "cheque"
 msgstr ""
 
 #: thinknxg_estate/templates/generators/listing.html:96
 msgid "cheques"
+msgstr ""
+
+#. Option for the 'Section' (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:20
+msgid "cta"
 msgstr ""
 
 #: thinknxg_estate/crm/matching.py:152
@@ -13629,13 +14554,18 @@ msgstr ""
 msgid "expiring in 30 days"
 msgstr ""
 
+#. Option for the 'Section' (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:20
+msgid "featured"
+msgstr ""
+
 #: thinknxg_estate/estate_portal/doctype/listing/listing.py:152
-#: thinknxg_estate/portal/api/catalog.py:349
+#: thinknxg_estate/portal/api/catalog.py:358
 msgid "for rent"
 msgstr ""
 
 #: thinknxg_estate/estate_portal/doctype/listing/listing.py:152
-#: thinknxg_estate/portal/api/catalog.py:349
+#: thinknxg_estate/portal/api/catalog.py:358
 msgid "for sale"
 msgstr ""
 
@@ -13644,14 +14574,29 @@ msgstr ""
 msgid "gave visit feedback: {0}"
 msgstr ""
 
+#. Option for the 'Section' (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:20
+msgid "hero"
+msgstr ""
+
 #: thinknxg_estate/crm/matching.py:131
-#: thinknxg_estate/portal/api/catalog.py:351
+#: thinknxg_estate/portal/api/catalog.py:360
 #, python-brace-format
 msgid "in {0}"
 msgstr ""
 
+#: thinknxg_estate/portal/site.py:41 thinknxg_estate/portal/site.py:56
+#: thinknxg_estate/portal/site.py:57
+msgid "label"
+msgstr ""
+
 #: thinknxg_estate/voice/commands/lead.py:54
 msgid "location"
+msgstr ""
+
+#. Option for the 'Section' (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:20
+msgid "locations"
 msgstr ""
 
 #: thinknxg_estate/templates/generators/listing.html:119
@@ -13672,6 +14617,16 @@ msgstr ""
 
 #: thinknxg_estate/voice/customer/pipeline.py:177
 msgid "our agent"
+msgstr ""
+
+#. Option for the 'Section' (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:20
+msgid "premium"
+msgstr ""
+
+#. Option for the 'Section' (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:20
+msgid "projects"
 msgstr ""
 
 #: thinknxg_estate/voice/commands/lead.py:51
@@ -13717,6 +14672,11 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:7
 msgid "thinkNXG Estate — One Platform. Every Property. Complete Control."
+msgstr ""
+
+#. Option for the 'Section' (Select) field in DocType 'Portal Theme Section'
+#: thinknxg_estate/estate_portal/doctype/portal_theme_section/portal_theme_section.json:20
+msgid "trust"
 msgstr ""
 
 #: thinknxg_estate/crm/tasks.py:28
@@ -13799,12 +14759,12 @@ msgstr ""
 msgid "{0} installment(s) fetched."
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:75
+#: thinknxg_estate/templates/estate/home/categories.html:8
 #, python-brace-format
 msgid "{0} listings"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.py:96
+#: thinknxg_estate/www/properties/index.py:104
 #, python-brace-format
 msgid "{0} listings: {1}. Compare prices, photos and locations, and request a viewing online."
 msgstr ""
@@ -13817,6 +14777,11 @@ msgstr ""
 #: thinknxg_estate/voice/commands/queries.py:38
 #, python-brace-format
 msgid "{0} matching properties:"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/portal_theme/portal_theme.py:18
+#, python-brace-format
+msgid "{0} must be a hex colour such as #0b1f3a."
 msgstr ""
 
 #: thinknxg_estate/core/listing_portal_api/listing_portal.py:845
@@ -13851,13 +14816,13 @@ msgid ""
 "{1}"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/home.html:116
+#: thinknxg_estate/templates/estate/home/locations.html:11
 #: thinknxg_estate/www/re-portal/index.html:2514
 #, python-brace-format
 msgid "{0} properties"
 msgstr ""
 
-#: thinknxg_estate/portal/api/catalog.py:294
+#: thinknxg_estate/portal/api/catalog.py:303
 #: thinknxg_estate/templates/estate/results.html:128
 #: thinknxg_estate/tests/test_translations.py:59
 #: thinknxg_estate/www/properties/index.html:27
@@ -13865,7 +14830,7 @@ msgstr ""
 msgid "{0} properties found"
 msgstr ""
 
-#: thinknxg_estate/templates/estate/base.html:32
+#: thinknxg_estate/templates/estate/base.html:38
 #, python-brace-format
 msgid "{0} selected"
 msgstr ""
@@ -13906,6 +14871,16 @@ msgstr ""
 #: thinknxg_estate/portal/api/catalog.py:225
 #, python-brace-format
 msgid "{0}+ bedrooms"
+msgstr ""
+
+#: thinknxg_estate/portal/themes.py:164
+#, python-brace-format
+msgid "{0}: contrast {1} is below the recommended {2}."
+msgstr ""
+
+#: thinknxg_estate/portal/themes.py:162
+#, python-brace-format
+msgid "{0}: contrast {1} is too low to read (needs at least {2})."
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:2127

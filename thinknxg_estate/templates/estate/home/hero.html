@@ -1,0 +1,65 @@
+<section class="eb-hero {{ 'has-img' if site.theme.hero_image }}" style="--eb-overlay:{{ (site.theme.hero_overlay / 100)|round(2) }};{% if site.theme.hero_image %}--eb-hero-img:url('{{ site.theme.hero_image }}');{% endif %}">
+  <div class="eb-wrap">
+    <div class="eb-hero-in">
+      <span class="eb-eyebrow"><svg class="i i-sm"><use href="#i-sparkles"/></svg>{{ site.title }}</span>
+      <h1>{{ _(site.theme.hero_headline) if site.theme.hero_headline else _("Find a Place You'll Love to Call Home.") }}</h1>
+      <p class="lead">{{ _(site.theme.hero_subtext) if site.theme.hero_subtext else _("Discover exceptional properties, verified listings, and your next investment opportunity.") }}</p>
+
+      <form class="eb-search" id="hero-search" action="/properties" method="get" role="search" autocomplete="off">
+        <div class="eb-tabs" role="tablist" aria-label="{{ _('Search for') }}">
+          {% if site.counts.Sale %}<button type="button" role="tab" class="eb-tab" data-tab="Sale" aria-selected="false">{{ _("Buy") }}</button>{% endif %}
+          <button type="button" role="tab" class="eb-tab on" data-tab="Rent" aria-selected="true">{{ _("Rent") }}</button>
+          {% if site.counts.Commercial %}<button type="button" role="tab" class="eb-tab" data-tab="Commercial" aria-selected="false">{{ _("Commercial") }}</button>{% endif %}
+          {% if site.counts.projects %}<button type="button" role="tab" class="eb-tab" data-tab="Projects" aria-selected="false">{{ _("New projects") }}</button>{% endif %}
+        </div>
+        <input type="hidden" name="listing_type" id="s-purpose" value="Rent">
+        <input type="hidden" name="usage" id="s-usage" value="" disabled>
+        <input type="hidden" name="development_status" id="s-dev" value="Under Development" disabled>
+        <input type="hidden" name="city" id="s-city" disabled>
+        <input type="hidden" name="locality" id="s-locality" disabled>
+        <input type="hidden" name="min_price" id="s-min" disabled>
+        <input type="hidden" name="max_price" id="s-max" disabled>
+        <div class="eb-sfields">
+          <div class="eb-sf eb-sf-wide">
+            <label for="s-q">{{ _("City / Location / Area") }}</label>
+            <input id="s-q" name="q" type="text" placeholder="{{ _('Where do you want to live?') }}" role="combobox" aria-expanded="false" aria-controls="s-suggest" aria-autocomplete="list">
+            <div class="eb-suggest" id="s-suggest" role="listbox"></div>
+          </div>
+          <div class="eb-sf">
+            <label for="s-cat">{{ _("Property type") }}</label>
+            <select id="s-cat" name="category">
+              <option value="">{{ _("Any type") }}</option>
+              {% for c in category_cards %}<option value="{{ c.key }}">{{ c.label }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="eb-sf">
+            <label for="s-budget">{{ _("Budget") }} ({{ site.currency }})</label>
+            <select id="s-budget"><option value="">{{ _("Any budget") }}</option></select>
+          </div>
+          <div class="eb-sf">
+            <label for="s-beds">{{ _("Bedrooms") }}</label>
+            <select id="s-beds" name="bedrooms">
+              <option value="">{{ _("Any") }}</option><option value="studio">{{ _("Studio") }}</option>
+              {% for b in [1, 2, 3, 4, 5] %}<option value="{{ b }}">{{ b }}+</option>{% endfor %}
+            </select>
+          </div>
+          <button class="eb-btn eb-btn-lg eb-sgo" type="submit"><svg class="i"><use href="#i-search"/></svg>{{ _("Search") }}</button>
+        </div>
+      </form>
+
+      {% if site.cities and site.theme.show_popular_searches %}
+      <div class="eb-popular">
+        <span>{{ _("Popular") }}:</span>
+        {% for c in site.cities[:5] %}<a href="/properties?city={{ c.value|urlencode }}">{{ c.value }}</a>{% endfor %}
+      </div>
+      {% endif %}
+      <div class="eb-popular" id="recent-searches" hidden><span>{{ _("Recent searches") }}:</span></div>
+      {% if site.theme.show_hero_stats %}<div class="eb-stats">
+        <div><b>{{ site.counts.total }}</b><span>{{ _("Properties") }}</span></div>
+        {% if site.cities|length > 1 %}<div><b>{{ site.cities|length }}</b><span>{{ _("Cities") }}</span></div>{% endif %}
+        {% if site.counts.Rent and site.counts.Sale %}<div><b>{{ site.counts.Sale }}</b><span>{{ _("For sale") }}</span></div>{% endif %}
+      </div>{% endif %}
+    </div>
+    <div class="eb-hero-art" aria-hidden="true"></div>
+  </div>
+</section>

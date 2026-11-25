@@ -1,0 +1,21 @@
+{% if category_cards %}
+<section class="eb-section-tight {{ 'eb-overlap' if after_hero }}">
+  <div class="eb-wrap">
+    <div class="eb-cats" role="list">
+      {% for c in category_cards %}
+      <a class="eb-cat" role="listitem" href="/properties?category={{ c.key }}">
+        <span class="eb-cat-ic"><svg class="i"><use href="#i-{{ c.icon }}"/></svg></span>
+        <div><b>{{ c.label }}</b><span>{{ _("{0} listings").format(c.count) if c.count != 1 else _("1 listing") }}</span></div>
+      </a>
+      {% endfor %}
+      {% if site.counts.total > 1 %}
+      <a class="eb-cat" role="listitem" href="/properties?sort=price_desc">
+        <span class="eb-cat-ic"><svg class="i"><use href="#i-sparkles"/></svg></span>
+        <div><b>{{ _("Premium") }}</b><span>{{ _("Highest priced first") }}</span></div>
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
+

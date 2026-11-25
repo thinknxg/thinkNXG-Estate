@@ -162,16 +162,18 @@
     </aside>
   </div>
 
-  {% if similar_count %}
+  {% if similar_count and site.theme.show_similar %}
   <section class="eb-block" style="margin-bottom:56px">
     <div class="eb-sec-head" style="margin-bottom:20px"><div><h2 style="font-size:24px">{{ _("Similar properties") }}</h2></div><a class="eb-seeall" href="/properties?listing_type={{ doc.listing_type }}{% if doc.city %}&city={{ doc.city|urlencode }}{% endif %}">{{ _("View all") }}<svg class="i i-dir"><use href="#i-arrow"/></svg></a></div>
     <div class="eb-rail eb-rail-scroll">{{ similar_html }}</div>
   </section>
   {% endif %}
+  {% if site.theme.show_recently_viewed %}
   <section class="eb-block" id="recent" hidden style="margin-bottom:56px">
     <div class="eb-sec-head" style="margin-bottom:20px"><div><h2 style="font-size:24px">{{ _("Recently viewed") }}</h2></div></div>
     <div class="eb-rail eb-rail-scroll" id="recent-cards"></div>
   </section>
+  {% endif %}
 </div>
 
 {# mobile contact bar #}

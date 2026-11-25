@@ -6,3 +6,4 @@
 thinknxg_estate.patches.v1_2.unify_public_listings
 thinknxg_estate.patches.v1_2.shared_ai_provider
 thinknxg_estate.patches.v1_3.listing_facets
+thinknxg_estate.patches.v1_3.portal_themes

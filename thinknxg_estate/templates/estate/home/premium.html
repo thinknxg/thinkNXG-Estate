@@ -1,0 +1,24 @@
+{% if home.premium|length >= 3 %}
+<section class="eb-section eb-premium">
+  <div class="eb-wrap">
+    <div class="eb-sec-head">
+      <div><h2>{{ _(sec.title) if sec.title else _("Premium Properties") }}</h2><p>{{ _(sec.subtitle) if sec.subtitle else _("The highest-priced properties currently available.") }}</p></div>
+      <a class="eb-seeall" href="/properties?listing_type={{ home.premium_type }}&sort=price_desc">{{ _("View all") }}<svg class="i i-dir"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="eb-prem-grid">
+      {% for r in home.premium[:(sec.item_limit or 4)] %}
+      <a class="eb-prem" href="/{{ r.route }}">
+        <img src="{{ r.cover }}" alt="{{ r.title }}" loading="lazy" decoding="async">
+        <span class="eb eb-light">{{ _(r.unit_type or "") }}</span>
+        <div class="eb-prem-in">
+          <h3>{{ r.title }}</h3>
+          <div class="pl"><svg class="i i-sm"><use href="#i-pin"/></svg>{{ [r.locality, r.city]|select|join(", ") }}</div>
+          <div class="pr">{{ site.currency }} {{ amount(r.headline_price) }} <small>{{ _(r.price_period or "") }}</small></div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+

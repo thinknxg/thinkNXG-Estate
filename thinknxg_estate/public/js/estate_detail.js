@@ -113,7 +113,7 @@
   // ---------- recently viewed (this browser only) ----------
   var KEY = "estate_recent", seen = E.load(KEY).filter(function (n) { return n !== D.name; });
   E.store(KEY, [D.name].concat(seen).slice(0, 12));
-  if (seen.length) {
+  if (seen.length && $("#recent")) {
     frappe.call({ method: "thinknxg_estate.portal.api.catalog.cards_by_name", type: "GET", args: { names: seen.slice(0, 4).join(",") }, callback: function (r) {
       if (r.message && r.message.count) { $("#recent-cards").innerHTML = r.message.html; $("#recent").hidden = false; E.paintCompare(); } } });
   }

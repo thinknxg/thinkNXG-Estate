@@ -5,6 +5,8 @@
 {{ super() }}
 <link rel="stylesheet" href="/assets/thinknxg_estate/css/portal.css">
 <link rel="preload" href="/assets/frappe/css/fonts/inter/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+{% if site.favicon %}<link rel="icon" href="{{ site.favicon }}">{% endif %}
+<style id="eb-theme">{{ site.theme_css | safe }}</style>
 {% block head_extra %}{% endblock %}
 {% endblock %}
 {% block navbar %}
@@ -13,7 +15,11 @@
 {% include "templates/estate/header.html" %}
 {% endblock %}
 {% block content %}
-<main id="main" class="eb-site">{% block site_content %}{% endblock %}</main>
+{% if site.preview %}
+<div class="eb-preview" role="status"><span><b>{{ _("Preview") }}</b> · {{ site.preview }} · {{ _("Only you can see this. Visitors still see the live site.") }}</span>
+  <a href="/properties?theme_preview=">{{ _("Exit preview") }}</a></div>
+{% endif %}
+<main id="main" class="eb-site"{% for k, v in site.layout.items() %} {{ k }}="{{ v }}"{% endfor %}>{% block site_content %}{% endblock %}</main>
 <div class="eb-toast" id="toast" role="status" aria-live="polite"></div>
 {% endblock %}
 {% block footer %}

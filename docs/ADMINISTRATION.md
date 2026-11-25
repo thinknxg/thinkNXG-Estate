@@ -193,3 +193,15 @@ The test site needs a completed setup wizard (a company and fiscal year).
 ## 10. Support
 
 Support: https://thinknxg.com/thinkdesk · Sales: sales@kreatao.com · Community: discuss.thinknxg.com
+
+## 14. Portal themes (Property Portal Theme Settings)
+
+Open **Portal Theme Settings** to see your themes and the four starting templates (Classic Navy, Modern Light, Dark Luxury, Marketplace).
+
+1. **Create a theme:** click *Create a Theme from This* on a template, or *New Theme*.
+2. **Customise:** Design (colours, fonts, corners, buttons, shadows), Branding and Header (logo, name, header style, links), Home Page (hero, section order and on/off, call to action), Listings (card style, columns, filters, default view, map and compare, property page layout), SEO, and Advanced (custom CSS, System Manager only).
+3. **Preview:** *Preview* opens the saved draft in a dialog (choose the page and device width). Only you see it; visitors still see the live site.
+4. **Publish:** *Publish* makes it live at once. *Actions > Revert to Previous Version* returns to the copy before the last publish.
+5. **Other actions:** *Duplicate* copies a theme; *Apply Template* resets the design fields to a template (optionally keeping your branding and text).
+
+Colours that make text hard to read are rejected on save. The live theme cannot be deleted; publish another first.

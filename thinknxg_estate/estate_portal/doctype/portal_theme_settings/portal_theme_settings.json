@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-11-25 08:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sb_active",
+  "active_theme",
+  "published_on",
+  "published_by",
+  "gallery"
+ ],
+ "fields": [
+  {
+   "fieldname": "sb_active",
+   "fieldtype": "Section Break",
+   "label": "Live Theme"
+  },
+  {
+   "fieldname": "active_theme",
+   "fieldtype": "Link",
+   "label": "Live Theme",
+   "options": "Portal Theme",
+   "read_only": 1,
+   "description": "Change it with Publish on a theme. Visitors see the published copy, not unsaved edits."
+  },
+  {
+   "fieldname": "published_on",
+   "fieldtype": "Datetime",
+   "label": "Published On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "published_by",
+   "fieldtype": "Link",
+   "label": "Published By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "gallery",
+   "fieldtype": "HTML",
+   "label": "Themes"
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-25 08:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Estate Portal",
+ "name": "Portal Theme Settings",
+ "owner": "Administrator",
+ "states": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "issingle": 1,
+ "permissions": [
+  {
+   "role": "RE Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "email": 1,
+   "print": 1
+  },
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "email": 1,
+   "print": 1
+  }
+ ],
+ "track_changes": 1
+}

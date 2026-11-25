@@ -20,7 +20,7 @@ window.ESTATE_HOME = { price: {{ price_bounds | tojson }}, currency: {{ site.cur
 {% if view == "map" %}<script src="/assets/thinknxg_estate/vendor/leaflet/leaflet.js"></script>{% endif %}
 <script>
 window.ESTATE_SEARCH = {
-  view: {{ view | tojson }}, page: {{ page }}, args: {{ args | tojson }}, currency: {{ site.currency | tojson }},
+  view: {{ view | tojson }}, defaultView: {{ default_view | tojson }}, page: {{ page }}, args: {{ args | tojson }}, currency: {{ site.currency | tojson }},
   price: {{ price_bounds | tojson }}, localities: {{ facets.localities | tojson }},
   tile: {{ site.map_tile_url | tojson }}, attribution: {{ site.map_attribution | tojson }},
   center: [{{ map_lat }}, {{ map_lng }}], zoom: {{ map_zoom }},

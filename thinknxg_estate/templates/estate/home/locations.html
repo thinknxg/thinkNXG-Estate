@@ -1,0 +1,18 @@
+{% if home.cities|length > 1 %}
+<section class="eb-section" style="padding-top:0">
+  <div class="eb-wrap">
+    <div class="eb-sec-head">
+      <div><h2>{{ _(sec.title) if sec.title else _("Explore by Location") }}</h2><p>{{ _(sec.subtitle) if sec.subtitle else _("Browse properties in the cities where we have listings.") }}</p></div>
+    </div>
+    <div class="eb-locs">
+      {% for c in home.cities[:(sec.item_limit or 7)] %}
+      <a class="eb-loc" href="/properties?city={{ c.city|urlencode }}">
+        {% if c.cover %}<img src="{{ c.cover }}" alt="{{ c.city }}" loading="lazy" decoding="async">{% endif %}
+        <div class="eb-loc-in"><div><h3>{{ c.city }}</h3><span>{{ _("{0} properties").format(c.count) if c.count != 1 else _("1 property") }}</span></div><svg class="i i-dir"><use href="#i-arrow"/></svg></div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+

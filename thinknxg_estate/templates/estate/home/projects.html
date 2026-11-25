@@ -1,0 +1,25 @@
+{% if home.projects %}
+<section class="eb-section" style="background:#fff">
+  <div class="eb-wrap">
+    <div class="eb-sec-head">
+      <div><h2>{{ _(sec.title) if sec.title else _("New Projects & Developments") }}</h2><p>{{ _(sec.subtitle) if sec.subtitle else _("Properties that are still under development, open for reservation.") }}</p></div>
+      <a class="eb-seeall" href="/properties?development_status=Under+Development">{{ _("View all") }}<svg class="i i-dir"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="eb-projects">
+      {% for p in (home.projects[:sec.item_limit] if sec.item_limit else home.projects) %}
+      <a class="eb-proj" href="/properties?project={{ p.property|urlencode }}">
+        <div class="eb-proj-img" {% if p.cover %}style="background-image:url('{{ p.cover }}')"{% endif %}><span class="eb eb-light" style="position:absolute;top:12px;inset-inline-start:12px">{{ _("Under construction") }}</span></div>
+        <div class="eb-proj-body">
+          <h3>{{ p.name }}</h3>
+          <div class="loc"><svg class="i i-sm"><use href="#i-pin"/></svg>{{ [p.locality, p.city]|select|join(", ") }}</div>
+          <div class="eb-tags">{% for t in p.types[:4] %}<span class="eb-tag">{{ _(t) }}</span>{% endfor %}</div>
+          <div class="from">{{ _("Starting from") }}<b>{{ site.currency }} {{ amount(p.from_price) }}</b></div>
+          <span class="eb-seeall">{{ _("Project details") }}<svg class="i i-dir"><use href="#i-arrow"/></svg></span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+

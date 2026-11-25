@@ -33,13 +33,13 @@ def active_nav(args):
         return "commercial"
 
 
-def canonical(args, page, view):
+def canonical(args, page, view, default="grid"):
     from urllib.parse import urlencode
 
     keep = {k: v for k, v in sorted(args.items()) if k not in ("sort", "north", "south", "east", "west")}
     if cint(page) > 1:
         keep["page"] = cint(page)
-    if view != "grid":
+    if view != default:
         keep["view"] = view
     url = frappe.utils.get_url("/properties")
     return url + ("?" + urlencode(keep) if keep else "")
@@ -49,7 +49,12 @@ def get_context(context):
     context.no_cache = 1
     form = frappe.form_dict
     args = catalog.parse_args(form)
-    view = form.get("view") if form.get("view") in VIEWS else "grid"
+    default_view = catalog.default_view()
+    view = form.get("view") if form.get("view") in VIEWS else default_view
+    from thinknxg_estate.portal import themes
+
+    if view == "map" and not themes.current_theme()[0].enable_map_view:
+        view = default_view if default_view != "map" else "grid"
     page = max(cint(form.get("page")), 1)
     searching = bool(args) or cint(form.get("page")) > 0 or form.get("view") in VIEWS
     site_context(context, active=active_nav(args) if searching else None)
@@ -57,6 +62,7 @@ def get_context(context):
     context.mode = "results" if searching else "home"
     context.args = args
     context.view = view
+    context.default_view = default_view
     context.saved = saved_listing_names()
     context.new_after = str(frappe.utils.add_days(frappe.utils.nowdate(), -30))
     settings = frappe.get_cached_doc("RE Portal Settings")
@@ -68,9 +74,11 @@ def get_context(context):
     if context.mode == "home":
         home = catalog.home_data()
         context.home = home
-        context.title = f"{site.title}: {_('Find properties to rent and buy')}"
-        description = site.tagline or _("Discover exceptional properties and request a viewing online.")
-        image = next((r.cover for r in home["featured"] if r.cover), None)
+        theme = site.theme
+        context.title = _(theme.seo_title) if theme.seo_title else f"{site.title}: {_('Find properties to rent and buy')}"
+        description = _(theme.seo_description) if theme.seo_description else (
+            site.tagline or _("Discover exceptional properties and request a viewing online."))
+        image = theme.og_image or next((r.cover for r in home["featured"] if r.cover), None)
         context.metatags = _meta(context.title, description, base_url, image)
         context.canonical = base_url
         context.jsonld = json.dumps({"@context": "https://schema.org", "@graph": [
@@ -96,10 +104,10 @@ def get_context(context):
     description = _("{0} listings: {1}. Compare prices, photos and locations, and request a viewing online.").format(
         result["total"], heading.lower())
     image = next((r.cover for r in result["results"] if r.cover), None)
-    context.metatags = _meta(context.title, description, canonical(args, page, view), image)
-    if view != "grid" or (set(args) & NOINDEX_KEYS and len(args) > 2) or page > 3:
+    context.metatags = _meta(context.title, description, canonical(args, page, view, default_view), image)
+    if view != default_view or (set(args) & NOINDEX_KEYS and len(args) > 2) or page > 3:
         context.metatags["robots"] = "noindex, follow"
-    context.canonical = canonical(args, page, "grid" if view == "list" else view)
+    context.canonical = canonical(args, page, default_view if view in ("grid", "list") else view, default_view)
     context.jsonld = json.dumps({"@context": "https://schema.org", "@type": "ItemList", "name": heading,
         "numberOfItems": result["total"],
         "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": frappe.utils.get_url("/" + r.route),

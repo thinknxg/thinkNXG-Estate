@@ -1,0 +1,11 @@
+<section class="eb-section" style="padding-top:0">
+  <div class="eb-wrap">
+    <div class="eb-cta">
+      <div><h2>{{ _(site.theme.cta_title) if site.theme.cta_title else (_(sec.title) if sec.title else _("Have a Property to Sell or Rent?")) }}</h2><p>{{ _(site.theme.cta_text) if site.theme.cta_text else (_(sec.subtitle) if sec.subtitle else _("Reach genuine property seekers and manage your listings with thinkNXG Estate.")) }}</p></div>
+      <div class="eb-cta-btns">
+        <a class="eb-btn eb-btn-lg eb-btn-light" href="{{ site.theme.cta_primary_url or ('/owner-portal' if site.owner_portal else '/contact') }}">{{ _(site.theme.cta_primary_label) if site.theme.cta_primary_label else _("List Your Property") }}</a>
+        {% if site.theme.cta_secondary_label or not site.theme.cta_primary_label %}<a class="eb-btn eb-btn-lg eb-btn-outline-light" href="{{ site.theme.cta_secondary_url or '/contact' }}">{{ _(site.theme.cta_secondary_label) if site.theme.cta_secondary_label else _("Contact Our Team") }}</a>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>

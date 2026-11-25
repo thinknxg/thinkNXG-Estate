@@ -43,3 +43,25 @@ def after_migrate():
 
 	ensure_rent_item()
 	sync_naming_counters()
+	ensure_default_themes()
+
+
+def ensure_default_themes():
+	"""One theme per built-in template, so the admin has something to preview straight away; the
+	Classic one is published when nothing is live yet, which keeps the site looking as it did."""
+	from thinknxg_estate.portal import themes
+
+	if not frappe.db.exists("DocType", "Portal Theme"):
+		return
+	for name, tpl in themes.TEMPLATES.items():
+		if not frappe.db.exists("Portal Theme", tpl["label"]):
+			frappe.get_doc({"doctype": "Portal Theme", "theme_name": tpl["label"], "template": name,
+			                "description": tpl["description"]}).insert(ignore_permissions=True)
+	if not themes.active_theme_name():
+		from thinknxg_estate.portal.api import theme_admin
+
+		frappe.flags.in_install = True
+		try:
+			theme_admin.publish_as_system(themes.TEMPLATES["Classic"]["label"])
+		finally:
+			frappe.flags.in_install = False

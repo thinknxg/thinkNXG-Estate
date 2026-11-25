@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-11-25 08:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_key",
+  "enabled",
+  "title",
+  "subtitle",
+  "item_limit",
+  "variant"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_key",
+   "fieldtype": "Select",
+   "label": "Section",
+   "options": "hero\ncategories\nfeatured\nlocations\nprojects\npremium\ntrust\ncta",
+   "reqd": 1,
+   "in_list_view": 1,
+   "columns": 2
+  },
+  {
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Show",
+   "default": "1",
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "in_list_view": 1,
+   "columns": 3,
+   "description": "Leave empty for the default."
+  },
+  {
+   "fieldname": "subtitle",
+   "fieldtype": "Small Text",
+   "label": "Subtitle"
+  },
+  {
+   "fieldname": "item_limit",
+   "fieldtype": "Int",
+   "label": "How Many",
+   "description": "Featured, premium, locations and projects."
+  },
+  {
+   "fieldname": "variant",
+   "fieldtype": "Select",
+   "label": "Style",
+   "options": "\nGrid\nCarousel",
+   "description": "Featured properties only."
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-25 08:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Estate Portal",
+ "name": "Portal Theme Section",
+ "owner": "Administrator",
+ "states": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "istable": 1,
+ "editable_grid": 1,
+ "permissions": []
+}

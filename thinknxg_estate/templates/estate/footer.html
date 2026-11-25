@@ -2,8 +2,9 @@
   <div class="eb-wrap">
     <div class="eb-foot-grid">
       <div class="eb-foot-about">
-        <a class="eb-brand eb-brand-light" href="/properties"><img src="/assets/thinknxg_estate/images/thinknxg_estate_logo.svg" alt="" width="34" height="34"><span>think<b>NXG</b> <em>Estate</em></span></a>
-        <p>{{ site.tagline or _("Discover properties to rent and buy, and request a viewing online.") }}</p>
+        <a class="eb-brand eb-brand-light" href="/properties">{% include "templates/estate/brand.html" %}</a>
+        <p>{{ site.footer_text or site.tagline or _("Discover properties to rent and buy, and request a viewing online.") }}</p>
+        {% if site.social %}<ul class="eb-foot-social">{% for l in site.social %}<li><a href="{{ l.url }}" rel="noopener" target="_blank">{{ l.label }}</a></li>{% endfor %}</ul>{% endif %}
         <ul class="eb-foot-contact">
           {% if site.email %}<li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>{% endif %}
           {% if site.whatsapp %}<li dir="ltr"><a href="https://wa.me/{{ site.whatsapp | replace('+','') | replace(' ','') }}" rel="noopener" target="_blank">{{ site.whatsapp }}</a></li>{% endif %}
@@ -33,14 +34,14 @@
       {% if site.footer_links %}
       <div>
         <h4>{{ _("More") }}</h4>
-        <ul>{% for l in site.footer_links %}<li><a href="{{ l.url }}">{{ l.label }}</a></li>{% endfor %}</ul>
+        <ul>{% for l in site.footer_links %}<li><a href="{{ l.url }}"{% if l.new_tab %} target="_blank" rel="noopener"{% endif %}>{{ l.label }}</a></li>{% endfor %}</ul>
       </div>
       {% endif %}
     </div>
     <div class="eb-foot-base">
       <span>© {{ frappe.utils.getdate().year }} {{ site.title }}</span>
       <span class="eb-foot-legal">{% for l in site.legal %}<a href="{{ l.url }}">{{ l.label }}</a>{% endfor %}</span>
-      <span>{{ _("Powered by") }} <a href="https://thinknxg.com" rel="noopener" target="_blank">thinkNXG</a></span>
+      {% if site.powered_by %}<span>{{ _("Powered by") }} <a href="https://thinknxg.com" rel="noopener" target="_blank">thinkNXG</a></span>{% endif %}
     </div>
   </div>
 </footer>
