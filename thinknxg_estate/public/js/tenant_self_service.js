@@ -1,4 +1,4 @@
-/* thinkNXG Estate - Tenant Self-Service Portal (/tenant-self-service)
+/* thinkNXG Estate - Tenant Self-Service Portal (/re-tenant, also /tenant-self-service)
    Vanilla JS single-page app. Every value is read from the server API
    (thinknxg_estate.core.tenant_self_service); nothing here is hard-coded tenant data.
    All interpolated values are HTML-escaped by the `html` tag. */
@@ -713,7 +713,7 @@
   function showSignIn(msg) {
     clearAuth();
     const codeOn = S.info && S.info.access_code_enabled;
-    const next = encodeURIComponent('/tenant-self-service');
+    const next = encodeURIComponent(location.pathname);
     mount(app(), html`<div class="auth"><section class="auth-hero"><div class="brand"><img src="${T.logo}" alt="">${T.title || 'thinkNXG Estate'}</div>
       <div><h1>Your home, in one place.</h1><p>Pay and track rent, request repairs, access your lease and documents, and talk to your property team.</p><div class="auth-points"><div>${ic('wallet')}<span>Rent ledger, invoices and receipts</span></div><div>${ic('wrench')}<span>Maintenance requests with live status</span></div><div>${ic('folder')}<span>Lease and documents, always to hand</span></div></div></div><small>Secure tenant portal</small></section>
       <section class="auth-panel"><div class="auth-card"><h2>Sign in</h2><p class="sub">Access your tenancy.</p>

@@ -1,6 +1,6 @@
 # Tenant Self-Service Portal: Implementation
 
-`/tenant-self-service` is a dedicated single-page application with its own shell, navigation, dashboard and API. It does not redirect to or alias `/tenant-portal`, which is unchanged.
+`/tenant-self-service` (short address **`/re-tenant`**, a route rewrite in `hooks.py`) is a dedicated single-page application with its own shell, navigation, dashboard and API. It does not redirect to or alias `/tenant-portal`, which is unchanged.
 
 ## Access
 
@@ -10,6 +10,10 @@
 | Mobile + access code | Property Settings > `enable_access_code_portal`, plus `Tenant.enable_portal` and `Tenant.portal_access_code` |
 
 Both modes pass through the same server-side checks (`_tenant()`).
+
+## Menus and shortcuts
+
+The thinkNXG Estate desk sidebar has a **Portals** section (Staff Portal `/re-portal`, Property Website `/properties`, Owner Portal `/owner-portal`, Tenant Portal `/re-tenant`) and the workspace has matching shortcut cards. Tenants see "Tenant Self-Service" in the website portal menu. Run `bench migrate` to load them.
 
 ## Pages
 

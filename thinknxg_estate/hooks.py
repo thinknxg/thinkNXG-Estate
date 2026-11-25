@@ -55,8 +55,15 @@ website_redirects = [
 	{"source": r"/listings/(.*)", "target": "/properties"},
 ]
 
+# Short address for the tenant self-service app. A route rewrite, not a redirect: the page is
+# served as is, and /tenant-self-service keeps working.
+website_route_rules = [
+	{"from_route": "/re-tenant", "to_route": "tenant-self-service"},
+]
+
 standard_portal_menu_items = [
 	{"title": "My Tenancy", "route": "/tenant-portal", "role": "Tenant"},
+	{"title": "Tenant Self-Service", "route": "/re-tenant", "role": "Tenant"},
 	{"title": "My Properties", "route": "/owner-portal", "role": "Property Owner"},
 ]
 

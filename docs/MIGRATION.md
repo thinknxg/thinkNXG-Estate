@@ -75,7 +75,7 @@ mode no exported JSON is removed from the legacy apps' folders.
   submit permission on the document; terminate, make job and make deal need write permission.
 - **Access-code sessions are invalidated** once: only token hashes are stored now, so tenants
   using `/tenant-self-service` sign in again.
-- `/tenant-self-service` redirects to `/tenant-portal` when the access-code portal is off.
+- `/tenant-self-service` (short address `/re-tenant`) is a standalone app and no longer redirects to `/tenant-portal`; with the access-code portal off, website accounts still sign in there.
 - **Sales agents and brokers see only their own leads, deals and site visits** (RE CRM Settings
   → *Sales Agents See Only Their Own Leads*, on by default). Make sure each RE Agent record has its
   user, or turn the setting off to keep the old behaviour.
