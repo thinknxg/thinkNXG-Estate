@@ -45,6 +45,12 @@
   "tenancy_end_date",
   "termination_posting_date",
   "termination_col",
+  "termination_settlement_status",
+  "termination_mode_of_payment",
+  "termination_journal_entry",
+  "termination_charge_invoice",
+  "terminated_by",
+  "terminated_on",
   "termination_settlement",
   "amended_from"
  ],
@@ -303,6 +309,46 @@
   {
    "fieldname": "termination_col",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "termination_settlement_status",
+   "fieldtype": "Data",
+   "label": "Settlement Result",
+   "read_only": 1
+  },
+  {
+   "fieldname": "termination_mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Settlement Mode of Payment",
+   "read_only": 1,
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "termination_journal_entry",
+   "fieldtype": "Link",
+   "label": "Settlement Journal Entry",
+   "read_only": 1,
+   "options": "Journal Entry"
+  },
+  {
+   "fieldname": "termination_charge_invoice",
+   "fieldtype": "Link",
+   "label": "Tenant Charges Invoice",
+   "read_only": 1,
+   "options": "Sales Invoice"
+  },
+  {
+   "fieldname": "terminated_by",
+   "fieldtype": "Link",
+   "label": "Terminated By",
+   "read_only": 1,
+   "options": "User"
+  },
+  {
+   "fieldname": "terminated_on",
+   "fieldtype": "Datetime",
+   "label": "Terminated On",
+   "read_only": 1
   },
   {
    "fieldname": "termination_settlement",

@@ -111,17 +111,23 @@ def terminate_lease(termination_date, reasons, outstanding_rent=None,
         _notify_leasing_team(doc, note)
         return {"ok": True, "status": "Requested", "unit": doc.unit, "reasons": reasons}
 
-    # Ownership was verified above (lease resolved from the session tenant) and the
-    # setting allows online termination, so the tenant may run this staff action.
+    # Online termination is only completed here when nothing needs accounting (no credit
+    # notes, no cash to move). Otherwise it is routed to staff, who post the settlement.
+    from thinknxg_estate.core import lease_settlement as ls
+
+    posting = frappe.utils.nowdate()
+    settle = ls.compute_settlement(doc, termination_date, posting)
+    if settle["result"] != ls.SETTLED or settle["adjustments"]:
+        note = _("Tenant requested termination on {0}. Reason: {1}. A settlement of {2} {3} must be "
+                 "posted by the leasing team.").format(termination_date, reasons, abs(settle["net_settlement"]),
+                                                      settle["currency"])
+        doc.add_comment("Comment", note)
+        _notify_leasing_team(doc, note)
+        return {"ok": True, "status": "Requested", "unit": doc.unit, "reasons": reasons}
     doc.flags.ignore_permissions = True
     status = doc.terminate(
-        termination_date=termination_date,
-        reasons=reasons,
-        outstanding_rent=outstanding_rent,
-        mode_of_payment=mode_of_payment,
-        apply_charge_to_tenant=apply_charge_to_tenant,
-        reason=reason,
-    )
+        termination_date=termination_date, reasons=reasons, posting_date=posting,
+        calc_token=settle["token"], reason=reason)
     return {"ok": True, "status": status, "unit": doc.unit, "reasons": reasons}
 
 

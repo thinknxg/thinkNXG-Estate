@@ -13,6 +13,7 @@
   "col_break_1",
   "auto_create_pdcs",
   "overdue_grace_days",
+  "prorate_final_rent",
   "deposit_sb",
   "deposit_liability_account",
   "col_break_2",
@@ -60,6 +61,13 @@
    "fieldname": "overdue_grace_days",
    "fieldtype": "Int",
    "label": "Overdue Grace Days"
+  },
+  {
+   "default": "1",
+   "description": "On termination, rent for the part of the final instalment period after the Tenancy End Date is credited pro rata (days used / days in period)",
+   "fieldname": "prorate_final_rent",
+   "fieldtype": "Check",
+   "label": "Prorate Final Rent on Termination"
   },
   {
    "fieldname": "deposit_sb",
@@ -133,7 +141,7 @@
  "issingle": 1,
  "istable": 0,
  "links": [],
- "modified": "2026-11-24 12:00:00.000000",
+ "modified": "2026-11-25 18:30:00.000000",
  "modified_by": "Administrator",
  "module": "Estate Property",
  "name": "Property Settings",

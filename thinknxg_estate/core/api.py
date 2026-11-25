@@ -249,7 +249,43 @@ def get_dashboard_stats():
         "rera": {"filled": rera_filled, "total": total_properties},
     }
 
+    # ── Portfolio / receivables / termination metrics, all from live records ──
+    vacant_units = frappe.db.count("Unit", {"status": "Vacant"})
+    active_tenancies = frappe.db.count("Lease Contract", {"docstatus": 1, "status": ["in", ["Active", "Expiring"]]})
+    expiring_leases = frappe.db.count("Lease Contract", {
+        "docstatus": 1, "status": ["in", ["Active", "Expiring"]],
+        "end_date": ["between", [today(), add_days(today(), 90)]]})
+    outstanding_rent = frappe.db.sql(
+        """select coalesce(sum(si.outstanding_amount), 0) from `tabSales Invoice` si
+           where si.docstatus = 1 and si.is_return = 0 and si.outstanding_amount > 0
+             and si.name in (select ri.sales_invoice from `tabRent Installment` ri
+                             where ri.sales_invoice is not null and ri.sales_invoice != '')""")[0][0]
+    held = frappe.get_all("Security Deposit", filters={"docstatus": 1, "status": ["in", ["Held", "Partially Refunded"]]},
+                          fields=["amount", "deduction_amount", "refunded_amount"])
+    security_deposits = sum(max(flt(d.amount) - flt(d.deduction_amount) - flt(d.refunded_amount), 0) for d in held)
+    open_maintenance = frappe.db.count("Maintenance Request", {"status": ["in", ["Open", "In Progress", "On Hold"]]})
+    recent_terminations = frappe.get_all(
+        "Lease Contract", filters={"docstatus": 1, "status": "Terminated"},
+        fields=["name", "tenant", "unit", "tenancy_end_date", "end_date", "terminated_on", "termination_settlement_status"],
+        order_by="terminated_on desc, modified desc", limit_page_length=5)
+    for r in recent_terminations:
+        r["tenant_name"] = frappe.db.get_value("Tenant", r["tenant"], "tenant_name") or r["tenant"]
+    company = (frappe.defaults.get_user_default("Company")
+               or frappe.db.get_value("Lease Contract", {"docstatus": 1}, "company", order_by="modified desc")
+               or frappe.db.get_single_value("Global Defaults", "default_company"))
+    currency = frappe.db.get_value("Company", company, "default_currency") if company else None
+
     return {
+        "total_units": total_units,
+        "occupied_units": occupied_units,
+        "vacant_units": vacant_units,
+        "active_tenancies": active_tenancies,
+        "expiring_leases": expiring_leases,
+        "outstanding_rent": flt(outstanding_rent, 2),
+        "security_deposits_held": flt(security_deposits, 2),
+        "open_maintenance": open_maintenance,
+        "recent_terminations": recent_terminations,
+        "currency": currency,
         "total_properties": total_properties,
         "occupancy_rate": occupancy_rate,
         "monthly_rent_income": monthly_rent_income,
@@ -1773,7 +1809,7 @@ def update_inspection(name, estimated_damage_cost=None, summary=None, tenant_sig
 def terminate_lease_contract(name, termination_date=None, reason=None, reasons=None,
                               outstanding_rent=None, mode_of_payment=None,
                               apply_charge_to_tenant=None, tenancy_end_date=None,
-                              posting_date=None, issue_credit_notes=0):
+                              posting_date=None, issue_credit_notes=0, charges=None, calc_token=None):
     """termination_date is the legacy name of tenancy_end_date (the actual end of tenancy)."""
     doc = frappe.get_doc("Lease Contract", name)
     status = doc.terminate(
@@ -1786,17 +1822,52 @@ def terminate_lease_contract(name, termination_date=None, reason=None, reasons=N
         outstanding_rent=outstanding_rent,
         mode_of_payment=mode_of_payment,
         apply_charge_to_tenant=apply_charge_to_tenant,
+        charges=charges,
+        calc_token=calc_token,
     )
-    return {"name": doc.name, "status": status, "unit": doc.unit, "reasons": reasons}
+    return {"name": doc.name, "status": status, "unit": doc.unit, "reasons": reasons,
+            "journal_entry": doc.termination_journal_entry,
+            "settlement": doc.termination_settlement_status}
 
 
 @frappe.whitelist()
 @staff_only
-def get_lease_termination_settlement(name, tenancy_end_date=None):
+def get_lease_termination_settlement(name, tenancy_end_date=None, posting_date=None,
+                                     charges=None, apply_charge_to_tenant=0):
     """Settlement preview: unpaid rent to the Tenancy End Date, invoices raised beyond it
     (needing credit notes) and the deposit balance actually held."""
     doc = frappe.get_doc("Lease Contract", name)
-    return doc.get_termination_settlement(tenancy_end_date=tenancy_end_date)
+    return doc.get_termination_settlement(
+        tenancy_end_date=tenancy_end_date, posting_date=posting_date,
+        charges=charges, apply_charge_to_tenant=apply_charge_to_tenant)
+
+
+@frappe.whitelist()
+@staff_only
+def reverse_lease_termination(name, reason=None):
+    """Cancel a termination and the settlement documents it created."""
+    doc = frappe.get_doc("Lease Contract", name)
+    return {"name": doc.name, "status": doc.reverse_termination(reason=reason)}
+
+
+@frappe.whitelist()
+@staff_only
+def get_termination_options(company=None, lease=None):
+    """Modes of Payment that have an account for the company, plus the VAT rate from the
+    company's tax configuration (so the screen never hardcodes either)."""
+    from thinknxg_estate.core import lease_settlement as ls
+    from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
+
+    modes = []
+    for m in frappe.get_all("Mode of Payment", filters={"enabled": 1}, pluck="name"):
+        acc = (get_bank_cash_account(m, company) or {}).get("account") if company else None
+        modes.append({"name": m, "account": acc})
+    vat = None
+    if company:
+        doc = frappe.get_doc("Lease Contract", lease) if lease else frappe._dict(company=company, tenant=None)
+        vat = ls.vat_config(doc)
+    return {"modes": modes, "vat": vat,
+            "currency": frappe.db.get_value("Company", company, "default_currency") if company else None}
 
 
 @frappe.whitelist()
@@ -1974,7 +2045,8 @@ def get_lease_contracts_list(source="Admin"):
         filters=filters,
         fields=["name", "tenant", "unit", "property", "status", "docstatus",
                 "start_date", "end_date", "total_contract_value", "payment_frequency",
-                "rent_schedule", "security_deposit", "request_source"],
+                "rent_schedule", "security_deposit", "request_source", "company",
+                "security_deposit_amount"],
         order_by="modified desc",
         limit_page_length=200,
     )

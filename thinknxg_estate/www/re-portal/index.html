@@ -559,6 +559,19 @@
           </div>
         </div>
 
+        <div class="stats-row" id="dash-ops-row">
+          <div class="stat-card"><div class="stat-label">{{ _("Total Units") }}</div><div class="stat-value" id="stat-total-units">—</div><div class="stat-sub" id="stat-units-sub"></div></div>
+          <div class="stat-card"><div class="stat-label">{{ _("Occupied / Vacant") }}</div><div class="stat-value" id="stat-occ-vac">—</div><div class="stat-sub">{{ _("units") }}</div></div>
+          <div class="stat-card"><div class="stat-label">{{ _("Active Tenancies") }}</div><div class="stat-value" id="stat-active-tenancies">—</div><div class="stat-sub"></div></div>
+          <div class="stat-card"><div class="stat-label">{{ _("Expiring Leases") }}</div><div class="stat-value" id="stat-expiring-leases">—</div><div class="stat-sub">{{ _("within 90 days") }}</div></div>
+        </div>
+        <div class="stats-row" id="dash-fin-row">
+          <div class="stat-card"><div class="stat-label">{{ _("Outstanding Rent") }}</div><div class="stat-value" id="stat-outstanding-rent">—</div><div class="stat-sub" id="stat-outstanding-sub">{{ _("open rent invoices") }}</div></div>
+          <div class="stat-card"><div class="stat-label">{{ _("Security Deposits Held") }}</div><div class="stat-value" id="stat-deposits-held">—</div><div class="stat-sub" id="stat-deposits-sub"></div></div>
+          <div class="stat-card"><div class="stat-label">{{ _("Open Maintenance") }}</div><div class="stat-value" id="stat-open-maintenance">—</div><div class="stat-sub">{{ _("requests") }}</div></div>
+          <div class="stat-card"><div class="stat-label">{{ _("Recent Terminations") }}</div><div class="stat-value" id="stat-terminations">—</div><div class="stat-sub" id="stat-terminations-list"></div></div>
+        </div>
+
         <div class="grid-2">
           <!-- Recent Activity -->
           <div class="card">
@@ -604,7 +617,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>{{ _("Type") }}</th><th>{{ _("Property / Unit") }}</th><th>{{ _("Tenant") }}</th><th>{{ _("Due Date") }}</th><th>{{ _("Amount (OMR)") }}</th><th>{{ _("Status") }}</th><th>{{ _("Action") }}</th>
+                  <th>{{ _("Type") }}</th><th>{{ _("Property / Unit") }}</th><th>{{ _("Tenant") }}</th><th>{{ _("Due Date") }}</th><th>{{ _("Amount") }}</th><th>{{ _("Status") }}</th><th>{{ _("Action") }}</th>
                 </tr>
               </thead>
               <tbody id="action-required-rows">
@@ -844,7 +857,7 @@
               </div>
               <div class="scroll-x">
                 <table>
-                  <thead><tr><th>{{ _("Unit") }}</th><th>{{ _("Type") }}</th><th>{{ _("Area") }}</th><th>{{ _("Tenant") }}</th><th>{{ _("Lease End") }}</th><th>{{ _("Rent (OMR)") }}</th><th>{{ _("Status") }}</th><th>{{ _("Portal") }}</th></tr></thead>
+                  <thead><tr><th>{{ _("Unit") }}</th><th>{{ _("Type") }}</th><th>{{ _("Area") }}</th><th>{{ _("Tenant") }}</th><th>{{ _("Lease End") }}</th><th>{{ _("Rent") }}</th><th>{{ _("Status") }}</th><th>{{ _("Portal") }}</th></tr></thead>
                   <tbody id="pd-units-rows">
                     <tr><td colspan="8" style="text-align:center;color:var(--ink-muted);padding:24px;">{{ _("No units yet.") }}</td></tr>
                   </tbody>
@@ -985,7 +998,7 @@
           <div class="scroll-x">
             <table>
               <thead>
-                <tr><th>{{ _("Tenant") }}</th><th>{{ _("Nationality") }}</th><th>{{ _("Unit") }}</th><th>{{ _("Lease Period") }}</th><th>{{ _("Rent (OMR/mo)") }}</th><th>{{ _("Payment") }}</th><th>{{ _("Status") }}</th><th></th></tr>
+                <tr><th>{{ _("Tenant") }}</th><th>{{ _("Nationality") }}</th><th>{{ _("Unit") }}</th><th>{{ _("Lease Period") }}</th><th>{{ _("Rent / month") }}</th><th>{{ _("Payment") }}</th><th>{{ _("Status") }}</th><th></th></tr>
               </thead>
               <tbody id="tenants-rows">
                 <tr><td colspan="8" style="text-align:center;color:var(--ink-muted);padding:24px;">{{ _("No tenants yet.") }}</td></tr>
@@ -1187,90 +1200,135 @@
            SCREEN: TERMINATE LEASE
       ════════════════════════════════════════════ -->
       <div class="screen" id="screen-terminate_lease">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">{{ _("Terminate Lease") }}</div>
-          </div>
-          <div class="card-body" style="padding:18px; display:flex; flex-direction:column; gap:14px; max-width:520px;">
-            <div id="terminate-form-msg" style="display:none;margin-bottom:4px;padding:10px 14px;border-radius:var(--radius);font-size: 15.0px;"></div>
-            <div class="form-group" id="terminate-property-group">
-              <label class="form-label">{{ _("Property") }}</label>
-              <select class="form-input form-select" id="terminate-property-select" onchange="onTerminatePropertyChange()">
-                <option value="">{{ _("Select a property…") }}</option>
-              </select>
-            </div>
-            <div class="form-group" id="terminate-unit-group">
-              <label class="form-label">{{ _("Unit") }}</label>
-              <select class="form-input form-select" id="terminate-unit-select" onchange="renderTerminateLeaseSelect()" disabled>
-                <option value="">{{ _("Select property first…") }}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">{{ _("Lease Contract") }}</label>
-              <select class="form-input form-select" id="terminate-lease-select" onchange="onTerminateLeaseSelectChange(); calculateTerminateOutstandingRent();">
-                <option value="">{{ _("Select an Active or Expiring lease…") }}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">{{ _("Schedule End Date") }}</label>
-              <input class="form-input" type="date" id="terminate-schedule-end" disabled>
-              <div style="font-size:12px;color:var(--ink-muted);margin-top:4px;">{{ _("Contractual end of the lease.") }}</div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">{{ _("Tenancy End Date") }}</label>
-              <input class="form-input" type="date" id="terminate-date" onchange="calculateTerminateOutstandingRent()">
-              <div style="font-size:12px;color:var(--ink-muted);margin-top:4px;">{{ _("Actual last day of the tenancy; used for the final settlement.") }}</div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">{{ _("Posting Date") }}</label>
-              <input class="form-input" type="date" id="terminate-posting-date">
-              <div style="font-size:12px;color:var(--ink-muted);margin-top:4px;">{{ _("Date the settlement enters the General Ledger.") }}</div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">{{ _("Reasons") }}</label>
-              <select class="form-input form-select" id="terminate-reasons">
-                <option value="New Contract">{{ _("New Contract") }}</option>
-                <option value="Lost to another agent">{{ _("Lost to another agent") }}</option>
-                <option value="Tenancy Surrendered">{{ _("Tenancy Surrendered") }}</option>
-                <option value="End of Tenancy">{{ _("End of Tenancy") }}</option>
-                <option value="Tenancy Breach">{{ _("Tenancy Breach") }}</option>
-                <option value="Break Clause Activation">{{ _("Break Clause Activation") }}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">{{ _("Security Deposit") }}</label>
-              <input class="form-input" id="terminate-security-deposit" disabled>
-            </div>
-            <div class="form-group" style="flex-direction:row; align-items:center; gap:8px;">
-              <input type="checkbox" id="terminate-apply-charge" style="width:auto;">
-              <label class="form-label" style="margin:0;" for="terminate-apply-charge">{{ _("Apply Charge to Tenant") }}</label>
-            </div>
-            <div class="form-group">
-              <label class="form-label">{{ _("Outstanding Rent") }}</label>
-              <div style="display:flex; gap:8px;">
-                <input class="form-input" type="number" step="0.001" id="terminate-outstanding-rent" style="flex:1;" readonly>
-                <button class="btn btn-ghost btn-sm" onclick="calculateTerminateOutstandingRent()">{{ _("Calculate Amount") }}</button>
+        <style>
+          .tl-wrap{display:flex;flex-direction:column;gap:16px;max-width:980px}
+          .tl-sec{background:var(--white);border:1px solid var(--border-light);border-radius:var(--radius);overflow:hidden}
+          .tl-sec>h3{margin:0;padding:12px 18px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);border-bottom:1px solid var(--border-light);background:#f8fafc;display:flex;gap:10px;align-items:center}
+          .tl-sec>h3 b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#4f46e5;color:#fff;font-size:12px}
+          .tl-body{padding:16px 18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+          .tl-body .wide{grid-column:1/-1}
+          .tl-date-plan{background:#eef2ff;border:1px solid #c7d2fe;border-radius:8px;padding:10px 12px}
+          .tl-date-act{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 12px}
+          .tl-kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed var(--border-light);font-size:14px}
+          .tl-kv:last-child{border-bottom:0}
+          .tl-kv.total{font-weight:700;font-size:15px;border-top:2px solid #0f172a;border-bottom:0;margin-top:4px;padding-top:10px}
+          .tl-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:13px}
+          .tl-badge.pay{background:#dcfce7;color:#166534}.tl-badge.rec{background:#fee2e2;color:#991b1b}.tl-badge.zero{background:#e0e7ff;color:#3730a3}
+          .tl-stale{background:#fef3c7;color:#92400e;border-radius:8px;padding:8px 12px;font-size:13px}
+          table.tl-ch{width:100%;border-collapse:collapse;font-size:13px}
+          table.tl-ch th{text-align:start;padding:6px 6px;color:var(--ink-muted);font-weight:600}
+          table.tl-ch td{padding:4px 4px}
+          table.tl-ch input,table.tl-ch select{width:100%}
+          .tl-ro{background:#f1f5f9}
+        </style>
+        <div class="tl-wrap">
+          <div id="terminate-form-msg" style="display:none;padding:10px 14px;border-radius:var(--radius);font-size:15px;"></div>
+
+          <div class="tl-sec">
+            <h3><b>A</b>{{ _("Lease Information") }}</h3>
+            <div class="tl-body">
+              <div class="form-group" id="terminate-property-group">
+                <label class="form-label">{{ _("Property") }}</label>
+                <select class="form-input form-select" id="terminate-property-select" onchange="onTerminatePropertyChange()"><option value="">{{ _("Select a property…") }}</option></select>
+              </div>
+              <div class="form-group" id="terminate-unit-group">
+                <label class="form-label">{{ _("Unit") }}</label>
+                <select class="form-input form-select" id="terminate-unit-select" onchange="renderTerminateLeaseSelect()" disabled><option value="">{{ _("Select property first…") }}</option></select>
+              </div>
+              <div class="form-group wide">
+                <label class="form-label">{{ _("Lease Contract") }}</label>
+                <select class="form-input form-select" id="terminate-lease-select" onchange="onTerminateLeaseSelectChange(); invalidateTerminate();"><option value="">{{ _("Select an Active or Expiring lease…") }}</option></select>
+              </div>
+              <div class="form-group tl-date-plan">
+                <label class="form-label">{{ _("Schedule End Date") }}</label>
+                <input class="form-input tl-ro" type="date" id="terminate-schedule-end" disabled>
+                <div style="font-size:12px;color:var(--ink-muted);margin-top:4px;">{{ _("Contractual end of the lease. Never changed.") }}</div>
+              </div>
+              <div class="form-group tl-date-act">
+                <label class="form-label">{{ _("Tenancy End Date") }}</label>
+                <input class="form-input" type="date" id="terminate-date" onchange="invalidateTerminate()">
+                <div style="font-size:12px;color:var(--ink-muted);margin-top:4px;">{{ _("Actual last day of the tenancy; drives the settlement.") }}</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">{{ _("Reasons") }}</label>
+                <select class="form-input form-select" id="terminate-reasons">
+                  <option value="New Contract">{{ _("New Contract") }}</option>
+                  <option value="Lost to another agent">{{ _("Lost to another agent") }}</option>
+                  <option value="Tenancy Surrendered">{{ _("Tenancy Surrendered") }}</option>
+                  <option value="End of Tenancy">{{ _("End of Tenancy") }}</option>
+                  <option value="Tenancy Breach">{{ _("Tenancy Breach") }}</option>
+                  <option value="Break Clause Activation">{{ _("Break Clause Activation") }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">{{ _("Original Security Deposit") }}</label>
+                <input class="form-input tl-ro" id="terminate-security-deposit" disabled>
               </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">{{ _("Deposit Balance Held") }}</label>
-              <input class="form-input" id="terminate-deposit-balance" disabled>
+          </div>
+
+          <div class="tl-sec">
+            <h3><b>B</b>{{ _("Financial Position") }}</h3>
+            <div class="tl-body"><div class="wide" id="terminate-position"><span style="color:var(--ink-muted)">{{ _("Press Calculate Amount to load the position from the ledger.") }}</span></div></div>
+          </div>
+
+          <div class="tl-sec">
+            <h3><b>C</b>{{ _("Tenant Charges") }}</h3>
+            <div class="tl-body">
+              <div class="wide" style="display:flex;gap:8px;align-items:center;">
+                <input type="checkbox" id="terminate-apply-charge" style="width:auto;" onchange="onTerminateChargeToggle()">
+                <label class="form-label" style="margin:0;" for="terminate-apply-charge">{{ _("Apply Charge to Tenant") }}</label>
+              </div>
+              <div class="wide" id="terminate-charges-box" style="display:none;overflow-x:auto;">
+                <table class="tl-ch"><thead><tr>
+                  <th>{{ _("Charge Description") }}</th><th style="width:120px">{{ _("Amount") }}</th><th style="width:110px">{{ _("VAT Treatment") }}</th>
+                  <th style="width:80px">{{ _("VAT Rate") }}</th><th style="width:110px">{{ _("VAT Amount") }}</th><th style="width:120px">{{ _("Total Amount") }}</th><th style="width:70px">{{ _("Actions") }}</th>
+                </tr></thead><tbody id="terminate-charges-rows"></tbody></table>
+                <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="addTerminateCharge()">+ {{ _("Add Charge") }}</button>
+              </div>
             </div>
-            <div id="terminate-settlement-box" style="display:none;font-size:14px;line-height:1.5;"></div>
-            <div class="form-group" id="terminate-credit-group" style="display:none;flex-direction:row;align-items:center;gap:8px;">
-              <input type="checkbox" id="terminate-issue-credit" style="width:auto;">
-              <label class="form-label" style="margin:0;" for="terminate-issue-credit">{{ _("Issue credit notes for rent already invoiced after the Tenancy End Date") }}</label>
+          </div>
+
+          <div class="tl-sec">
+            <h3><b>D</b>{{ _("Settlement Calculation") }}</h3>
+            <div class="tl-body">
+              <div class="wide" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <button class="btn btn-primary btn-sm" id="terminate-calc-btn" onclick="calculateTerminateOutstandingRent()">{{ _("Calculate Amount") }}</button>
+                <span id="terminate-stale" class="tl-stale" style="display:none;">{{ _("Inputs changed — calculate again before terminating.") }}</span>
+              </div>
+              <div class="wide" id="terminate-settlement-box"></div>
+              <input type="hidden" id="terminate-outstanding-rent">
+              <input type="hidden" id="terminate-deposit-balance">
             </div>
-            <div class="form-group">
-              <label class="form-label">{{ _("Mode of Payment") }}</label>
-              <input class="form-input" id="terminate-mode-of-payment" placeholder="{{ _("e.g. Cash, Bank Transfer")|e }}">
+          </div>
+
+          <div class="tl-sec">
+            <h3><b>E</b>{{ _("Accounting Details") }}</h3>
+            <div class="tl-body">
+              <div class="form-group">
+                <label class="form-label">{{ _("Posting Date") }} *</label>
+                <input class="form-input" type="date" id="terminate-posting-date" onchange="invalidateTerminate()">
+                <div style="font-size:12px;color:var(--ink-muted);margin-top:4px;">{{ _("Date the settlement enters the General Ledger.") }}</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">{{ _("Mode of Payment") }} <span id="terminate-mop-req"></span></label>
+                <select class="form-input form-select" id="terminate-mode-of-payment" onchange="onTerminateModeChange()"><option value="">{{ _("Select…") }}</option></select>
+                <div id="terminate-mop-account" style="font-size:12px;color:var(--ink-muted);margin-top:4px;"></div>
+              </div>
+              <div class="form-group wide">
+                <label class="form-label">{{ _("Notes") }}</label>
+                <textarea class="form-input" id="terminate-reason" rows="2" placeholder="{{ _("Optional")|e }}" style="resize:vertical;"></textarea>
+              </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">{{ _("Notes") }}</label>
-              <textarea class="form-input" id="terminate-reason" rows="3" placeholder="{{ _("Optional")|e }}" style="resize:vertical;"></textarea>
-            </div>
-            <div class="action-row">
-              <button class="btn btn-primary btn-sm" id="terminate-submit-btn" onclick="submitTerminateLease()" style="background:var(--red);border-color:var(--red);">{{ _("Terminate Lease") }}</button>
+          </div>
+
+          <div class="tl-sec">
+            <h3><b>F</b>{{ _("Confirmation") }}</h3>
+            <div class="tl-body">
+              <div class="wide" id="terminate-confirm" style="font-size:14px;line-height:1.6;color:var(--ink-muted);">{{ _("Calculate the settlement to see the summary.") }}</div>
+              <div class="wide action-row">
+                <button class="btn btn-primary btn-sm" id="terminate-submit-btn" onclick="submitTerminateLease()" disabled style="background:var(--red);border-color:var(--red);">{{ _("Terminate Lease") }}</button>
+              </div>
             </div>
           </div>
         </div>
@@ -1323,7 +1381,7 @@
                 <input class="form-input" type="date" id="contract-end-date" onchange="refreshContractChargesPreview()">
               </div>
               <div class="form-group">
-                <label class="form-label">{{ _("Annual Rent (OMR)") }}</label>
+                <label class="form-label">{{ _("Annual Rent") }}</label>
                 <input class="form-input" id="contract-rent" placeholder="0.00">
                 <div style="grid-column:1/-1; margin-top:8px;">
                   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
@@ -1353,7 +1411,7 @@
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">{{ _("Security Deposit (OMR)") }}</label>
+                <label class="form-label">{{ _("Security Deposit") }}</label>
                 <input class="form-input" id="contract-deposit" placeholder="0.00">
               </div>
               <div class="form-group">
@@ -1381,7 +1439,7 @@
                 <input class="form-input" type="number" id="contract-notice-period" placeholder="60">
               </div>
               <div class="form-group">
-                <label class="form-label">{{ _("Broker Commission (OMR)") }}</label>
+                <label class="form-label">{{ _("Broker Commission") }}</label>
                 <input class="form-input" type="number" step="0.01" id="contract-broker-commission" placeholder="0.00">
               </div>
               <div class="form-group">
@@ -1432,7 +1490,7 @@
           <div class="scroll-x">
             <table>
               <thead>
-                <tr><th>{{ _("Invoice #") }}</th><th>{{ _("Tenant") }}</th><th>{{ _("Unit") }}</th><th>{{ _("Period") }}</th><th>{{ _("Rent (OMR)") }}</th><th>{{ _("VAT (5%)") }}</th><th>{{ _("Total") }}</th><th>{{ _("Type") }}</th><th>{{ _("Due") }}</th><th>{{ _("Status") }}</th><th></th></tr>
+                <tr><th>{{ _("Invoice #") }}</th><th>{{ _("Tenant") }}</th><th>{{ _("Unit") }}</th><th>{{ _("Period") }}</th><th>{{ _("Rent") }}</th><th>{{ _("VAT") }}</th><th>{{ _("Total") }}</th><th>{{ _("Type") }}</th><th>{{ _("Due") }}</th><th>{{ _("Status") }}</th><th></th></tr>
               </thead>
               <tbody id="invoices-rows">
                 <tr><td colspan="10" style="text-align:center;color:var(--ink-muted);padding:24px;">{{ _("No invoices yet.") }}</td></tr>
@@ -1699,7 +1757,7 @@
           </div>
           <div class="scroll-x">
             <table>
-              <thead><tr><th>{{ _("WO #") }}</th><th>{{ _("Issue") }}</th><th>{{ _("Property/Unit") }}</th><th>{{ _("Reported By") }}</th><th>{{ _("Priority") }}</th><th>{{ _("Vendor") }}</th><th>{{ _("Est. Cost (OMR)") }}</th><th>{{ _("Status") }}</th></tr></thead>
+              <thead><tr><th>{{ _("WO #") }}</th><th>{{ _("Issue") }}</th><th>{{ _("Property/Unit") }}</th><th>{{ _("Reported By") }}</th><th>{{ _("Priority") }}</th><th>{{ _("Vendor") }}</th><th>{{ _("Est. Cost") }}</th><th>{{ _("Status") }}</th></tr></thead>
               <tbody id="maintenance-rows">
                 <tr><td colspan="8" style="text-align:center;color:var(--ink-muted);padding:24px;">{{ _("No work orders yet.") }}</td></tr>
               </tbody>
@@ -1782,7 +1840,7 @@
           <div id="units-column-filters" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;"></div>
           <div class="scroll-x">
             <table>
-              <thead><tr><th>{{ _("Unit Code") }}</th><th>{{ _("Property") }}</th><th>{{ _("Type") }}</th><th>{{ _("Floor") }}</th><th>{{ _("Area (m²)") }}</th><th>{{ _("Bedrooms") }}</th><th>{{ _("Rent (OMR)") }}</th><th>{{ _("Status") }}</th><th>{{ _("Actions") }}</th></tr></thead>
+              <thead><tr><th>{{ _("Unit Code") }}</th><th>{{ _("Property") }}</th><th>{{ _("Type") }}</th><th>{{ _("Floor") }}</th><th>{{ _("Area (m²)") }}</th><th>{{ _("Bedrooms") }}</th><th>{{ _("Rent") }}</th><th>{{ _("Status") }}</th><th>{{ _("Actions") }}</th></tr></thead>
               <tbody id="units-rows">
                 <tr><td colspan="9" style="text-align:center;color:var(--ink-muted);padding:24px;">{{ _("No units yet.") }}</td></tr>
               </tbody>
@@ -2519,6 +2577,19 @@
       rentEl.textContent = rent.toLocaleString();
     }
 
+    const setT = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+    const money = (n) => Number(n || 0).toLocaleString(undefined, {maximumFractionDigits: 0}) + (d.currency ? ' ' + d.currency : '');
+    setT('stat-total-units', d.total_units ?? '—');
+    setT('stat-occ-vac', (d.occupied_units ?? 0) + ' / ' + (d.vacant_units ?? 0));
+    setT('stat-active-tenancies', d.active_tenancies ?? '—');
+    setT('stat-expiring-leases', d.expiring_leases ?? '—');
+    setT('stat-outstanding-rent', money(d.outstanding_rent));
+    setT('stat-deposits-held', money(d.security_deposits_held));
+    setT('stat-open-maintenance', d.open_maintenance ?? '—');
+    setT('stat-terminations', (d.recent_terminations || []).length);
+    const tl = document.getElementById('stat-terminations-list');
+    if (tl) tl.textContent = (d.recent_terminations || []).slice(0, 2).map(t => (t.tenant_name || t.tenant) + ' · ' + (t.tenancy_end_date || '')).join(' | ');
+
     const renewalsEl = document.getElementById('stat-pending-renewals');
     if (renewalsEl) renewalsEl.textContent = d.pending_renewals ?? '—';
 
@@ -3018,7 +3089,7 @@
       <select class="form-input" id="ucf-floor" style="min-width:90px;" onchange="applyUnitColumnFilters()">${buildSelectFilterOptions(rows, 'floor', 'Floor')}</select>
       <select class="form-input" id="ucf-area_sqm" style="min-width:100px;" onchange="applyUnitColumnFilters()">${buildSelectFilterOptions(rows, 'area_sqm', 'Area (m²)')}</select>
       <select class="form-input" id="ucf-bedrooms" style="min-width:100px;" onchange="applyUnitColumnFilters()">${buildSelectFilterOptions(rows, 'bedrooms', 'Bedrooms')}</select>
-      <select class="form-input" id="ucf-annual_rent" style="min-width:120px;" onchange="applyUnitColumnFilters()">${buildSelectFilterOptions(rows, 'annual_rent', 'Rent (OMR)')}</select>
+      <select class="form-input" id="ucf-annual_rent" style="min-width:120px;" onchange="applyUnitColumnFilters()">${buildSelectFilterOptions(rows, 'annual_rent', 'Rent')}</select>
       <button class="btn btn-ghost btn-sm" onclick="clearUnitColumnFilters()">${__('Clear')}</button>
     `;
     Object.keys(_unitColumnFilters).forEach(key => {
@@ -3184,7 +3255,7 @@
       <input class="form-input" id="tcf-tenant_name" placeholder="Tenant…" style="min-width:130px;" value="${_tenantColumnFilters.tenant_name || ''}" oninput="applyTenantColumnFilters()">
       <select class="form-input" id="tcf-nationality" style="min-width:120px;" onchange="applyTenantColumnFilters()">${buildSelectFilterOptions(rows, 'nationality', 'Nationality')}</select>
       <select class="form-input" id="tcf-unit" style="min-width:110px;" onchange="applyTenantColumnFilters()">${buildSelectFilterOptions(rows, 'unit', 'Unit')}</select>
-      <select class="form-input" id="tcf-monthly_rent" style="min-width:120px;" onchange="applyTenantColumnFilters()">${buildSelectFilterOptions(rows, 'monthly_rent', 'Rent (OMR/mo)')}</select>
+      <select class="form-input" id="tcf-monthly_rent" style="min-width:120px;" onchange="applyTenantColumnFilters()">${buildSelectFilterOptions(rows, 'monthly_rent', 'Rent / month')}</select>
       <select class="form-input" id="tcf-payment_frequency" style="min-width:110px;" onchange="applyTenantColumnFilters()">${buildSelectFilterOptions(rows, 'payment_frequency', 'Payment')}</select>
       <button class="btn btn-ghost btn-sm" onclick="clearTenantColumnFilters()">${__('Clear')}</button>
     `;
@@ -3270,9 +3341,10 @@
     document.getElementById('terminate-posting-date').value = new Date().toISOString().slice(0, 10);
     document.getElementById('terminate-schedule-end').value = '';
     document.getElementById('terminate-deposit-balance').value = '';
-    document.getElementById('terminate-settlement-box').style.display = 'none';
-    document.getElementById('terminate-credit-group').style.display = 'none';
-    document.getElementById('terminate-issue-credit').checked = false;
+    document.getElementById('terminate-settlement-box').innerHTML = '';
+    _terminateCharges = []; renderTerminateCharges(true); invalidateTerminate();
+    document.getElementById('terminate-charges-box').style.display = 'none';
+    document.getElementById('terminate-position').innerHTML = '';
     document.getElementById('terminate-reason').value = '';
     document.getElementById('terminate-security-deposit').value = '';
     document.getElementById('terminate-outstanding-rent').value = '';
@@ -3359,7 +3431,6 @@
       : '<option value="">' + __('No Active or Expiring leases found') + '</option>';
     if (rows.length === 1) sel.value = rows[0].name;
     onTerminateLeaseSelectChange();
-    if (rows.length === 1) calculateTerminateOutstandingRent();
   }
 
   function onTerminateLeaseSelectChange() {
@@ -3368,91 +3439,198 @@
     document.getElementById('terminate-security-deposit').value =
       row && row.security_deposit_amount ? row.security_deposit_amount : '';
     document.getElementById('terminate-schedule-end').value = (row && row.end_date) || '';
+    if (row && row.company) loadTerminateOptions(row.company, name);
   }
 
   let _terminateSettlement = null;
-  async function calculateTerminateOutstandingRent() {
-    const name = document.getElementById('terminate-lease-select').value;
-    if (!name) {
-      showTerminateMsg('Select a lease contract first.', true);
+  let _terminateCharges = [];
+  let _terminateOptions = null;
+  let _terminateBusy = false;
+  const tEsc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const tMoney = (n, cur) => (Number(n || 0)).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + (cur ? ' ' + cur : '');
+
+  function invalidateTerminate() {
+    const had = !!_terminateSettlement;
+    _terminateSettlement = null;
+    document.getElementById('terminate-submit-btn').disabled = true;
+    document.getElementById('terminate-stale').style.display = had ? 'inline-block' : 'none';
+    document.getElementById('terminate-confirm').textContent = __('Calculate the settlement to see the summary.');
+  }
+
+  function onTerminateChargeToggle() {
+    const on = document.getElementById('terminate-apply-charge').checked;
+    document.getElementById('terminate-charges-box').style.display = on ? 'block' : 'none';
+    if (on && !_terminateCharges.length) addTerminateCharge();
+    if (!on) _terminateCharges = [];
+    renderTerminateCharges();
+    invalidateTerminate();
+  }
+
+  function addTerminateCharge() {
+    _terminateCharges.push({description: '', amount: '', vat_applicable: 0});
+    renderTerminateCharges();
+    invalidateTerminate();
+  }
+  function removeTerminateCharge(i) {
+    _terminateCharges.splice(i, 1);
+    renderTerminateCharges();
+    invalidateTerminate();
+  }
+  function setTerminateCharge(i, key, val) {
+    _terminateCharges[i][key] = key === 'vat_applicable' ? Number(val) : val;
+    renderTerminateCharges(key === 'vat_applicable');
+    invalidateTerminate();
+  }
+  function renderTerminateCharges(rerender) {
+    const rate = (_terminateOptions && _terminateOptions.vat) ? _terminateOptions.vat.rate : 0;
+    const body = document.getElementById('terminate-charges-rows');
+    if (!rerender && body.dataset.n == String(_terminateCharges.length) && body.contains(document.activeElement)) {
+      // typing: only refresh the computed cells so the input keeps focus
+      _terminateCharges.forEach((c, i) => {
+        const vat = c.vat_applicable ? (Number(c.amount || 0) * rate / 100) : 0;
+        const r = body.rows[i];
+        r.cells[4].textContent = tMoney(vat);
+        r.cells[5].textContent = tMoney(Number(c.amount || 0) + vat);
+      });
       return;
     }
-    const endDate = document.getElementById('terminate-date').value;
+    body.dataset.n = _terminateCharges.length;
+    body.innerHTML = _terminateCharges.map((c, i) => {
+      const vat = c.vat_applicable ? (Number(c.amount || 0) * rate / 100) : 0;
+      return `<tr>
+        <td><input class="form-input" value="${tEsc(c.description)}" oninput="setTerminateCharge(${i},'description',this.value)"></td>
+        <td><input class="form-input" type="number" min="0" step="0.01" value="${tEsc(c.amount)}" oninput="setTerminateCharge(${i},'amount',this.value)"></td>
+        <td><select class="form-input form-select" onchange="setTerminateCharge(${i},'vat_applicable',this.value)"><option value="0" ${c.vat_applicable ? '' : 'selected'}>${__('No')}</option><option value="1" ${c.vat_applicable ? 'selected' : ''}>${__('Yes')}</option></select></td>
+        <td>${c.vat_applicable ? rate + '%' : '—'}</td>
+        <td>${tMoney(vat)}</td>
+        <td>${tMoney(Number(c.amount || 0) + vat)}</td>
+        <td><button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="removeTerminateCharge(${i})">${__('Remove')}</button></td></tr>`;
+    }).join('');
+  }
+
+  async function loadTerminateOptions(company, lease) {
+    if (_terminateOptions && _terminateOptions.company === company && _terminateOptions.lease === lease) return;
     try {
-      const st = await callApiWithParams('re_core', 'get_lease_termination_settlement',
-        { name, tenancy_end_date: endDate || null });
+      const o = await callApiWithParams('re_core', 'get_termination_options', { company, lease });
+      o.company = company; o.lease = lease;
+      _terminateOptions = o;
+      const sel = document.getElementById('terminate-mode-of-payment');
+      sel.innerHTML = '<option value="">' + __('Select…') + '</option>' + o.modes.map(m =>
+        `<option value="${tEsc(m.name)}" ${m.account ? '' : 'disabled'}>${tEsc(m.name)}${m.account ? '' : ' — ' + __('no account')}</option>`).join('');
+      renderTerminateCharges(true);
+    } catch (e) { console.error(e); }
+  }
+
+  function onTerminateModeChange() {
+    const v = document.getElementById('terminate-mode-of-payment').value;
+    const m = _terminateOptions && _terminateOptions.modes.find(x => x.name === v);
+    document.getElementById('terminate-mop-account').textContent = m && m.account ? __('Account') + ': ' + m.account : '';
+  }
+
+  function terminateChargesPayload() {
+    return _terminateCharges.map(c => ({description: (c.description || '').trim(), amount: Number(c.amount || 0), vat_applicable: c.vat_applicable ? 1 : 0}));
+  }
+
+  async function calculateTerminateOutstandingRent() {
+    const name = document.getElementById('terminate-lease-select').value;
+    if (!name) { showTerminateMsg(__('Select a lease contract first.'), true); return; }
+    const endDate = document.getElementById('terminate-date').value;
+    const postingDate = document.getElementById('terminate-posting-date').value;
+    if (!endDate) { showTerminateMsg(__('Select the Tenancy End Date.'), true); return; }
+    if (!postingDate) { showTerminateMsg(__('Select the Posting Date.'), true); return; }
+    const row = _terminateEligibleLeases.find(r => r.name === name);
+    if (row && row.company) await loadTerminateOptions(row.company, name);
+    const apply = document.getElementById('terminate-apply-charge').checked ? 1 : 0;
+    try {
+      const st = await callApiWithParams('re_core', 'get_lease_termination_settlement', {
+        name, tenancy_end_date: endDate, posting_date: postingDate,
+        charges: JSON.stringify(apply ? terminateChargesPayload() : []), apply_charge_to_tenant: apply });
+      document.getElementById('terminate-form-msg').style.display = 'none';
       _terminateSettlement = st;
+      document.getElementById('terminate-stale').style.display = 'none';
       document.getElementById('terminate-outstanding-rent').value = st.rent_outstanding || 0;
       document.getElementById('terminate-deposit-balance').value = st.deposit_balance || 0;
-      const adv = st.advance_invoices || [];
-      document.getElementById('terminate-credit-group').style.display = adv.length ? 'flex' : 'none';
-      if (!adv.length) document.getElementById('terminate-issue-credit').checked = false;
-      const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-      const net = st.net_settlement || 0;
-      let html = `<div style="color:var(--ink-muted);">${__('Deposit balance')} ${fmtMoney(st.deposit_balance)} + ${__('rent paid after end')} ${fmtMoney(st.paid_after_end)} − ${__('outstanding rent')} ${fmtMoney(st.rent_outstanding)}</div>`
-        + `<div><b>${net >= 0 ? __('Refundable to tenant') : __('Payable by tenant')}: ${fmtMoney(Math.abs(net))}</b></div>`;
-      if (adv.length) {
-        html += `<div style="margin-top:8px;color:var(--red);">${__('Rent already invoiced after the Tenancy End Date — these invoices need credit notes:')}</div><ul style="margin:4px 0 0 18px;">`
-          + adv.map(a => `<li>${esc(a.sales_invoice)} (${esc(a.due_date)}) — ${fmtMoney(a.grand_total)}, ${__('paid')} ${fmtMoney(a.paid)}</li>`).join('') + '</ul>';
-      }
-      const box = document.getElementById('terminate-settlement-box');
-      box.innerHTML = html; box.style.display = 'block';
+      renderTerminateSettlement(st);
+      document.getElementById('terminate-submit-btn').disabled = false;
     } catch (err) {
       console.error(err);
-      showTerminateMsg('Failed to calculate outstanding rent: ' + err.message, true);
+      invalidateTerminate();
+      showTerminateMsg(__('Failed to calculate settlement: ') + (err.message || err), true);
     }
+  }
+
+  function renderTerminateSettlement(st) {
+    const c = st.currency, kv = (k, v, cls) => `<div class="tl-kv ${cls || ''}"><span>${k}</span><span>${v}</span></div>`;
+    const adj = (st.adjustments || []).filter(a => a.credit_gross || a.to_invoice);
+    document.getElementById('terminate-position').innerHTML =
+      kv(__('Security deposit held (balance)'), tMoney(st.deposit_balance, c))
+      + kv(__('Rent outstanding (invoices incl. VAT, after credits)'), tMoney(st.rent_outstanding, c))
+      + kv(__('Rent credited — period after Tenancy End Date'), tMoney(st.credit_note_total, c))
+      + kv(__('Advance rent / credit to refund'), tMoney(st.paid_after_end, c))
+      + (adj.length ? '<ul style="margin:8px 0 0 18px;font-size:13px;color:var(--ink-muted);">' + adj.map(a =>
+          `<li>${tEsc(a.due_date)}: ${a.to_invoice ? __('will be invoiced') + ' ' + tMoney(a.gross) + '; ' : tEsc(a.sales_invoice) + ' '}`
+          + (a.credit_gross ? (a.kind === 'prorata' ? __('pro-rata credit') + ' (' + a.unused_days + '/' + a.period_days + ' ' + __('days') + ') ' : __('full credit note') + ' ') + tMoney(a.credit_gross) : '') + '</li>').join('') + '</ul>' : '')
+      + ((st.warnings || []).map(w => `<div class="tl-stale" style="margin-top:8px;">${tEsc(w)}</div>`).join(''));
+    const net = st.net_settlement || 0;
+    const cls = st.result === 'Payable to Tenant' ? 'pay' : st.result === 'Receivable from Tenant' ? 'rec' : 'zero';
+    const label = st.result === 'Payable to Tenant' ? __('Amount Payable to Tenant') : st.result === 'Receivable from Tenant' ? __('Amount Receivable from Tenant') : __('No Outstanding Settlement / Settled');
+    document.getElementById('terminate-settlement-box').innerHTML =
+      kv(__('Security deposit balance'), tMoney(st.deposit_balance, c))
+      + kv('+ ' + __('Advance rent / credit to refund'), tMoney(st.paid_after_end, c))
+      + kv('− ' + __('Outstanding rent'), tMoney(st.rent_outstanding, c))
+      + kv('− ' + __('Tenant charges (net)'), tMoney(st.charges_net, c))
+      + kv('− ' + __('VAT on charges'), tMoney(st.charges_vat, c))
+      + kv(__('Total deductions'), tMoney(st.total_deductions, c))
+      + kv(`<span class="tl-badge ${cls}">${label}</span>`, tMoney(Math.abs(net), c), 'total');
+    const needMop = st.result !== 'Settled';
+    document.getElementById('terminate-mop-req').textContent = needMop ? '*' : '(' + __('not required — no cash moves') + ')';
+    const dirHint = st.result === 'Payable to Tenant' ? __('paid out to the tenant') : st.result === 'Receivable from Tenant' ? __('collected from the tenant') : '';
+    document.getElementById('terminate-confirm').innerHTML =
+      `${__('Schedule End Date')} <b>${tEsc(st.schedule_end_date)}</b> → ${__('Tenancy End Date')} <b>${tEsc(st.tenancy_end_date)}</b>; ${__('Posting Date')} <b>${tEsc(st.posting_date)}</b>.<br>`
+      + `${__('Result')}: <span class="tl-badge ${cls}">${label}</span> <b>${tMoney(Math.abs(net), c)}</b> ${dirHint}.<br>`
+      + `${__('This posts a settlement Journal Entry, credit notes and a charges invoice where needed, in one transaction. All or nothing.')}`;
   }
 
   function showTerminateMsg(text, isError) {
     const el = document.getElementById('terminate-form-msg');
     el.style.display = 'block';
-    el.style.background = isError ? 'var(--amber-pale)' : '#d1fae5';
+    el.style.background = isError ? '#fee2e2' : '#d1fae5';
     el.style.color = isError ? 'var(--red)' : 'var(--green)';
-    el.style.border = '1px solid ' + (isError ? '#5eead4' : 'var(--green)');
+    el.style.border = '1px solid ' + (isError ? '#fca5a5' : 'var(--green)');
     el.textContent = text;
   }
 
   async function submitTerminateLease() {
+    if (_terminateBusy) return;                                  // double-submit guard
+    const st = _terminateSettlement;
     const name = document.getElementById('terminate-lease-select').value;
-    const terminationDate = document.getElementById('terminate-date').value;
-    const postingDate = document.getElementById('terminate-posting-date').value;
+    if (!name || !st) { showTerminateMsg(__('Calculate the settlement before terminating.'), true); return; }
     const reasons = document.getElementById('terminate-reasons').value;
     const reason = document.getElementById('terminate-reason').value;
-    const outstandingRent = document.getElementById('terminate-outstanding-rent').value;
     const modeOfPayment = document.getElementById('terminate-mode-of-payment').value;
-    const applyCharge = document.getElementById('terminate-apply-charge').checked;
+    if (st.result !== 'Settled' && !modeOfPayment) { showTerminateMsg(__('Select a Mode of Payment.'), true); return; }
     const row = _terminateEligibleLeases.find(r => r.name === name);
-
-    if (!name) {
-      showTerminateMsg('Select a lease contract to terminate.', true);
-      return;
-    }
-    if (!terminationDate) { showTerminateMsg('Select the Tenancy End Date.', true); return; }
-    if (!postingDate) { showTerminateMsg('Select the Posting Date.', true); return; }
-    const vacateNote = reasons === 'New Contract'
-      ? 'This will reserve the unit for a new contract.'
-      : 'This will vacate the unit.';
-    if (!confirm(__('Terminate ') + name + '? ' + vacateNote + ' This cannot be undone.')) return;
+    const vacateNote = reasons === 'New Contract' ? __('This will reserve the unit for a new contract.') : __('This will vacate the unit.');
+    if (!confirm(__('Terminate ') + name + '? ' + vacateNote + ' ' + __('The settlement will be posted to the ledger.'))) return;
 
     const btn = document.getElementById('terminate-submit-btn');
-    btn.disabled = true;
-    btn.textContent = __('Terminating…');
-
+    _terminateBusy = true; btn.disabled = true; btn.textContent = __('Terminating…');
+    document.getElementById('terminate-calc-btn').disabled = true;
     try {
-      await postApi('re_core', 'terminate_lease_contract', {
+      const apply = document.getElementById('terminate-apply-charge').checked ? 1 : 0;
+      const res = await postApi('re_core', 'terminate_lease_contract', {
         name,
-        tenancy_end_date: terminationDate,
-        posting_date: postingDate,
-        issue_credit_notes: document.getElementById('terminate-issue-credit').checked ? 1 : 0,
-        reason: reason || null,
-        reasons: reasons || null,
-        outstanding_rent: outstandingRent || 0,
+        tenancy_end_date: document.getElementById('terminate-date').value,
+        posting_date: document.getElementById('terminate-posting-date').value,
+        reason: reason || null, reasons: reasons || null,
         mode_of_payment: modeOfPayment || null,
-        apply_charge_to_tenant: applyCharge ? 1 : 0,
+        apply_charge_to_tenant: apply,
+        charges: apply ? terminateChargesPayload() : [],
+        calc_token: st.token,
       });
-      showTerminateMsg('Lease ' + name + ' terminated successfully.', false);
+      _terminateSettlement = null;
+      showTerminateMsg(__('Lease ') + name + __(' terminated.') + (res && res.journal_entry ? ' ' + __('Journal Entry') + ' ' + res.journal_entry + '.' : ''), false);
       loadSidebarCounts();
-
       if (reasons === 'New Contract' && row) {
         setTimeout(async () => {
           showScreen('contracts');
@@ -3463,26 +3641,25 @@
           if (tenantEl && row.tenant) tenantEl.value = row.tenant;
           if (propertyEl && row.property) {
             propertyEl.value = row.property;
-            if (typeof onContractPropertyChange === 'function') {
-              await onContractPropertyChange();
-            }
+            if (typeof onContractPropertyChange === 'function') await onContractPropertyChange();
           }
           if (unitEl && row.unit) {
             unitEl.value = row.unit;
-            if (typeof onContractUnitChange === 'function') {
-              onContractUnitChange();
-            }
+            if (typeof onContractUnitChange === 'function') onContractUnitChange();
           }
-        }, 600);
+        }, 900);
       } else {
         loadTerminateLeaseOptions();
       }
     } catch (err) {
       console.error(err);
-      showTerminateMsg('Failed to terminate lease: ' + err.message, true);
+      showTerminateMsg(__('Failed to terminate lease: ') + (err.message || err), true);
+      btn.disabled = false;                                       // stays on the same calculation; token check guards it
     } finally {
-      btn.disabled = false;
+      _terminateBusy = false;
       btn.textContent = __('Terminate Lease');
+      document.getElementById('terminate-calc-btn').disabled = false;
+      if (!_terminateSettlement) btn.disabled = true;
     }
   }
 

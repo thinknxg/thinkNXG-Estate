@@ -36,31 +36,53 @@ def invoice_due_installments():
                              message=f"Installment {row.name} / lease {row.lease_contract}")
 
 
-def _invoice_installment(row, settings):
-    lease = frappe.get_doc("Lease Contract", row.lease_contract)
-    if lease.status not in ("Active", "Expiring"):
-        return
-    customer = frappe.db.get_value("Tenant", lease.tenant, "customer")
-    if not customer:
-        return
+def set_company_currency(si, company):
+	"""Invoice in the company currency with a selling price list in that currency, so a site
+	whose default price list is in another currency does not demand an exchange rate."""
+	currency = frappe.db.get_value("Company", company, "default_currency")
+	pl = frappe.db.get_value("Price List", {"currency": currency, "selling": 1, "enabled": 1}, "name")
+	si.currency = currency
+	si.conversion_rate = 1
+	if pl:
+		si.selling_price_list = pl
+		si.price_list_currency = currency
+		si.plc_conversion_rate = 1
 
-    si = frappe.new_doc("Sales Invoice")
-    si.customer = customer
-    si.company = lease.company
-    si.due_date = max(getdate(row.due_date), getdate(nowdate()))
-    tax_template = _dominant_tax_template(lease)
-    si.append("items", {
-        "item_code": settings.rent_item,
-        "item_name": _("Rent installment {0}").format(row.due_date),
-        "description": _("Lease {0} — installment due {1}").format(lease.name, row.due_date),
-        "qty": 1,
-        "rate": flt(row.amount),
-        "item_tax_template": tax_template,
-    })
-    si.insert(ignore_permissions=True)
-    si.submit()
-    frappe.db.set_value("Rent Installment", row.name,
-                        {"sales_invoice": si.name, "status": "Invoiced"})
+
+def _rent_invoice_doc(row, lease, settings, posting_date=None):
+	"""Unsaved rent Sales Invoice for one installment (shared with the termination preview)."""
+	customer = frappe.db.get_value("Tenant", lease.tenant, "customer")
+	si = frappe.new_doc("Sales Invoice")
+	si.customer = customer
+	si.company = lease.company
+	set_company_currency(si, lease.company)
+	if posting_date:
+		si.set_posting_time = 1
+		si.posting_date = getdate(posting_date)
+	si.due_date = max(getdate(row.due_date), getdate(posting_date or nowdate()))
+	si.append("items", {
+		"item_code": settings.rent_item,
+		"item_name": _("Rent installment {0}").format(row.due_date),
+		"description": _("Lease {0} — installment due {1}").format(lease.name, row.due_date),
+		"qty": 1,
+		"rate": flt(row.amount),
+		"item_tax_template": _dominant_tax_template(lease),
+	})
+	return si
+
+
+def _invoice_installment(row, settings, posting_date=None, allow_status=("Active", "Expiring")):
+	lease = frappe.get_doc("Lease Contract", row.lease_contract)
+	if lease.status not in allow_status:
+		return
+	if not frappe.db.get_value("Tenant", lease.tenant, "customer"):
+		return
+	si = _rent_invoice_doc(row, lease, settings, posting_date)
+	si.insert(ignore_permissions=True)
+	si.submit()
+	frappe.db.set_value("Rent Installment", row.name,
+	                    {"sales_invoice": si.name, "status": "Invoiced"})
+	return si
 
 
 def _dominant_tax_template(lease):

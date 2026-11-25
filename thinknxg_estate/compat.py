@@ -55,6 +55,8 @@ LEGACY_METHODS = {
 	"re_core.re_core.api.get_lease_installments": "thinknxg_estate.core.api.get_lease_installments",
 	"re_core.re_core.api.get_lease_outstanding_rent": "thinknxg_estate.core.api.get_lease_outstanding_rent",
 	"re_core.re_core.api.get_lease_termination_settlement": "thinknxg_estate.core.api.get_lease_termination_settlement",
+	"re_core.re_core.api.reverse_lease_termination": "thinknxg_estate.core.api.reverse_lease_termination",
+	"re_core.re_core.api.get_termination_options": "thinknxg_estate.core.api.get_termination_options",
 	"re_core.re_core.api.get_lease_request_detail": "thinknxg_estate.core.api.get_lease_request_detail",
 	"re_core.re_core.api.get_lease_term_charges_preview": "thinknxg_estate.core.api.get_lease_term_charges_preview",
 	"re_core.re_core.api.get_maintenance_list": "thinknxg_estate.core.api.get_maintenance_list",

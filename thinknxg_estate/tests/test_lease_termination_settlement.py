@@ -21,6 +21,9 @@ def _rows(lease):
 
 
 class TestLeaseTerminationSettlement(IntegrationTestCase):
+	def setUp(self):
+		frappe.db.set_single_value("Property Settings", "prorate_final_rent", 1)
+
 	def _lease(self, tag, mobile, **kw):
 		_, _, unit = make_unit(tag)
 		tenant = make_tenant(tag, mobile)
@@ -68,80 +71,285 @@ class TestLeaseTerminationSettlement(IntegrationTestCase):
 		frappe.db.set_value("Rent Installment", row.name, {"sales_invoice": si.name, "status": "Invoiced"})
 		return si.name
 
+	# ---- helpers for the settlement flow
+	def _term(self, lease, end=None, posting=None, charges=None, mop="Cash", reasons="End of Tenancy", **kw):
+		end = end or nowdate()
+		posting = posting or nowdate()
+		s = lease.get_termination_settlement(tenancy_end_date=end, posting_date=posting,
+		                                     charges=charges, apply_charge_to_tenant=1 if charges else 0)
+		lease.terminate(tenancy_end_date=end, posting_date=posting, charges=charges,
+		                apply_charge_to_tenant=1 if charges else 0, mode_of_payment=mop,
+		                reasons=reasons, calc_token=s["token"], **kw)
+		return s
+
+	def _pay_first(self, lease):
+		"""First installment settled outside invoicing, so only the deposit/charges matter."""
+		r = _rows(lease)[0]
+		frappe.db.set_value("Rent Installment", r.name, {"status": "Paid", "paid_amount": r.amount})
+
+	def _gl(self, je):
+		return frappe.get_all("GL Entry", filters={"voucher_type": "Journal Entry", "voucher_no": je, "is_cancelled": 0},
+		                      fields=["account", "debit", "credit", "posting_date", "party"])
+
+	def _balanced(self, gl):
+		self.assertAlmostEqual(sum(flt(g.debit) for g in gl), sum(flt(g.credit) for g in gl), places=2)
+
+	def _vat_default(self, lease):
+		tpl = f"UAE VAT 5% - {frappe.db.get_value('Company', lease.company, 'abbr')}"
+		if not frappe.db.exists("Sales Taxes and Charges Template", tpl):
+			self.skipTest("no 5% VAT template on this site")
+		frappe.db.set_value("Sales Taxes and Charges Template", tpl, "is_default", 1)
+		return tpl
+
+	# ---- the dates
 	def test_three_dates_stay_separate(self):
-		lease = self._lease("TS1", "+96890001101")
+		lease = self._lease("TT1", "+96890001201")
+		self._pay_first(lease)
 		end = add_months(nowdate(), 2)
-		lease.terminate(tenancy_end_date=end, outstanding_rent=ls.compute_settlement(lease, end)["rent_outstanding"])
+		self._term(lease, end=end, mop="Cash")
 		lease.reload()
 		self.assertEqual(lease.status, "Terminated")
 		self.assertEqual(getdate(lease.tenancy_end_date), getdate(end))
 		self.assertEqual(getdate(lease.end_date), getdate(add_months(nowdate(), 12)))  # schedule end untouched
-		self.assertIsNone(lease.termination_posting_date)  # no ledger entry, no posting date invented
+		self.assertEqual(getdate(lease.termination_posting_date), getdate(nowdate()))
 
-	def test_legacy_termination_date_is_the_tenancy_end_date(self):
-		lease = self._lease("TS2", "+96890001102")
-		lease.terminate(termination_date=nowdate(), outstanding_rent=ls.compute_settlement(lease, nowdate())["rent_outstanding"])
-		self.assertEqual(getdate(lease.reload().tenancy_end_date), getdate(nowdate()))
-
-	def test_outstanding_counts_invoiced_and_partially_paid_balances(self):
-		lease = self._lease("TS3", "+96890001103")
-		rows = _rows(lease)
-		frappe.db.set_value("Rent Installment", rows[0].name, "status", "Invoiced")
-		frappe.db.set_value("Rent Installment", rows[1].name,
-		                    {"status": "Partially Paid", "paid_amount": 100, "outstanding_amount": 200})
-		end = add_months(nowdate(), 4)  # installments 1 and 2 fall due before this
-		due = [r for r in rows if getdate(r.due_date) <= getdate(end)]
-		self.assertEqual(len(due), 2)
-		self.assertAlmostEqual(lease.get_outstanding_rent(end), 300 + 200, places=3)
-
-	def test_wrong_outstanding_is_rejected(self):
-		lease = self._lease("TS4", "+96890001104")
+	def test_token_required_and_stale_calculation_refused(self):
+		lease = self._lease("TT2", "+96890001202")
+		self._pay_first(lease)
+		s = lease.get_termination_settlement(tenancy_end_date=nowdate(), posting_date=nowdate())
 		with self.assertRaises(frappe.ValidationError):
-			lease.terminate(tenancy_end_date=nowdate(), outstanding_rent=1)
-
-	def test_rent_invoiced_beyond_end_date_needs_credit_note(self):
-		lease = self._lease("TS5", "+96890001105")
-		rows = _rows(lease)
-		late = rows[2]  # due ~6 months out
-		invoice = self._invoice(lease, late)
-		self.assertTrue(invoice)
-		end = add_months(nowdate(), 4)
-		st = ls.compute_settlement(lease, end)
-		self.assertEqual([a["sales_invoice"] for a in st["advance_invoices"]], [invoice])
-		out = st["rent_outstanding"]
-
-		# 1. never silently reduced: terminating without credit notes is refused and changes nothing
+			lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), mode_of_payment="Cash")  # no token
+		# inputs changed after calculating: charges added
 		with self.assertRaises(frappe.ValidationError):
-			lease.terminate(tenancy_end_date=end, outstanding_rent=out)
+			lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), mode_of_payment="Cash",
+			                apply_charge_to_tenant=1, charges=[{"description": "Paint", "amount": 10}],
+			                calc_token=s["token"])
 		self.assertEqual(frappe.db.get_value("Lease Contract", lease.name, "status"), "Active")
-		# 2. credit notes need an explicit Posting Date
-		with self.assertRaises(frappe.ValidationError):
-			lease.terminate(tenancy_end_date=end, outstanding_rent=out, issue_credit_notes=1)
 
-		# 3. with consent and a Posting Date the original invoice is reversed on that date
-		posting = nowdate()
-		lease.terminate(tenancy_end_date=end, outstanding_rent=out, issue_credit_notes=1, posting_date=posting)
+	def test_posting_date_is_mandatory(self):
+		lease = self._lease("TT3", "+96890001203")
+		with self.assertRaises(frappe.ValidationError):
+			lease.terminate(tenancy_end_date=nowdate(), calc_token="x", mode_of_payment="Cash")
+
+	# ---- scenarios
+	def test_early_termination_deposit_refund_with_charges_payable(self):
+		"""Deposit 100, no rent due, charges 30 -> 70 payable to the tenant."""
+		lease = self._lease("TT4", "+96890001204")
+		self._pay_first(lease)
+		charges = [{"description": "Cleaning", "amount": 30, "vat_applicable": 0}]
+		s = self._term(lease, charges=charges)
+		self.assertEqual(s["result"], ls.PAYABLE)
+		self.assertAlmostEqual(s["net_settlement"], 70, places=2)
 		lease.reload()
-		self.assertEqual(lease.status, "Terminated")
+		self.assertEqual(lease.termination_settlement_status, ls.PAYABLE)
+		self.assertTrue(lease.termination_journal_entry and lease.termination_charge_invoice)
+		gl = self._gl(lease.termination_journal_entry)
+		self._balanced(gl)
+		cash = frappe.db.get_value("Mode of Payment Account", {"parent": "Cash", "company": lease.company}, "default_account")
+		self.assertAlmostEqual(sum(flt(g.credit) for g in gl if g.account == cash), 70, places=2)
+		self.assertAlmostEqual(sum(flt(g.debit) for g in gl if g.account.startswith("Tenant Security Deposits")), 100, places=2)
+		self.assertAlmostEqual(flt(frappe.db.get_value("Sales Invoice", lease.termination_charge_invoice, "outstanding_amount")), 0, places=2)
+		dep = frappe.db.get_value("Security Deposit", lease.security_deposit, ["status", "deduction_amount", "refunded_amount"], as_dict=True)
+		self.assertEqual((flt(dep.deduction_amount), flt(dep.refunded_amount)), (30, 70))
+		self.assertEqual(ls.deposit_balance(lease.security_deposit), 0)
+
+	def test_rent_exceeds_deposit_is_receivable(self):
+		frappe.db.set_single_value("Property Settings", "prorate_final_rent", 0)
+		lease = self._lease("TT5", "+96890001205")
+		s = lease.get_termination_settlement(tenancy_end_date=nowdate(), posting_date=nowdate())
+		self.assertEqual(s["result"], ls.RECEIVABLE)
+		self.assertLess(s["net_settlement"], 0)
+		lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), mode_of_payment="Cash",
+		                calc_token=s["token"], reasons="Tenancy Breach")
+		lease.reload()
+		gl = self._gl(lease.termination_journal_entry)
+		self._balanced(gl)
+		cash = frappe.db.get_value("Mode of Payment Account", {"parent": "Cash", "company": lease.company}, "default_account")
+		self.assertAlmostEqual(sum(flt(g.debit) for g in gl if g.account == cash), -s["net_settlement"], places=2)
+		inv = frappe.db.get_value("Rent Installment", _rows(lease)[0].name, "sales_invoice")
+		self.assertTrue(inv)
+		self.assertAlmostEqual(flt(frappe.db.get_value("Sales Invoice", inv, "outstanding_amount")), 0, places=2)
+
+	def test_final_period_is_prorated_with_a_credit_note(self):
+		lease = self._lease("TT6", "+96890001206")
+		end = add_months(nowdate(), 1)  # inside the first quarterly period
+		s = lease.get_termination_settlement(tenancy_end_date=end, posting_date=nowdate())
+		adj = [a for a in s["adjustments"] if a["kind"] == "prorata"]
+		self.assertEqual(len(adj), 1)
+		a = adj[0]
+		self.assertAlmostEqual(a["credit_net"] + 300.0 * (a["period_days"] - a["unused_days"]) / a["period_days"], 300.0, delta=0.02)
+		self.assertGreater(a["unused_days"], 0)
+		lease.terminate(tenancy_end_date=end, posting_date=nowdate(), mode_of_payment="Cash", calc_token=s["token"])
+		cns = frappe.get_all("Sales Invoice", filters={"is_return": 1, "return_against": a["sales_invoice"] or "x"}) if a["sales_invoice"] else []
+		lease.reload()
+		posted = json.loads(lease.termination_settlement)["posted"]
+		self.assertEqual(len(posted["credit_notes"]), 1)
+		cn = frappe.db.get_value("Sales Invoice", posted["credit_notes"][0], ["docstatus", "grand_total"], as_dict=True)
+		self.assertEqual(cn.docstatus, 1)
+		self.assertAlmostEqual(-flt(cn.grand_total), a["credit_gross"], delta=1.0)
+
+	def test_vat_applicable_and_not_applicable(self):
+		lease = self._lease("TT7", "+96890001207")
+		self._pay_first(lease)
+		self._vat_default(lease)
+		cfg = ls.vat_config(lease)
+		charges = [{"description": "Repair", "amount": 100, "vat_applicable": 1},
+		           {"description": "Key", "amount": 20, "vat_applicable": 0}]
+		s = lease.get_termination_settlement(tenancy_end_date=nowdate(), posting_date=nowdate(),
+		                                     charges=charges, apply_charge_to_tenant=1)
+		self.assertAlmostEqual(s["charges_vat"], 100 * cfg["rate"] / 100, places=2)
+		self.assertAlmostEqual(s["charges_total"], 120 + s["charges_vat"], places=2)
+		self.assertEqual([c["vat_amount"] for c in s["charges"]][1], 0)
+		lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), mode_of_payment="Cash",
+		                charges=charges, apply_charge_to_tenant=1, calc_token=s["token"])
+		lease.reload()
+		si = frappe.get_doc("Sales Invoice", lease.termination_charge_invoice)
+		self.assertAlmostEqual(flt(si.total_taxes_and_charges), s["charges_vat"], places=2)
+		self.assertAlmostEqual(flt(si.grand_total), s["charges_total"], places=2)
+		vat_gl = frappe.get_all("GL Entry", filters={"voucher_no": si.name, "account": cfg["account_head"], "is_cancelled": 0},
+		                        fields=["credit"])
+		self.assertAlmostEqual(sum(flt(g.credit) for g in vat_gl), s["charges_vat"], places=2)
+
+	def test_vat_without_configuration_is_refused(self):
+		lease = self._lease("TT8", "+96890001208")
+		with self.assertRaises(frappe.ValidationError):
+			ls.normalise_charges(frappe._dict(company="No Such Company", tenant=lease.tenant, name=lease.name),
+			                     [{"description": "X", "amount": 5, "vat_applicable": 1}], 1)
+
+	def test_charge_validation(self):
+		lease = self._lease("TT9", "+96890001209")
+		for bad in ([{"description": "", "amount": 5}], [{"description": "A", "amount": -1}],
+		            [{"description": "A", "amount": 5}, {"description": "a", "amount": 5}]):
+			with self.assertRaises(frappe.ValidationError):
+				ls.normalise_charges(lease, bad, 1)
+		self.assertEqual(ls.normalise_charges(lease, [{"description": "A", "amount": 5}], 0)["total"], 0)
+
+	def test_zero_settlement_creates_no_cash_entry(self):
+		lease = self._lease("TT10", "+96890001210")
+		self._pay_first(lease)
+		frappe.db.set_value("Security Deposit", lease.security_deposit, "deduction_amount", 100)
+		s = lease.get_termination_settlement(tenancy_end_date=nowdate(), posting_date=nowdate())
+		self.assertEqual(s["result"], ls.SETTLED)
+		lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), calc_token=s["token"])  # no Mode of Payment
+		lease.reload()
+		self.assertEqual(lease.termination_settlement_status, ls.SETTLED)
+		self.assertFalse(lease.termination_journal_entry)
+
+	def test_no_security_deposit(self):
+		lease = self._lease("TT11", "+96890001211")
+		self._pay_first(lease)
+		lease.db_set("security_deposit", None)
+		charges = [{"description": "Cleaning", "amount": 40}]
+		s = lease.get_termination_settlement(tenancy_end_date=nowdate(), posting_date=nowdate(),
+		                                     charges=charges, apply_charge_to_tenant=1)
+		self.assertEqual(s["deposit_balance"], 0)
+		self.assertEqual(s["result"], ls.RECEIVABLE)
+		with self.assertRaises(frappe.ValidationError):  # cash moves, so a Mode of Payment is required
+			lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), charges=charges,
+			                apply_charge_to_tenant=1, calc_token=s["token"])
+		lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), charges=charges,
+		                apply_charge_to_tenant=1, calc_token=s["token"], mode_of_payment="Cash")
+		self._balanced(self._gl(lease.reload().termination_journal_entry))
+
+	def test_different_posting_date(self):
+		lease = self._lease("TT12", "+96890001212")
+		self._pay_first(lease)
+		posting = frappe.utils.add_days(nowdate(), -5)
+		self._term(lease, posting=posting, charges=[{"description": "Cleaning", "amount": 10}])
+		lease.reload()
+		self.assertEqual(getdate(lease.tenancy_end_date), getdate(nowdate()))
 		self.assertEqual(getdate(lease.termination_posting_date), getdate(posting))
+		self.assertEqual({getdate(g.posting_date) for g in self._gl(lease.termination_journal_entry)}, {getdate(posting)})
+
+	def test_posting_date_outside_fiscal_year_refused(self):
+		lease = self._lease("TT13", "+96890001213")
+		with self.assertRaises(Exception):
+			ls.validate_posting_date(lease.company, "1990-01-01")
+
+	def test_duplicate_submission_is_refused(self):
+		lease = self._lease("TT14", "+96890001214")
+		self._pay_first(lease)
+		s = self._term(lease)
+		with self.assertRaises(frappe.ValidationError):
+			lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), mode_of_payment="Cash",
+			                calc_token=s["token"])
+		self.assertEqual(frappe.db.count("Journal Entry", {"user_remark": ["like", f"%{lease.name}%"], "docstatus": 1}), 1)
+
+	def test_failed_accounting_leaves_no_partial_termination(self):
+		from unittest.mock import patch
+
+		lease = self._lease("TT15", "+96890001215")
+		self._pay_first(lease)
+		charges = [{"description": "Cleaning", "amount": 10}]
+		s = lease.get_termination_settlement(tenancy_end_date=nowdate(), posting_date=nowdate(),
+		                                     charges=charges, apply_charge_to_tenant=1)
+		with patch("thinknxg_estate.core.security_deposit_accounting._get_liability_account",
+		           side_effect=frappe.ValidationError("boom")):
+			with self.assertRaises(frappe.ValidationError):
+				lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), charges=charges,
+				                apply_charge_to_tenant=1, mode_of_payment="Cash", calc_token=s["token"])
+		self.assertEqual(frappe.db.get_value("Lease Contract", lease.name, "status"), "Active")
+		self.assertFalse(frappe.db.exists("Sales Invoice", {"remarks": ["like", f"%{lease.name}%"], "docstatus": 1,
+		                                                    "is_return": 0, "grand_total": 10}))
+		self.assertEqual(ls.deposit_balance(lease.security_deposit), 100)
+
+	def test_historical_terminated_lease_is_untouched(self):
+		lease = self._lease("TT16", "+96890001216")
+		lease.db_set("status", "Terminated")
+		before = frappe.db.get_value("Lease Contract", lease.name, ["tenancy_end_date", "termination_settlement", "end_date"])
+		with self.assertRaises(frappe.ValidationError):
+			lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), calc_token="x")
+		with self.assertRaises(frappe.ValidationError):
+			lease.reverse_termination(reason="x")  # nothing was posted for it
+		self.assertEqual(frappe.db.get_value("Lease Contract", lease.name, ["tenancy_end_date", "termination_settlement", "end_date"]), before)
+
+	def test_rent_invoiced_beyond_end_date_is_credited_automatically(self):
+		lease = self._lease("TT17", "+96890001217")
+		self._pay_first(lease)
+		rows = _rows(lease)
+		late = rows[2]
+		invoice = self._invoice(lease, late)
+		end = add_months(nowdate(), 4)
+		posting = nowdate()
+		s = self._term(lease, end=end, posting=posting)
+		self.assertEqual([a["sales_invoice"] for a in s["advance_invoices"]], [invoice])
+		lease.reload()
 		cn = frappe.get_all("Sales Invoice", filters={"return_against": invoice, "docstatus": 1},
 		                    fields=["name", "posting_date", "grand_total", "is_return"])
 		self.assertEqual(len(cn), 1)
-		self.assertTrue(cn[0].is_return)
 		self.assertEqual(getdate(cn[0].posting_date), getdate(posting))
-		original = frappe.db.get_value("Sales Invoice", invoice, "grand_total")
-		self.assertAlmostEqual(flt(cn[0].grand_total), -flt(original), places=2)
+		self.assertAlmostEqual(flt(cn[0].grand_total), -flt(frappe.db.get_value("Sales Invoice", invoice, "grand_total")), places=2)
 		self.assertEqual(frappe.db.get_value("Rent Installment", late.name, "status"), "Cancelled")
-		gl = frappe.get_all("GL Entry", filters={"voucher_type": "Sales Invoice", "voucher_no": cn[0].name, "is_cancelled": 0},
-		                    fields=["posting_date", "debit", "credit"])
-		self.assertTrue(gl)
-		self.assertEqual({getdate(g.posting_date) for g in gl}, {getdate(posting)})
-		self.assertAlmostEqual(sum(flt(g.debit) for g in gl), sum(flt(g.credit) for g in gl), places=2)
-		snap = json.loads(lease.termination_settlement)
-		self.assertEqual(snap["credit_notes"], [cn[0].name])
+		self.assertIn(cn[0].name, json.loads(lease.termination_settlement)["posted"]["credit_notes"])  # plus the pro-rata credit for the final period
+
+	def test_reversal_restores_the_lease_and_cancels_entries(self):
+		lease = self._lease("TT18", "+96890001218")
+		self._pay_first(lease)
+		self._term(lease, charges=[{"description": "Cleaning", "amount": 30}])
+		lease.reload()
+		je, inv = lease.termination_journal_entry, lease.termination_charge_invoice
+		lease.reverse_termination(reason="Entered in error")
+		lease.reload()
+		self.assertEqual(lease.status, "Active")
+		self.assertFalse(lease.termination_journal_entry)
+		self.assertEqual(frappe.db.get_value("Journal Entry", je, "docstatus"), 2)
+		self.assertEqual(frappe.db.get_value("Sales Invoice", inv, "docstatus"), 2)
+		self.assertEqual(ls.deposit_balance(lease.security_deposit), 100)
+		self.assertEqual(frappe.db.get_value("Unit", lease.unit, "current_lease"), lease.name)
+
+	def test_outstanding_counts_invoiced_and_partially_paid_balances(self):
+		lease = self._lease("TT19", "+96890001219")
+		rows = _rows(lease)
+		si = self._invoice(lease, rows[0])
+		frappe.db.set_value("Sales Invoice", si, "outstanding_amount", 120)  # partly paid
+		end = add_months(nowdate(), 4)
+		inv2 = self._invoice(lease, rows[1])
+		frappe.db.set_single_value("Property Settings", "prorate_final_rent", 0)
+		self.assertAlmostEqual(lease.get_outstanding_rent(end),
+		                       120 + flt(frappe.db.get_value("Sales Invoice", inv2, "outstanding_amount")), places=2)
 
 	def test_settlement_uses_deposit_balance_not_original_amount(self):
-		lease = self._lease("TS6", "+96890001106")
+		lease = self._lease("TT20", "+96890001220")
 		frappe.db.set_value("Security Deposit", lease.security_deposit, "deduction_amount", 30)
 		st = ls.compute_settlement(lease, nowdate())
 		self.assertEqual(st["deposit_amount"], 100)
@@ -149,7 +357,7 @@ class TestLeaseTerminationSettlement(IntegrationTestCase):
 		self.assertAlmostEqual(st["net_settlement"], 70 - st["rent_outstanding"], places=3)
 
 	def test_deposit_refund_pays_out_the_balance_only(self):
-		lease = self._lease("TS7", "+96890001107")
+		lease = self._lease("TT21", "+96890001221")
 		dep = frappe.get_doc("Security Deposit", lease.security_deposit)
 		frappe.db.set_value("Security Deposit", dep.name, "deduction_amount", 30)
 		dep.reload()
