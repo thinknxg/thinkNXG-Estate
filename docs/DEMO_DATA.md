@@ -45,6 +45,19 @@ The seeder temporarily mutes emails, suppresses background enqueues (sites witho
 disables WhatsApp auto-reply, auto-assignment and AI scoring, and sets site defaults
 (currency, price lists, company) to AED values. All are restored afterwards.
 
+## Tenant self-service sign-in
+
+The seeder's `seed_tenant_access()` step enables portal access for every demo tenant, so the
+`/tenant-self-service` portal can be explored straight after seeding:
+
+- **Access code:** each demo tenant signs in with their registered mobile number and the code `246810`
+  (override with the `estate_demo_access_code` key in `site_config.json`). The step also turns on
+  Property Settings > `enable_access_code_portal`.
+- **Website account:** each tenant also has a provisioned portal user (tagged `demo-data`) that signs in
+  with the demo password.
+- Sample mobiles: `+971 4 555 0216` (Horizon Dental Clinic, fully paid), `+971 56 555 0206` (Daniel Okafor,
+  one overdue instalment and one open maintenance request).
+
 ## Known app gaps found while seeding (app logic was not modified)
 
 - Expense JE credits Supplier with is_advance=Yes, which ERPNext v16 rejects (seeder relaxes the check only while posting expenses).

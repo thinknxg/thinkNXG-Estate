@@ -504,6 +504,34 @@ def seed_tenants():
 	r.save()
 
 
+ACCESS_CODE_KEY = "estate_demo_access_code"
+
+
+def seed_tenant_access():
+	"""Give every demo tenant a portal login so /tenant-self-service can be shown both ways:
+	website account (demo password) and mobile number + access code (default 246810, or the
+	site_config key estate_demo_access_code). Switches on the access-code sign-in setting."""
+	from frappe.utils.password import update_password
+	code = str(frappe.conf.get(ACCESS_CODE_KEY) or "246810")
+	r = reg()
+	for t in D.TENANTS:
+		name = r.get(f"tenant:{t['key']}")
+		if not name or not frappe.db.exists("Tenant", name):
+			continue
+		doc = frappe.get_doc("Tenant", name)
+		stored = doc.get_password("portal_access_code", raise_exception=False)
+		if not (doc.enable_portal and stored == code and doc.portal_user):
+			doc.enable_portal = 1
+			doc.portal_access_code = code
+			doc.save(ignore_permissions=True)
+			doc.reload()
+			if doc.portal_user:
+				update_password(doc.portal_user, demo_password())
+		if doc.portal_user:
+			tag("User", doc.portal_user)
+	frappe.db.set_single_value("Property Settings", "enable_access_code_portal", 1)
+
+
 # ------------------------------------------------------------------ leases and money
 
 def _lease_charges(prop, unit, start, end):
@@ -1540,6 +1568,7 @@ def seed(reset=0):
 		seed_tenants()
 		sweep_party_defaults()
 		seed_leases()
+		seed_tenant_access()
 		seed_utilities()
 		finish_unit_states()
 		frappe.db.commit()

@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "engine": "InnoDB",
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-11-25 10:30:00.000000",
+ "modified_by": "Administrator",
+ "owner": "Administrator",
+ "sort_order": "DESC",
+ "states": [],
+ "module": "Estate Leasing",
+ "doctype": "DocType",
+ "name": "Tenant Request Message",
+ "istable": 1,
+ "editable_grid": 1,
+ "permissions": [],
+ "field_order": [
+  "sender_type",
+  "message",
+  "posted_by",
+  "posted_on"
+ ],
+ "fields": [
+  {
+   "fieldname": "sender_type",
+   "fieldtype": "Select",
+   "label": "Sender",
+   "options": "Tenant\nManagement",
+   "in_list_view": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "message",
+   "fieldtype": "Small Text",
+   "label": "Message",
+   "in_list_view": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "posted_by",
+   "fieldtype": "Data",
+   "label": "Posted By",
+   "read_only": 1
+  },
+  {
+   "fieldname": "posted_on",
+   "fieldtype": "Datetime",
+   "label": "Posted On",
+   "read_only": 1,
+   "in_list_view": 1
+  }
+ ]
+}
