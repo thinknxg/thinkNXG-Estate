@@ -1,78 +1,69 @@
-{% extends "templates/web.html" %}
-{% block page_content %}
-<div class="estate-page py-4">
-  <a href="/properties" class="small text-muted">&larr; {{ _("All properties") }}</a>
+{% extends "templates/estate/base.html" %}
+{% block head_extra %}<link rel="canonical" href="{{ canonical }}">{% endblock %}
+{% block site_content %}
+<div class="eb-wrap eb-account">
   {% if not signed_in %}
-  <div class="row g-4 mt-1">
-    <div class="col-md-6"><div class="estate-card">
-      <h3>{{ _("Sign in") }}</h3>
+  <h1 style="margin-bottom:6px">{{ _("Your account") }}</h1>
+  <p style="color:var(--eb-muted);margin-bottom:28px">{{ _("Save properties, get emails when new matches appear, and track your viewing and lease requests.") }}</p>
+  <div class="eb-acc-grid">
+    <div class="eb-card" id="signin">
+      <h2 style="font-size:20px;margin-bottom:16px">{{ _("Sign in") }}</h2>
       <form id="in-form">
-      <input class="estate-field" id="in-email" type="email" placeholder="{{ _('Email') }}" autocomplete="email">
-      <input class="estate-field" id="in-pass" type="password" placeholder="{{ _('Password') }}" autocomplete="current-password">
-      <button class="estate-btn w-100" id="in-go" type="submit">{{ _("Sign in") }}</button>
+        <input class="eb-input" id="in-email" type="email" placeholder="{{ _('Email') }}" autocomplete="email" aria-label="{{ _('Email') }}">
+        <input class="eb-input" id="in-pass" type="password" placeholder="{{ _('Password') }}" autocomplete="current-password" aria-label="{{ _('Password') }}">
+        <button class="eb-btn eb-full" id="in-go" type="submit">{{ _("Sign in") }}</button>
       </form>
-      <div class="small text-danger mt-2" id="in-err"></div>
-      <a class="small d-block mt-2" href="/login#forgot">{{ _("Forgot password?") }}</a>
-    </div></div>
-    <div class="col-md-6"><div class="estate-card">
-      <h3>{{ _("Create an account") }}</h3>
-      <p class="small text-muted">{{ _("Save properties, get emails when new matches appear, and track your viewing and lease requests.") }}</p>
+      <div class="eb-err" id="in-err" role="alert"></div>
+      <a class="eb-linkbtn" style="display:inline-block;margin-top:12px" href="/login#forgot">{{ _("Forgot password?") }}</a>
+    </div>
+    <div class="eb-card" id="register">
+      <h2 style="font-size:20px;margin-bottom:16px">{{ _("Create an account") }}</h2>
       <form id="up-form">
-      <input class="estate-field" id="up-name" placeholder="{{ _('Full name') }}" autocomplete="name">
-      <input class="estate-field" id="up-email" type="email" placeholder="{{ _('Email') }}" autocomplete="email">
-      <input class="estate-field" id="up-phone" placeholder="{{ _('Mobile (e.g. +968...)') }}" autocomplete="tel">
-      <input class="estate-field" id="up-pass" type="password" placeholder="{{ _('Password') }}" autocomplete="new-password">
-      <button class="estate-btn w-100" id="up-go" type="submit">{{ _("Create account") }}</button>
+        <input class="eb-input" id="up-name" placeholder="{{ _('Full name') }}" autocomplete="name" aria-label="{{ _('Full name') }}">
+        <input class="eb-input" id="up-email" type="email" placeholder="{{ _('Email') }}" autocomplete="email" aria-label="{{ _('Email') }}">
+        <input class="eb-input" id="up-phone" placeholder="{{ _('Mobile (e.g. +968...)') }}" autocomplete="tel" aria-label="{{ _('Mobile') }}">
+        <input class="eb-input" id="up-pass" type="password" placeholder="{{ _('Password') }}" autocomplete="new-password" aria-label="{{ _('Password') }}">
+        <button class="eb-btn eb-full" id="up-go" type="submit">{{ _("Create account") }}</button>
       </form>
-      <div class="small text-danger mt-2" id="up-err"></div>
-    </div></div>
+      <div class="eb-err" id="up-err" role="alert"></div>
+    </div>
   </div>
   {% elif is_staff %}
-  <div class="estate-card mt-3">{{ _("You are signed in as a staff user. Visitor accounts are for the public; open the desk to work with leads and listings.") }}
-    <a class="estate-btn mt-2" href="/app/estate-dashboard">{{ _("Open desk") }}</a></div>
+  <div class="eb-card">{{ _("You are signed in as a staff user. Visitor accounts are for the public; open the desk to work with leads and listings.") }}
+    <div style="margin-top:14px"><a class="eb-btn" href="/app/estate-dashboard">{{ _("Open desk") }}</a></div></div>
   {% else %}
-  <div class="estate-toolbar mt-2">
-    <h1 class="mb-0">{{ _("Welcome, {0}").format(full_name or "") }}</h1>
-    <a class="estate-btn secondary" href="/?cmd=web_logout">{{ _("Sign out") }}</a>
+  <div class="eb-toolbar" style="margin-bottom:28px">
+    <h1>{{ _("Welcome, {0}").format(full_name or "") }}</h1>
+    <a class="eb-btn eb-btn-ghost" href="/?cmd=web_logout">{{ _("Sign out") }}</a>
   </div>
 
-  <h3 class="mt-4 mb-3">{{ _("Saved properties") }}</h3>
-  {% if wishlist %}
-  <div class="estate-grid">{% for r in wishlist %}
-    <div class="estate-listing"><a href="/{{ r.route }}">
-      {% if r.cover %}<div class="cover" style="background-image:url('{{ r.cover }}')"></div>{% else %}<div class="cover empty">{{ _("No photo yet") }}</div>{% endif %}
-      <div class="body"><div class="title">{{ r.title }}</div>
-        <div class="place">{{ r.locality or "" }}{{ ", " if r.locality and r.city }}{{ r.city or "" }}</div>
-        <div class="price">{{ currency }} {{ amount(r.headline_price) }} <small>{{ _(r.price_period or "") }}</small></div></div></a></div>
-  {% endfor %}</div>
-  {% else %}<div class="estate-empty">{{ _("Tap the heart on any property to save it here.") }}</div>{% endif %}
+  <h2 id="saved" style="font-size:22px;margin-bottom:16px">{{ _("Saved properties") }}</h2>
+  {% if wishlist %}<div class="eb-rail">{{ saved_html }}</div>
+  {% else %}<div class="eb-empty"><svg class="i"><use href="#i-heart"/></svg><p style="margin:0 auto">{{ _("Tap the heart on any property to save it here.") }}</p></div>{% endif %}
 
-  <h3 class="mt-5 mb-3">{{ _("Saved searches") }}</h3>
+  <h2 style="font-size:22px;margin:44px 0 16px">{{ _("Saved searches") }}</h2>
   {% if searches %}
-  <div class="estate-card"><table class="estate-table">
-    <tr><th>{{ _("City") }}</th><th>{{ _("Type") }}</th><th>{{ _("Bedrooms") }}</th><th>{{ _("Price") }}</th><th></th></tr>
-    {% for s in searches %}<tr id="ss-{{ s.name }}"><td>{{ s.location or _("Any") }}</td><td>{{ _(s.unit_type) if s.unit_type else _("Any") }}</td>
-      <td>{{ (s.bedrooms|string + "+") if s.bedrooms else _("Any") }}</td>
-      <td>{{ amount(s.min_rent) if s.min_rent else "" }} – {{ amount(s.max_rent) if s.max_rent else "" }}</td>
-      <td class="text-end"><button class="estate-btn secondary ss-del" data-name="{{ s.name }}">{{ _("Delete") }}</button></td></tr>{% endfor %}
+  <div class="eb-card" style="padding:0;overflow-x:auto"><table class="eb-cmp">
+    {% for s in searches %}<tr id="ss-{{ s.name }}">
+      <td>{% if s.summary %}{{ s.summary }}{% else %}{{ s.location or _("Any location") }}{% if s.unit_type %} · {{ _(s.unit_type) }}{% endif %}{% if s.bedrooms %} · {{ s.bedrooms }}+ {{ _("bed") }}{% endif %}{% if s.min_rent or s.max_rent %} · {{ amount(s.min_rent) if s.min_rent else "0" }} – {{ amount(s.max_rent) if s.max_rent else "∞" }}{% endif %}{% endif %}</td>
+      <td style="text-align:end;white-space:nowrap">{% if s.url %}<a class="eb-btn eb-btn-sm eb-btn-ghost" href="{{ s.url }}">{{ _("View results") }}</a> {% endif %}<button class="eb-btn eb-btn-sm eb-btn-ghost ss-del" data-name="{{ s.name }}">{{ _("Delete") }}</button></td></tr>{% endfor %}
   </table></div>
-  {% else %}<div class="estate-empty">{{ _("Use Save this search on the property search page to get email alerts.") }}</div>{% endif %}
+  {% else %}<div class="eb-empty"><p style="margin:0 auto">{{ _("Use Save this search on the property search page to get email alerts.") }}</p></div>{% endif %}
 
-  <h3 class="mt-5 mb-3">{{ _("My requests") }}</h3>
+  <h2 style="font-size:22px;margin:44px 0 16px">{{ _("My requests") }}</h2>
   {% set reqs = (requests.enquiries or []) + (requests.visits or []) + (requests.leases or []) %}
   {% if reqs %}
-  <div class="estate-card"><table class="estate-table">
+  <div class="eb-card" style="padding:0;overflow-x:auto"><table class="eb-cmp">
     <tr><th>{{ _("Request") }}</th><th>{{ _("Property") }}</th><th>{{ _("Date") }}</th><th>{{ _("Status") }}</th></tr>
-    {% for r in requests.enquiries or [] %}<tr><td>{{ _("Enquiry") }}</td><td>{{ r.unit or r.property or "" }}</td><td>{{ frappe.format_date(r.creation) }}</td><td><span class="estate-badge muted">{{ _(r.status or "Open") }}</span></td></tr>{% endfor %}
-    {% for r in requests.visits or [] %}<tr><td>{{ _("Viewing") }}</td><td>{{ r.label or r.unit or r.property or "" }}</td><td>{{ frappe.format_date(r.visit_date or r.creation) }}</td><td><span class="estate-badge muted">{{ _(r.status or "Requested") }}</span></td></tr>{% endfor %}
-    {% for r in requests.leases or [] %}<tr><td>{{ _("Lease request") }}</td><td>{{ r.label or r.unit or r.property or "" }}</td><td>{{ frappe.format_date(r.start_date or r.creation) }}</td><td><span class="estate-badge muted">{{ _(r.status or "Draft") }}</span></td></tr>{% endfor %}
+    {% for r in requests.enquiries or [] %}<tr><td>{{ _("Enquiry") }}</td><td>{{ r.unit or r.property or "" }}</td><td>{{ frappe.format_date(r.creation) }}</td><td><span class="eb-tag">{{ _(r.status or "Open") }}</span></td></tr>{% endfor %}
+    {% for r in requests.visits or [] %}<tr><td>{{ _("Viewing") }}</td><td>{{ r.label or r.unit or r.property or "" }}</td><td>{{ frappe.format_date(r.visit_date or r.creation) }}</td><td><span class="eb-tag">{{ _(r.status or "Requested") }}</span></td></tr>{% endfor %}
+    {% for r in requests.leases or [] %}<tr><td>{{ _("Lease request") }}</td><td>{{ r.label or r.unit or r.property or "" }}</td><td>{{ frappe.format_date(r.start_date or r.creation) }}</td><td><span class="eb-tag">{{ _(r.status or "Draft") }}</span></td></tr>{% endfor %}
   </table></div>
-  {% else %}<div class="estate-empty">{{ _("Enquiries, viewings and lease requests you send will appear here.") }}</div>{% endif %}
+  {% else %}<div class="eb-empty"><p style="margin:0 auto">{{ _("Enquiries, viewings and lease requests you send will appear here.") }}</p></div>{% endif %}
   {% endif %}
 </div>
 {% endblock %}
-{% block script %}
-{{ super() }}
+{% block page_script %}
 <script>
 (function () {
   var next = {{ next | tojson }};

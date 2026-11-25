@@ -52,13 +52,14 @@ class Listing(WebsiteGenerator):
 
     def _copy_from_unit(self):
         unit = frappe.db.get_value(
-            "Unit", self.unit, ["property", "unit_type", "bedrooms", "bathrooms", "area_sqm", "furnishing"],
-            as_dict=True)
+            "Unit", self.unit, ["property", "unit_type", "bedrooms", "bathrooms", "area_sqm", "furnishing",
+                                "usage"], as_dict=True)
         if not unit:
             return
         self.property_ref = unit.property
         for field in ("unit_type", "bedrooms", "bathrooms", "area_sqm", "furnishing"):
             self.set(field, unit.get(field))
+        self._copy_property_facets(unit.usage)
 
     def _copy_from_property(self):
         prop = frappe.db.get_value(
@@ -71,6 +72,13 @@ class Listing(WebsiteGenerator):
             self.set(field, prop.get(field))
         self.city = self.city or prop.city
         self.locality = self.locality or prop.area
+        self._copy_property_facets()
+
+    def _copy_property_facets(self, unit_usage=None):
+        """Usage and development status come from the property so the website can filter on them."""
+        usage, status = frappe.db.get_value("Property", self.property_ref, ["usage", "status"]) or (None, None)
+        self.usage = unit_usage or usage
+        self.development_status = status if status == "Under Development" else "Ready"
 
     def _check_available(self):
         if self.unit:
@@ -87,46 +95,99 @@ class Listing(WebsiteGenerator):
             frappe.throw(_("Property {0} is under a lease and cannot be published.").format(self.property_ref))
 
     def get_context(self, context):
+        import json
+
+        from thinknxg_estate.portal.api import catalog
+        from thinknxg_estate.portal.site import site_context
+
         context.no_cache = 1
-        context.parents = [{"route": "properties", "label": _("Properties")}]
+        site_context(context, active={"Rent": "rent", "Sale": "buy"}.get(self.listing_type))
+        site = context.site
         settings = frappe.get_cached_doc("RE Portal Settings")
-        context.currency = settings.currency_label or "OMR"
         context.contact_whatsapp = settings.contact_whatsapp
-        context.cover = (self.photos[0].image if self.photos else None)
-        context.gallery = [p.image for p in self.photos]
-        context.amenities = listing_amenities(self.property_ref)
+        context.contact_email = settings.contact_email
+        context.gallery = [p.image for p in self.photos if p.image]
+        context.captions = [p.caption for p in self.photos if p.image]
+        context.cover = context.gallery[0] if context.gallery else None
+        names = listing_amenities(self.property_ref)
+        context.amenities = [{"name": a, "icon": catalog.amenity_icon(a)} for a in names]
         prop = frappe.db.get_value(
             "Property", self.property_ref,
-            ["latitude", "longitude", "address_line"], as_dict=True) or frappe._dict()
-        context.update(prop)
-        context.related = frappe.get_all(
-            "Listing",
-            filters={"is_published": 1, "name": ["!=", self.name], "listing_type": self.listing_type,
-                     "city": self.city},
-            fields=["title", "route", "headline_price", "price_period", "unit_type", "bedrooms", "locality"],
-            order_by="featured desc, published_on desc", limit=3)
-        for row in context.related:
-            row["cover"] = frappe.db.get_value("Listing Photo", {"parent": frappe.db.get_value(
-                "Listing", {"route": row.route}, "name")}, "image", order_by="idx asc")
+            ["latitude", "longitude", "address_line", "property_name", "usage", "no_of_floors", "parking_slots",
+             "ejari_number"], as_dict=True) or frappe._dict()
+        context.update({k: prop.get(k) for k in ("latitude", "longitude", "address_line")})
+        unit = (frappe.db.get_value("Unit", self.unit, ["unit_no", "floor", "parking_slots"], as_dict=True)
+                if self.unit else None) or frappe._dict()
+        context.floor = unit.get("floor")
+        context.parking = unit.get("parking_slots") or prop.get("parking_slots")
+        context.building = prop.get("property_name")
+        context.total_floors = prop.get("no_of_floors")
+        context.place = ", ".join(p for p in (self.locality, self.city) if p)
+
+        similar = catalog.similar_listings(self.name, 4)
+        from thinknxg_estate.portal.api.visitor import saved_listing_names
+
+        saved = saved_listing_names()
+        context.saved = saved
+        context.similar_html = catalog.render_cards(similar, "grid", saved)
+        context.similar_count = len(similar)
         context.min_viewing_date = frappe.utils.add_days(frappe.utils.nowdate(), 1)
-        context.map_tile_url = settings.get("map_tile_url") or "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-        context.map_attribution = settings.get("map_attribution") or "&copy; OpenStreetMap contributors"
-        user = frappe.session.user
-        context.is_visitor = user != "Guest" and frappe.db.get_value("User", user, "user_type") == "Website User"
+        context.map_tile_url = site.map_tile_url
+        context.map_attribution = site.map_attribution
+        context.is_visitor = site.visitor
         context.visitor = frappe._dict()
-        if context.is_visitor:
+        if site.visitor:
             from thinknxg_estate.core.listing_portal_api.listing_portal import get_current_portal_user
-            from thinknxg_estate.portal.api.visitor import saved_listing_names
 
             context.visitor = frappe._dict(get_current_portal_user() or {})
-            context.visitor.email = user
-            context.is_saved = self.name in saved_listing_names()
+            context.visitor.email = frappe.session.user
+        context.is_saved = self.name in saved
         context.can_request_lease = bool(self.unit and self.listing_type == "Rent")
-        context.metatags = {
-            "title": self.meta_title or self.title,
-            "description": self.meta_description or frappe.utils.strip_html(
-                self.description or "")[:150],
-        }
+        context.new_after = str(frappe.utils.add_days(frappe.utils.nowdate(), -30))
+
+        # Search-engine metadata: title, description, canonical, Open Graph and Schema.org markup
+        title = self.meta_title or f"{self.title} – {context.place}" if context.place else (self.meta_title or self.title)
+        description = (self.meta_description or catalog.excerpt(self.description, 155)
+                       or _("{0} {1} in {2}.").format(_(self.unit_type or _("Property")),
+                                                      _("for rent") if self.listing_type == "Rent" else _("for sale"),
+                                                      context.place or site.title))
+        url = frappe.utils.get_url("/" + self.route)
+        context.title = f"{title} | {site.title}"
+        context.canonical = url
+        context.metatags = {"title": context.title, "description": description, "og:title": context.title,
+                            "og:description": description, "og:type": "website", "og:url": url,
+                            "twitter:card": "summary_large_image" if context.cover else "summary"}
+        if context.cover:
+            context.metatags["og:image"] = frappe.utils.get_url(context.cover)
+        offer = {"@type": "Offer", "price": float(self.headline_price or 0), "priceCurrency": site.currency,
+                 "availability": "https://schema.org/InStock", "url": url}
+        if self.listing_type == "Rent" and self.price_period:
+            offer["priceSpecification"] = {"@type": "UnitPriceSpecification", "price": float(self.headline_price or 0),
+                                           "priceCurrency": site.currency,
+                                           "unitText": {"Per Year": "YEAR", "Per Month": "MONTH"}.get(self.price_period, "YEAR")}
+        residence = {"@type": "Residence" if (self.usage or "Residential") == "Residential" else "Accommodation",
+                     "name": self.title, "url": url, "description": description,
+                     "image": [frappe.utils.get_url(g) for g in context.gallery[:6]],
+                     "address": {"@type": "PostalAddress", "addressLocality": self.city or "",
+                                 "streetAddress": prop.get("address_line") or self.locality or ""},
+                     "numberOfBedrooms": self.bedrooms or 0, "numberOfBathroomsTotal": self.bathrooms or 0}
+        if self.area_sqm:
+            residence["floorSize"] = {"@type": "QuantitativeValue", "value": float(self.area_sqm), "unitCode": "MTK"}
+        if prop.get("latitude") and prop.get("longitude"):
+            residence["geo"] = {"@type": "GeoCoordinates", "latitude": prop.latitude, "longitude": prop.longitude}
+        crumbs = [(_("Properties"), frappe.utils.get_url("/properties"))]
+        if self.listing_type:
+            crumbs.append((_("For rent") if self.listing_type == "Rent" else _("For sale"),
+                           frappe.utils.get_url(f"/properties?listing_type={self.listing_type}")))
+        if self.city:
+            crumbs.append((self.city, frappe.utils.get_url("/properties?city=" + frappe.utils.quote(self.city))))
+        crumbs.append((self.title, url))
+        context.crumbs = crumbs
+        context.jsonld = json.dumps({"@context": "https://schema.org", "@graph": [
+            {"@type": ["Product", "RealEstateListing"], "name": self.title, "url": url, "description": description,
+             "image": residence["image"], "offers": offer, "about": residence},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": i + 1, "name": name, "item": link} for i, (name, link) in enumerate(crumbs)]}]})
         return context
 
 

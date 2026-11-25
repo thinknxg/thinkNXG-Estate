@@ -165,8 +165,9 @@ matching document permission (submit or write), not only read.
 | Endpoint | Access | HTTP | Description | Legacy path |
 |---|---|---|---|---|
 | `thinknxg_estate.portal.api.visitor.toggle_wishlist` | Logged-in user (checked in code) | POST only | — | — |
-| `thinknxg_estate.portal.api.visitor.save_search` | Logged-in user (checked in code) | POST only | Save the current /properties filters; the daily job emails new matches. | — |
+| `thinknxg_estate.portal.api.visitor.save_search` | Logged-in user (checked in code) | POST only | Save the current /properties search (every filter); the daily job emails new matches. | — |
 | `thinknxg_estate.portal.api.visitor.delete_search` | Logged-in user (checked in code) | POST only | — | — |
+| `thinknxg_estate.portal.api.visitor.set_language` | Logged-in user (checked in code) | POST only | Remember the signed-in visitor's language (English or Arabic) on their own account, so the | — |
 
 ## Visitor sign-up, sign-in and requests (shared with the legacy /listings API paths)
 
@@ -275,6 +276,9 @@ matching document permission (submit or write), not only read.
 | Endpoint | Access | HTTP | Description | Legacy path |
 |---|---|---|---|---|
 | `thinknxg_estate.core.demo_data.tools.run_load` | Logged-in user (checked in code) | GET/POST | — | `re_core.demo_data.tools.run_load` |
+| `thinknxg_estate.portal.api.catalog.search_results` | Public (guest); rate limit PUBLIC_READ_LIMIT * 2 per 3600s | GET/POST | One page of result cards as HTML plus the totals and filter chips, for the search page. | — |
+| `thinknxg_estate.portal.api.catalog.cards_by_name` | Public (guest); rate limit PUBLIC_READ_LIMIT * 2 per 3600s | GET/POST | Cards for specific listings (recently viewed) or listings similar to one. | — |
+| `thinknxg_estate.portal.api.catalog.suggest` | Public (guest); rate limit PUBLIC_READ_LIMIT * 3 per 3600s | GET/POST | Search suggestions for the hero box: matching cities, localities and listing titles. | — |
 | `thinknxg_estate.portal.sync.run_backfill` | Logged-in user (checked in code) | GET/POST | Manually triggerable version of backfill_all(), restricted to System Managers. | `re_portal.sync.run_backfill` |
 | `thinknxg_estate.thinknxg_estate.dashboard_chart_source.re_lease_expirations_by_month.re_lease_expirations_by_month.get` | Estate staff | GET/POST | — | `re_core.re_core.dashboard_chart_source.re_lease_expirations_by_month.re_lease_expirations_by_month.get` |
 | `thinknxg_estate.thinknxg_estate.dashboard_chart_source.re_rent_arrears_ageing.re_rent_arrears_ageing.get` | Estate staff | GET/POST | — | `re_core.re_core.dashboard_chart_source.re_rent_arrears_ageing.re_rent_arrears_ageing.get` |

@@ -1,0 +1,38 @@
+{# Layout of the public property site: header, footer, icon sprite. Pages fill `site_content`
+   and may add `head_extra` and `page_script`. Needs `site` from portal.site.site_context(). #}
+{% extends "templates/base.html" %}
+{% block head_include %}
+{{ super() }}
+<link rel="stylesheet" href="/assets/thinknxg_estate/css/portal.css">
+<link rel="preload" href="/assets/frappe/css/fonts/inter/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+{% block head_extra %}{% endblock %}
+{% endblock %}
+{% block navbar %}
+{% include "templates/includes/estate_icons.html" %}
+<a class="eb-skip" href="#main">{{ _("Skip to content") }}</a>
+{% include "templates/estate/header.html" %}
+{% endblock %}
+{% block content %}
+<main id="main" class="eb-site">{% block site_content %}{% endblock %}</main>
+<div class="eb-toast" id="toast" role="status" aria-live="polite"></div>
+{% endblock %}
+{% block footer %}
+{% include "templates/estate/footer.html" %}
+{% endblock %}
+{% block script %}
+{{ super() }}
+<script>
+window.ESTATE = {
+  visitor: {{ "true" if site.visitor else "false" }}, lang: {{ site.lang | tojson }},
+  T: {
+    signin: {{ _("Please sign in to save properties and searches.") | tojson }},
+    saved: {{ _("Saved") | tojson }}, removed: {{ _("Removed from saved") | tojson }},
+    error: {{ _("Something went wrong. Please try again.") | tojson }},
+    compareMax: {{ _("You can compare up to three properties.") | tojson }},
+    selected: {{ _("{0} selected") | tojson }}, copied: {{ _("Link copied") | tojson }}
+  }
+};
+</script>
+<script src="/assets/thinknxg_estate/js/estate_site.js"></script>
+{% block page_script %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,5 @@
+{% if total_pages > 1 %}
+{% if page > 1 %}<a href="?{{ qs_base }}{{ '&' if qs_base }}page={{ page - 1 }}" data-page="{{ page - 1 }}" aria-label="{{ _('Previous page') }}"><svg class="i i-prev"><use href="#i-arrow"/></svg></a>{% endif %}
+{% for p in page_links %}{% if p == 0 %}<span class="gap">…</span>{% else %}<a href="?{{ qs_base }}{{ '&' if qs_base }}page={{ p }}" data-page="{{ p }}" class="{{ 'on' if p == page }}" {% if p == page %}aria-current="page"{% endif %}>{{ p }}</a>{% endif %}{% endfor %}
+{% if page < total_pages %}<a href="?{{ qs_base }}{{ '&' if qs_base }}page={{ page + 1 }}" data-page="{{ page + 1 }}" aria-label="{{ _('Next page') }}"><svg class="i i-dir"><use href="#i-arrow"/></svg></a>{% endif %}
+{% endif %}

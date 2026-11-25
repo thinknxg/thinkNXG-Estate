@@ -2,17 +2,17 @@ import frappe
 from frappe import _
 
 from thinknxg_estate.portal.api.listings import compare_rows
-from thinknxg_estate.portal.utils import amount, money
+from thinknxg_estate.portal.site import site_context
 
 
 def get_context(context):
     context.no_cache = 1
+    site_context(context)
     names = [n.strip() for n in (frappe.form_dict.get("l") or "").split(",") if n.strip()]
     context.rows = compare_rows(names)
-    context.money = money
-    context.amount = amount
-    context.currency = frappe.db.get_single_value("RE Portal Settings", "currency_label") or "OMR"
-    context.title = _("Compare properties")
+    context.title = f"{_('Compare properties')} | {context.site.title}"
+    context.metatags = {"title": context.title, "robots": "noindex, follow"}
+    context.canonical = frappe.utils.get_url("/properties/compare")
     context.specs = [
         ("listing_type", _("Rent or buy")), ("unit_type", _("Property type")), ("city", _("City")),
         ("locality", _("Area")), ("bedrooms", _("Bedrooms")), ("bathrooms", _("Bathrooms")),

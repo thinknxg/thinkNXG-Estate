@@ -8,11 +8,12 @@ from frappe.utils import cint, flt, get_datetime, now_datetime, nowdate
 PUBLIC_FIELDS = [
     "name", "title", "route", "listing_type", "headline_price", "price_period",
     "unit_type", "bedrooms", "bathrooms", "area_sqm", "furnishing",
-    "city", "locality", "featured", "published_on",
+    "city", "locality", "featured", "published_on", "usage", "development_status", "permit_number",
 ]
 
 
 SORTS = {
+    "relevance": "featured desc, published_on desc",
     "featured": "featured desc, published_on desc",
     "newest": "published_on desc",
     "price_asc": "headline_price asc",
@@ -20,19 +21,66 @@ SORTS = {
     "area_desc": "area_sqm desc",
 }
 
+NEW_LISTING_DAYS = 30
+CARD_PHOTOS = 4
+MAX_LIST = 25  # most values accepted in one multi-select filter
+
+
+def csv(value):
+    """A filter value that may be a list or a comma-separated string -> a clean, bounded list."""
+    if isinstance(value, (list, tuple)):
+        items = value
+    else:
+        items = str(value or "").split(",")
+    return [str(i).strip() for i in items if str(i).strip()][:MAX_LIST]
+
+
+def categories():
+    """Property categories the public site offers, as filters over fields Listings really have.
+    Only categories that have listings are shown on the site."""
+    return {
+        "apartments": {"label": _("Apartments"), "icon": "building",
+                       "unit_type": ["Studio", "1BR", "2BR", "3BR", "4BR+", "Penthouse", "Apartment Building"],
+                       "usage": "Residential"},
+        "villas": {"label": _("Villas"), "icon": "home", "unit_type": ["Villa", "Villa Compound"]},
+        "land": {"label": _("Land and plots"), "icon": "map", "unit_type": ["Land"]},
+        "offices": {"label": _("Office spaces"), "icon": "briefcase", "unit_type": ["Office", "Commercial Tower"]},
+        "shops": {"label": _("Shops"), "icon": "store", "unit_type": ["Shop"]},
+        "warehouses": {"label": _("Warehouses"), "icon": "warehouse", "unit_type": ["Warehouse"]},
+        "commercial": {"label": _("Commercial properties"), "icon": "building2", "usage": "Commercial"},
+    }
+
 
 def build_filters(listing_type=None, unit_type=None, city=None, bedrooms=None, min_price=None,
                   max_price=None, furnishing=None, bathrooms=None, min_area=None, max_area=None,
-                  locality=None, **_ignored):
-    """Listing filters shared by the search page, the map, saved searches and alerts."""
+                  locality=None, usage=None, development_status=None, category=None, featured=None,
+                  new=None, permit=None, project=None, north=None, south=None, east=None, west=None,
+                  amenity=None, **_ignored):
+    """Listing filters shared by the search page, the map, saved searches and alerts.
+    Multi-select values (unit_type, city, locality, furnishing, amenity) may be comma-separated."""
     filters = {"is_published": 1}
     if listing_type in ("Rent", "Sale"):
         filters["listing_type"] = listing_type
-    if unit_type:
-        filters["unit_type"] = unit_type
-    if city:
-        filters["city"] = city
-    if cint(bedrooms):
+    if usage in ("Residential", "Commercial"):
+        filters["usage"] = usage
+    preset = categories().get(category or "")
+    if preset:
+        if preset.get("usage"):
+            filters["usage"] = preset["usage"]
+        if preset.get("unit_type") and not unit_type:
+            unit_type = preset["unit_type"]
+    for key, value in (("unit_type", unit_type), ("city", city), ("locality", locality),
+                       ("furnishing", furnishing)):
+        values = csv(value)
+        if len(values) == 1:
+            filters[key] = values[0]
+        elif values:
+            filters[key] = ["in", values]
+    if development_status in ("Ready", "Under Development"):
+        filters["development_status"] = development_status
+    if str(bedrooms or "").lower() == "studio":
+        filters["bedrooms"] = 0
+    elif cint(bedrooms):
         filters["bedrooms"] = [">=", cint(bedrooms)]
     if flt(min_price) and flt(max_price):
         filters["headline_price"] = ["between", [flt(min_price), flt(max_price)]]
@@ -40,8 +88,6 @@ def build_filters(listing_type=None, unit_type=None, city=None, bedrooms=None, m
         filters["headline_price"] = [">=", flt(min_price)]
     elif flt(max_price):
         filters["headline_price"] = ["<=", flt(max_price)]
-    if furnishing:
-        filters["furnishing"] = furnishing
     if cint(bathrooms):
         filters["bathrooms"] = [">=", cint(bathrooms)]
     if flt(min_area) and flt(max_area):
@@ -50,9 +96,46 @@ def build_filters(listing_type=None, unit_type=None, city=None, bedrooms=None, m
         filters["area_sqm"] = [">=", flt(min_area)]
     elif flt(max_area):
         filters["area_sqm"] = ["<=", flt(max_area)]
-    if locality:
-        filters["locality"] = locality
+    if cint(featured):
+        filters["featured"] = 1
+    if cint(new):
+        filters["published_on"] = [">=", frappe.utils.add_days(nowdate(), -NEW_LISTING_DAYS)]
+    if cint(permit):
+        filters["permit_number"] = ["is", "set"]
+
+    # Filters that depend on the property: project, map area, amenities. Each narrows the set of
+    # properties; the listing filter is then "property_ref in (...)".
+    property_sets = []
+    if project:
+        property_sets.append({project})
+    if all(v not in (None, "") for v in (north, south, east, west)):
+        # a property at exactly 0,0 has no location set
+        in_box = frappe.get_all(
+            "Property", filters={"latitude": ["between", [flt(south), flt(north)]],
+                                 "longitude": ["between", [flt(west), flt(east)]]},
+            fields=["name", "latitude", "longitude"], limit=5000)
+        property_sets.append({p.name for p in in_box if p.latitude or p.longitude})
+    amenities = csv(amenity)
+    if amenities:
+        rows = frappe.db.sql("""SELECT parent FROM `tabProperty Amenity`
+            WHERE parenttype = 'Property' AND amenity IN %(a)s
+            GROUP BY parent HAVING COUNT(DISTINCT amenity) = %(n)s""", {"a": amenities, "n": len(amenities)})
+        property_sets.append({r[0] for r in rows})
+    if property_sets:
+        names = set.intersection(*property_sets)
+        filters["property_ref"] = ["in", list(names) or ["-"]]
     return filters
+
+
+def listing_query(q=None, **filters):
+    """get_all() keyword arguments for a search: filters plus the free-text box, which looks
+    in the title, city and locality."""
+    query = {"filters": build_filters(**filters)}
+    q = (q or "").strip()[:80]
+    if q:
+        like = ["like", f"%{q}%"]
+        query["or_filters"] = {"title": like, "city": like, "locality": like}
+    return query
 
 
 def _coords(property_names):
@@ -73,6 +156,23 @@ def _covers(listing_names):
     return covers
 
 
+def _photos(listing_names, limit=CARD_PHOTOS):
+    """Up to `limit` photos per listing, in gallery order, for the card slideshow."""
+    photos = {}
+    if not listing_names:
+        return photos
+    for r in frappe.get_all("Listing Photo", filters={"parent": ["in", list(listing_names)]},
+                            fields=["parent", "image"], order_by="idx asc"):
+        if r.image and len(photos.setdefault(r.parent, [])) < limit:
+            photos[r.parent].append(r.image)
+    return photos
+
+
+def excerpt(html, length=150):
+    text = " ".join(frappe.utils.strip_html_tags(html or "").split())
+    return text if len(text) <= length else text[:length].rsplit(" ", 1)[0] + "…"
+
+
 # Read-only public endpoints are limited per visitor IP to stop scraping, high enough that a person
 # browsing (or an office sharing one IP) never meets the limit. The /properties page itself calls
 # run_search() directly, so page views do not count against the API limit.
@@ -81,30 +181,28 @@ PUBLIC_READ_LIMIT = 600
 
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=PUBLIC_READ_LIMIT, seconds=3600)
-def search(listing_type=None, unit_type=None, city=None, bedrooms=None,
-           min_price=None, max_price=None, furnishing=None, page=1, page_size=None,
-           bathrooms=None, min_area=None, max_area=None, locality=None, sort=None):
-    return run_search(listing_type, unit_type, city, bedrooms, min_price, max_price, furnishing, page,
-                      page_size, bathrooms, min_area, max_area, locality, sort)
+def search(page=1, page_size=None, sort=None, **filters):
+    filters.pop("cmd", None)
+    return run_search(page=page, page_size=page_size, sort=sort, **filters)
 
 
-def run_search(listing_type=None, unit_type=None, city=None, bedrooms=None,
-               min_price=None, max_price=None, furnishing=None, page=1, page_size=None,
-               bathrooms=None, min_area=None, max_area=None, locality=None, sort=None):
+def run_search(page=1, page_size=None, sort=None, **filters):
     settings = frappe.get_cached_doc("RE Portal Settings")
     page_size = min(cint(page_size) or cint(settings.page_size) or 9, 30)
     page = max(cint(page), 1)
-    filters = build_filters(listing_type, unit_type, city, bedrooms, min_price, max_price, furnishing,
-                            bathrooms, min_area, max_area, locality)
+    query = listing_query(**filters)
 
-    total = frappe.db.count("Listing", filters)
-    rows = frappe.get_all("Listing", filters=filters, fields=PUBLIC_FIELDS + ["property_ref", "unit"],
+    total = cint(frappe.get_all("Listing", fields=[{"COUNT": "name", "as": "n"}], **query)[0].n)
+    rows = frappe.get_all("Listing", fields=PUBLIC_FIELDS + ["property_ref", "unit", "description"],
                           order_by=SORTS.get(sort, SORTS["featured"]),
-                          start=(page - 1) * page_size, page_length=page_size)
-    covers = _covers([r.name for r in rows])
+                          start=(page - 1) * page_size, limit=page_size, **query)
+    names = [r.name for r in rows]
+    photos = _photos(names)
     coords = _coords([r.property_ref for r in rows])
     for row in rows:
-        row["cover"] = covers.get(row["name"])
+        row["photos"] = photos.get(row["name"], [])
+        row["cover"] = row["photos"][0] if row["photos"] else None
+        row["excerpt"] = excerpt(row.pop("description", None))
         c = coords.get(row.pop("property_ref"))
         row["latitude"], row["longitude"] = (c.latitude, c.longitude) if c else (None, None)
     return {"total": total, "page": page, "page_size": page_size, "results": rows,
@@ -119,11 +217,12 @@ MAP_LIMIT = 500
 def map_points(**kwargs):
     """Every listing matching the search filters that has map coordinates (up to 500),
     for the map view. Coordinates come from the property, so units share their building's pin."""
-    filters = build_filters(**{k: v for k, v in kwargs.items() if k != "cmd"})
-    rows = frappe.get_all("Listing", filters=filters,
+    kwargs = {k: v for k, v in kwargs.items() if k not in ("cmd", "page", "sort", "view")}
+    rows = frappe.get_all("Listing", **listing_query(**kwargs),
                           fields=["name", "title", "route", "headline_price", "price_period", "listing_type",
-                                  "bedrooms", "unit_type", "locality", "city", "property_ref"],
-                          order_by=SORTS["featured"], page_length=MAP_LIMIT)
+                                  "bedrooms", "bathrooms", "area_sqm", "unit_type", "locality", "city",
+                                  "property_ref"],
+                          order_by=SORTS["featured"], limit=MAP_LIMIT)
     coords = _coords([r.property_ref for r in rows])
     covers = _covers([r.name for r in rows])
     points = []

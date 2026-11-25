@@ -1,63 +1,123 @@
-"""The public property website: search, grid and map views, wishlist, compare and saved searches.
-It replaces the older /listings page, which now redirects here."""
+"""The public property site: a landing page, and a search page with filters, grid / list / map
+views, sorting and saved searches. Both are one route (/properties); a request with filters,
+a page number or a view shows results, a bare request shows the landing page.
+
+The first page of results is rendered here (so search engines and slow connections get real
+content); later filter, sort and page changes use catalog.search_results without a reload."""
+
+import json
 
 import frappe
 from frappe import _
+from frappe.utils import cint, flt
 
-from thinknxg_estate.portal.api.listings import SORTS, run_search
+from thinknxg_estate.portal.api import catalog
+from thinknxg_estate.portal.api.catalog import seo_title
+from thinknxg_estate.portal.api.listings import PUBLIC_READ_LIMIT, categories, csv, run_search  # noqa: F401
 from thinknxg_estate.portal.api.visitor import saved_listing_names
-from thinknxg_estate.portal.utils import amount, money
+from thinknxg_estate.portal.site import site_context
 
-FILTER_KEYS = ["listing_type", "city", "locality", "unit_type", "bedrooms", "bathrooms", "furnishing",
-               "min_price", "max_price", "min_area", "max_area", "sort"]
-MORE_KEYS = ("locality", "bathrooms", "furnishing", "min_area", "max_area")
+NOINDEX_KEYS = {"q", "sort", "north", "south", "east", "west", "featured", "new", "permit", "furnishing", "amenity",
+                "bedrooms", "bathrooms", "min_price", "max_price", "min_area", "max_area", "locality"}
+VIEWS = ("grid", "list", "map")
 
 
-def _options(fieldname):
-    for doctype in ("Listing", "Unit"):
-        options = frappe.get_meta(doctype).get_options(fieldname) if frappe.get_meta(doctype).has_field(
-            fieldname) else ""
-        values = [o for o in (options or "").split("\n") if o]
-        if values:
-            return values
-    return []
+def active_nav(args):
+    if args.get("listing_type") == "Rent":
+        return "rent"
+    if args.get("listing_type") == "Sale":
+        return "buy"
+    if args.get("development_status") == "Under Development":
+        return "projects"
+    if args.get("usage") == "Commercial" or args.get("category") in ("offices", "shops", "warehouses", "commercial"):
+        return "commercial"
+
+
+def canonical(args, page, view):
+    from urllib.parse import urlencode
+
+    keep = {k: v for k, v in sorted(args.items()) if k not in ("sort", "north", "south", "east", "west")}
+    if cint(page) > 1:
+        keep["page"] = cint(page)
+    if view != "grid":
+        keep["view"] = view
+    url = frappe.utils.get_url("/properties")
+    return url + ("?" + urlencode(keep) if keep else "")
 
 
 def get_context(context):
     context.no_cache = 1
-    args = frappe._dict({k: frappe.form_dict.get(k) for k in FILTER_KEYS})
-    result = run_search(page=frappe.form_dict.get("page") or 1, **args)
-    context.update(result)
-    context.money = money
-    context.amount = amount
+    form = frappe.form_dict
+    args = catalog.parse_args(form)
+    view = form.get("view") if form.get("view") in VIEWS else "grid"
+    page = max(cint(form.get("page")), 1)
+    searching = bool(args) or cint(form.get("page")) > 0 or form.get("view") in VIEWS
+    site_context(context, active=active_nav(args) if searching else None)
+    site = context.site
+    context.mode = "results" if searching else "home"
     context.args = args
-    context.view = "map" if frappe.form_dict.get("view") == "map" else "grid"
-    context.total_pages = -(-result["total"] // result["page_size"])
-    published = {"is_published": 1}
-    context.cities = sorted(c for c in frappe.get_all("Listing", filters=published, distinct=True, pluck="city") if c)
-    context.localities = sorted(
-        c for c in frappe.get_all("Listing", filters=published, distinct=True, pluck="locality") if c)
-    context.unit_types = sorted(
-        {t for t in frappe.get_all("Listing", filters=published, distinct=True, pluck="unit_type") if t}
-        | set(_options("unit_type")))
-    context.furnishings = _options("furnishing")
-    context.sorts = [(k, label) for k, label in (
-        ("featured", _("Featured")), ("newest", _("Newest")), ("price_asc", _("Price: low to high")),
-        ("price_desc", _("Price: high to low")), ("area_desc", _("Largest"))) if k in SORTS]
-    context.filter_keys = FILTER_KEYS
-    context.more_open = any(args.get(k) for k in MORE_KEYS)
-    context.query = "&".join(f"{k}={frappe.utils.quote(str(args[k]))}" for k in FILTER_KEYS if args.get(k))
+    context.view = view
     context.saved = saved_listing_names()
-    context.is_visitor = frappe.session.user != "Guest"
+    context.new_after = str(frappe.utils.add_days(frappe.utils.nowdate(), -30))
     settings = frappe.get_cached_doc("RE Portal Settings")
-    # Settings text goes through translation so the shipped default title reads in Arabic too.
-    context.portal_title = _(settings.portal_title) if settings.portal_title else _("Properties")
-    context.portal_tagline = _(settings.portal_tagline) if settings.portal_tagline else ""
-    context.map_tile_url = settings.get("map_tile_url") or "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-    context.map_attribution = settings.get("map_attribution") or "&copy; OpenStreetMap contributors"
+    context.facets = catalog.facets()
+    context.price_bounds = context.facets["price"]
+    context.category_cards = catalog.category_cards()
+    base_url = frappe.utils.get_url("/properties")
+
+    if context.mode == "home":
+        home = catalog.home_data()
+        context.home = home
+        context.title = f"{site.title}: {_('Find properties to rent and buy')}"
+        description = site.tagline or _("Discover exceptional properties and request a viewing online.")
+        image = next((r.cover for r in home["featured"] if r.cover), None)
+        context.metatags = _meta(context.title, description, base_url, image)
+        context.canonical = base_url
+        context.jsonld = json.dumps({"@context": "https://schema.org", "@graph": [
+            {"@type": "WebSite", "name": site.title, "url": base_url,
+             "potentialAction": {"@type": "SearchAction", "target": base_url + "?q={search_term_string}",
+                                 "query-input": "required name=search_term_string"}},
+            {"@type": "Organization", "name": site.title, "url": frappe.utils.get_url(),
+             "logo": frappe.utils.get_url("/assets/thinknxg_estate/images/thinknxg_estate_logo.svg")}]})
+        return context
+
+    result = run_search(page=page, **args)
+    context.results = result["results"]
+    context.total = result["total"]
+    context.page = result["page"]
+    context.total_pages = max(-(-result["total"] // result["page_size"]), 1)
+    context.chips = catalog.chips(args)
+    context.sorts = catalog.sort_options()
+    context.sort = args.get("sort") or "relevance"
+    context.cards_html = catalog.render_cards(result["results"], "list" if view == "list" else "grid", context.saved)
+    heading = seo_title(args, result["total"])
+    context.heading = heading
+    context.title = f"{heading} | {site.title}"
+    description = _("{0} listings: {1}. Compare prices, photos and locations, and request a viewing online.").format(
+        result["total"], heading.lower())
+    image = next((r.cover for r in result["results"] if r.cover), None)
+    context.metatags = _meta(context.title, description, canonical(args, page, view), image)
+    if view != "grid" or (set(args) & NOINDEX_KEYS and len(args) > 2) or page > 3:
+        context.metatags["robots"] = "noindex, follow"
+    context.canonical = canonical(args, page, "grid" if view == "list" else view)
+    context.jsonld = json.dumps({"@context": "https://schema.org", "@type": "ItemList", "name": heading,
+        "numberOfItems": result["total"],
+        "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": frappe.utils.get_url("/" + r.route),
+                             "name": r.title} for i, r in enumerate(result["results"])]})
+    context.filters_active = len([c for c in context.chips if c["key"] not in ("q",)])
+    context.page_links = catalog.page_links(page, context.total_pages)
+    context.qs_base = catalog.query_string(args, view)
+    context.sel = {k: csv(args.get(k)) for k in catalog.MULTI_KEYS}
     context.map_lat = settings.get("map_default_lat") or 23.588
     context.map_lng = settings.get("map_default_lng") or 58.3829
     context.map_zoom = settings.get("map_default_zoom") or 11
-    context.title = context.portal_title
-    context.metatags = {"title": context.portal_title, "description": settings.portal_tagline or ""}
+    context.facet_json = json.dumps({"price": context.price_bounds, "localities": context.facets["localities"]})
     return context
+
+
+def _meta(title, description, url, image=None):
+    meta = {"title": title, "description": description, "og:title": title, "og:description": description,
+            "og:type": "website", "og:url": url, "twitter:card": "summary_large_image" if image else "summary"}
+    if image:
+        meta["og:image"] = frappe.utils.get_url(image)
+    return meta

@@ -1,0 +1,54 @@
+{# Result cards for the public property site. Used by the page render and by the search_results
+   endpoint, so the first page and every later page look the same.
+   Context: rows, layout ("grid" or "list"), saved (set of listing names), currency, new_after (date). #}
+{% for r in rows %}
+{% set photos = r.photos or [] %}
+{% set place = [r.locality, r.city]|select|join(", ") %}
+<article class="pc pc-{{ layout }}" data-name="{{ r.name }}" data-lat="{{ r.latitude or '' }}" data-lng="{{ r.longitude or '' }}">
+  <div class="pc-media">
+    <a class="pc-photo" href="/{{ r.route }}" tabindex="-1" aria-hidden="true">
+      {% if photos %}
+      {% for img in photos %}
+      <img class="pc-slide {{ 'on' if loop.first }}" {% if loop.first %}src="{{ img }}"{% else %}data-src="{{ img }}"{% endif %}
+           alt="{{ r.title }}{% if place %} – {{ place }}{% endif %}{% if not loop.first %} ({{ loop.index }}){% endif %}"
+           loading="lazy" decoding="async" width="640" height="480">
+      {% endfor %}
+      {% else %}
+      <span class="pc-noimg"><svg class="i i-lg"><use href="#i-image"/></svg>{{ _("Photos coming soon") }}</span>
+      {% endif %}
+    </a>
+    <div class="pc-badges">
+      <span class="eb eb-dark">{{ _("For rent") if r.listing_type == "Rent" else _("For sale") }}</span>
+      {% if r.featured %}<span class="eb eb-gold">{{ _("Featured") }}</span>{% endif %}
+      {% if r.published_on and r.published_on|string >= new_after %}<span class="eb eb-teal">{{ _("New") }}</span>{% endif %}
+      {% if r.development_status == "Under Development" %}<span class="eb eb-light">{{ _("Under construction") }}</span>{% endif %}
+      {% if r.permit_number %}<span class="eb eb-light">{{ _("Permit on file") }}</span>{% endif %}
+    </div>
+    <button type="button" class="pc-heart {{ 'on' if r.name in saved }}" data-listing="{{ r.name }}"
+            aria-pressed="{{ 'true' if r.name in saved else 'false' }}" aria-label="{{ _('Save') }}: {{ r.title }}">
+      <svg class="i"><use href="#i-heart"/></svg></button>
+    {% if photos|length > 1 %}
+    <button type="button" class="pc-nav pc-prev" aria-label="{{ _('Previous photo') }}"><svg class="i"><use href="#i-chev-l"/></svg></button>
+    <button type="button" class="pc-nav pc-next" aria-label="{{ _('Next photo') }}"><svg class="i"><use href="#i-chev-r"/></svg></button>
+    <span class="pc-count"><svg class="i"><use href="#i-camera"/></svg><b class="pc-pos">1</b>/{{ photos|length }}</span>
+    {% endif %}
+  </div>
+  <div class="pc-body">
+    <div class="pc-price">{{ currency }} {{ amount(r.headline_price) }}{% if r.price_period %} <small>{{ _(r.price_period) }}</small>{% endif %}</div>
+    <h3 class="pc-title"><a href="/{{ r.route }}">{{ r.title }}</a></h3>
+    {% if place %}<div class="pc-place"><svg class="i"><use href="#i-pin"/></svg>{{ place }}</div>{% endif %}
+    <ul class="pc-specs">
+      {% if r.unit_type %}<li><svg class="i"><use href="#i-building"/></svg>{{ _(r.unit_type) }}</li>{% endif %}
+      {% if r.bedrooms and r.bedrooms > 0 %}<li><svg class="i"><use href="#i-bed"/></svg>{{ r.bedrooms }} <span>{{ _("bed") }}</span></li>{% endif %}
+      {% if r.bathrooms and r.bathrooms > 0 %}<li><svg class="i"><use href="#i-bath"/></svg>{{ r.bathrooms }} <span>{{ _("bath") }}</span></li>{% endif %}
+      {% if r.area_sqm %}<li><svg class="i"><use href="#i-area"/></svg>{{ r.area_sqm|int }} <span>{{ _("sqm") }}</span></li>{% endif %}
+      {% if r.furnishing %}<li class="pc-furn">{{ _(r.furnishing) }}</li>{% endif %}
+    </ul>
+    {% if r.excerpt %}<p class="pc-excerpt">{{ r.excerpt }}</p>{% endif %}
+    <div class="pc-foot">
+      <label class="pc-compare"><input type="checkbox" class="compare-box" data-listing="{{ r.name }}" data-title="{{ r.title }}"><span>{{ _("Compare") }}</span></label>
+      <a class="eb-btn eb-btn-sm" href="/{{ r.route }}">{{ _("View details") }}<svg class="i i-dir"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</article>
+{% endfor %}

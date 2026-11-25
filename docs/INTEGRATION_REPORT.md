@@ -251,3 +251,18 @@ Defects found and fixed in this round:
 | Live providers | WhatsApp, AI and speech calls were tested with mocked providers (request shape, logging, budgets). Live calls need the client's accounts and are part of user acceptance testing. |
 | Map tiles | The default OpenStreetMap tile server suits light use; a busy public site should use a commercial or self-hosted tile service (setting in RE Portal Settings). |
 | Load test scope | Measured on one 2 vCPU server with the load generator on the same machine; repeat on the client's production hardware before go-live (`scripts/load/`). |
+
+
+## 13. Release 1.3 – public site redesign
+
+The public `/properties` experience and the property page were rebuilt on the existing records, with no new frontend framework and no DocType renames.
+
+**Schema (additive only).** `Listing.usage` and `Listing.development_status` (read-only, copied from the unit or property and kept in step by `portal/sync.py`; patch `v1_3.listing_facets` fills existing rows); `Saved Search.search_params` (the full filter set as JSON); search indexes on listing city, locality, price and publish date.
+
+**Backend.** `portal/api/catalog.py` (cached counts, categories, facets, home data, translated filter chips, server-rendered result cards, suggestions); `portal/site.py` (header, footer, navigation and language context); `listing_query()` extends `build_filters()` with category, usage, development status, featured, new, permit, project, amenities (all selected), multi-value type/city/area/furnishing and map bounds. Existing endpoints and arguments are unchanged; saved searches without the new JSON keep working.
+
+**Front end.** One design system (`portal.css`, `eb-*`/`pc-*`, logical properties for RTL), four small scripts, a Leaflet price-pin map (tiles configurable in RE Portal Settings), lightbox gallery, sticky inquiry card and mobile bar.
+
+**Verification.** 85 integration tests (7 new) and the Arabic coverage test pass; the visitor browser flow (sign up, save, save search, compare, viewing, lease request, account) passes; desktop, mobile (390 px) and Arabic RTL pages show no horizontal overflow or console errors apart from blocked map tiles in the sandbox.
+
+**Limits (data, not code).** Listings have no verified flag, so the site offers a "Permit on file" filter and badge instead (the hero text mentions verified listings as specified; review it before launch). There is no developer, possession date, agent or posted-by data, so New projects means properties under development and agents are not shown. Categories are the unit types in use (no plots, independent houses or "luxury"; Premium means highest priced). No image thumbnails are generated. Social links come from Website Settings footer items.

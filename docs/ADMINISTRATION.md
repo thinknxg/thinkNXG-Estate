@@ -116,7 +116,7 @@ at `/owner-portal`).
 
 | URL | Audience |
 |---|---|
-| `/properties` | Public property search with grid and map views, wishlist hearts, compare and saved searches (`/listings` redirects here) |
+| `/properties` | Public site: home page (search, categories, featured, locations, new projects, premium), filtered search with grid, list and map views, wishlist, compare and saved-search alerts (`/listings` redirects here). English and Arabic with RTL. Sections with no data are hidden. |
 | `/property/<route>` | Listing page: photos, location map, payment plan, enquiry, viewing request, lease request for signed-in visitors |
 | `/properties/account` | Visitor sign-in / sign-up, saved properties, saved searches, enquiries, viewings and lease requests |
 | `/properties/compare` | Up to three listings side by side |

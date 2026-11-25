@@ -1,0 +1,51 @@
+<footer class="eb-footer">
+  <div class="eb-wrap">
+    <div class="eb-foot-grid">
+      <div class="eb-foot-about">
+        <a class="eb-brand eb-brand-light" href="/properties"><img src="/assets/thinknxg_estate/images/thinknxg_estate_logo.svg" alt="" width="34" height="34"><span>think<b>NXG</b> <em>Estate</em></span></a>
+        <p>{{ site.tagline or _("Discover properties to rent and buy, and request a viewing online.") }}</p>
+        <ul class="eb-foot-contact">
+          {% if site.email %}<li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>{% endif %}
+          {% if site.whatsapp %}<li dir="ltr"><a href="https://wa.me/{{ site.whatsapp | replace('+','') | replace(' ','') }}" rel="noopener" target="_blank">{{ site.whatsapp }}</a></li>{% endif %}
+        </ul>
+      </div>
+      <div>
+        <h4>{{ _("Explore") }}</h4>
+        <ul>
+          {% for n in site.nav %}<li><a href="{{ n.url }}">{{ n.label }}</a></li>{% endfor %}
+          <li><a href="/properties">{{ _("All properties") }}</a></li>
+        </ul>
+      </div>
+      {% if site.cities %}
+      <div>
+        <h4>{{ _("Popular locations") }}</h4>
+        <ul>{% for c in site.cities[:6] %}<li><a href="/properties?city={{ c.value|urlencode }}">{{ c.value }}</a></li>{% endfor %}</ul>
+      </div>
+      {% endif %}
+      <div>
+        <h4>{{ _("For owners") }}</h4>
+        <ul>
+          <li><a href="{{ '/owner-portal' if site.owner_portal else '/contact' }}">{{ _("List your property") }}</a></li>
+          {% if site.owner_portal %}<li><a href="/owner-portal">{{ _("Owner portal") }}</a></li>{% endif %}
+          <li><a href="/contact">{{ _("Contact us") }}</a></li>
+        </ul>
+      </div>
+      {% if site.footer_links %}
+      <div>
+        <h4>{{ _("More") }}</h4>
+        <ul>{% for l in site.footer_links %}<li><a href="{{ l.url }}">{{ l.label }}</a></li>{% endfor %}</ul>
+      </div>
+      {% endif %}
+    </div>
+    <div class="eb-foot-base">
+      <span>© {{ frappe.utils.getdate().year }} {{ site.title }}</span>
+      <span class="eb-foot-legal">{% for l in site.legal %}<a href="{{ l.url }}">{{ l.label }}</a>{% endfor %}</span>
+      <span>{{ _("Powered by") }} <a href="https://thinknxg.com" rel="noopener" target="_blank">thinkNXG</a></span>
+    </div>
+  </div>
+</footer>
+<div class="eb-comparebar" id="comparebar">
+  <span id="compare-count"></span>
+  <a class="eb-btn eb-btn-sm" id="compare-go" href="#">{{ _("Compare") }}</a>
+  <button type="button" class="eb-linkbtn" id="compare-clear">{{ _("Clear") }}</button>
+</div>

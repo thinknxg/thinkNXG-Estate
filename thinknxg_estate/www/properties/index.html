@@ -1,231 +1,36 @@
-{% extends "templates/web.html" %}
-{% block head_include %}
-<link rel="stylesheet" href="/assets/thinknxg_estate/vendor/leaflet/leaflet.css">
+{% extends "templates/estate/base.html" %}
+{% block head_extra %}
+{% if mode == "results" and view == "map" %}<link rel="stylesheet" href="/assets/thinknxg_estate/vendor/leaflet/leaflet.css">{% endif %}
+<link rel="canonical" href="{{ canonical }}">
+<script type="application/ld+json">{{ jsonld | safe }}</script>
 {% endblock %}
-{% block page_content %}
-<div class="estate-page py-4">
-  <div class="estate-toolbar">
-    <div>
-      <h1 class="mb-1">{{ portal_title }}</h1>
-      {% if portal_tagline %}<p class="text-muted mb-0">{{ portal_tagline }}</p>{% endif %}
-    </div>
-    <a class="estate-btn secondary" href="/properties/account">{{ _("My account") if is_visitor else _("Sign in") }}</a>
-  </div>
-
-  <form method="get" class="estate-card estate-search" id="search-form">
-    <input type="hidden" name="view" value="{{ view }}">
-    <div><label>{{ _("Rent or buy") }}</label>
-      <select name="listing_type" class="estate-field">
-        <option value="">{{ _("Any") }}</option>
-        {% for t in ["Rent", "Sale"] %}<option value="{{ t }}" {{ "selected" if args.listing_type == t }}>{{ _(t) }}</option>{% endfor %}
-      </select></div>
-    <div><label>{{ _("City") }}</label>
-      <select name="city" class="estate-field">
-        <option value="">{{ _("Any") }}</option>
-        {% for c in cities %}<option value="{{ c }}" {{ "selected" if args.city == c }}>{{ c }}</option>{% endfor %}
-      </select></div>
-    <div><label>{{ _("Property type") }}</label>
-      <select name="unit_type" class="estate-field">
-        <option value="">{{ _("Any") }}</option>
-        {% for ut in unit_types %}<option value="{{ ut }}" {{ "selected" if args.unit_type == ut }}>{{ _(ut) }}</option>{% endfor %}
-      </select></div>
-    <div><label>{{ _("Bedrooms") }}</label>
-      <select name="bedrooms" class="estate-field">
-        <option value="">{{ _("Any") }}</option>
-        {% for b in ["1","2","3","4"] %}<option value="{{ b }}" {{ "selected" if args.bedrooms == b }}>{{ b }}+</option>{% endfor %}
-      </select></div>
-    <div><label>{{ _("Min price") }} ({{ currency }})</label>
-      <input type="number" min="0" name="min_price" class="estate-field" value="{{ args.min_price or '' }}"></div>
-    <div><label>{{ _("Max price") }} ({{ currency }})</label>
-      <input type="number" min="0" name="max_price" class="estate-field" value="{{ args.max_price or '' }}"></div>
-    <div><label>{{ _("Sort by") }}</label>
-      <select name="sort" class="estate-field">
-        {% for key, label in sorts %}<option value="{{ key }}" {{ "selected" if args.sort == key }}>{{ label }}</option>{% endfor %}
-      </select></div>
-    <div><button class="estate-btn w-100" type="submit">{{ _("Search") }}</button></div>
-    <details {{ "open" if more_open }}>
-      <summary>{{ _("More filters") }}</summary>
-      <div class="estate-more">
-        <div><label>{{ _("Area / locality") }}</label>
-          <select name="locality" class="estate-field">
-            <option value="">{{ _("Any") }}</option>
-            {% for l in localities %}<option value="{{ l }}" {{ "selected" if args.locality == l }}>{{ l }}</option>{% endfor %}
-          </select></div>
-        <div><label>{{ _("Bathrooms") }}</label>
-          <select name="bathrooms" class="estate-field">
-            <option value="">{{ _("Any") }}</option>
-            {% for b in ["1","2","3","4"] %}<option value="{{ b }}" {{ "selected" if args.bathrooms == b }}>{{ b }}+</option>{% endfor %}
-          </select></div>
-        <div><label>{{ _("Furnishing") }}</label>
-          <select name="furnishing" class="estate-field">
-            <option value="">{{ _("Any") }}</option>
-            {% for f in furnishings %}<option value="{{ f }}" {{ "selected" if args.furnishing == f }}>{{ _(f) }}</option>{% endfor %}
-          </select></div>
-        <div><label>{{ _("Min area (sqm)") }}</label>
-          <input type="number" min="0" name="min_area" class="estate-field" value="{{ args.min_area or '' }}"></div>
-        <div><label>{{ _("Max area (sqm)") }}</label>
-          <input type="number" min="0" name="max_area" class="estate-field" value="{{ args.max_area or '' }}"></div>
-      </div>
-    </details>
-  </form>
-
-  <div class="estate-toolbar">
-    <span class="count">{{ _("{0} properties found").format(total) }}</span>
-    <div class="d-flex gap-2 align-items-center flex-wrap">
-      <button type="button" class="estate-btn secondary" id="save-search">{{ _("Save this search") }}</button>
-      <div class="estate-seg" role="tablist">
-        <a href="?{{ query }}{{ '&' if query }}view=grid" class="{{ 'active' if view == 'grid' }}">{{ _("Grid") }}</a>
-        <a href="?{{ query }}{{ '&' if query }}view=map" class="{{ 'active' if view == 'map' }}">{{ _("Map") }}</a>
-      </div>
-    </div>
-  </div>
-
-  {% if view == "map" %}
-  <div id="estate-map" class="estate-map" data-query="{{ query }}"></div>
-  <p class="small text-muted mt-2" id="map-note"></p>
-  {% elif results %}
-  <div class="estate-grid">
-    {% for r in results %}
-    <div class="estate-listing">
-      <a href="/{{ r.route }}">
-        {% if r.cover %}<div class="cover" style="background-image:url('{{ r.cover }}')"></div>
-        {% else %}<div class="cover empty">{{ _("No photo yet") }}</div>{% endif %}
-        <div class="body">
-          <div class="title">{{ r.title }}</div>
-          <div class="place">{{ r.locality or "" }}{{ ", " if r.locality and r.city }}{{ r.city or "" }}</div>
-          <div class="price">{{ currency }} {{ amount(r.headline_price) }} <small>{{ _(r.price_period or "") }}</small></div>
-          <div class="specs">{{ _(r.unit_type or "") }}{% if r.bedrooms and r.bedrooms > 0 %} · {{ r.bedrooms }} {{ _("bed") }}{% endif %}{% if r.bathrooms and r.bathrooms > 0 %} · {{ r.bathrooms }} {{ _("bath") }}{% endif %}{% if r.area_sqm %} · {{ r.area_sqm|int }} {{ _("sqm") }}{% endif %}</div>
-        </div>
-      </a>
-      <div class="badges">
-        <span class="estate-badge">{{ _(r.listing_type) }}</span>
-        {% if r.featured %}<span class="estate-badge ok">{{ _("Featured") }}</span>{% endif %}
-      </div>
-      <button type="button" class="estate-heart {{ 'on' if r.name in saved }}" data-listing="{{ r.name }}"
-              aria-label="{{ _('Save') }}" title="{{ _('Save') }}">&#9829;</button>
-      <div class="foot">
-        <label class="estate-compare-check"><input type="checkbox" class="compare-box" data-listing="{{ r.name }}"
-               data-title="{{ r.title }}"> {{ _("Compare") }}</label>
-        <a href="/{{ r.route }}">{{ _("View details") }} &rarr;</a>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-  {% if total_pages > 1 %}
-  <nav class="estate-pages">
-    {% for p in range(1, total_pages + 1) %}
-    <a href="?{{ query }}{{ '&' if query }}page={{ p }}" class="{{ 'active' if p == page }}">{{ p }}</a>
-    {% endfor %}
-  </nav>
-  {% endif %}
-  {% else %}
-  <div class="estate-empty">{{ _("No properties match these filters. Try widening your search, or save it and we'll email you when something comes up.") }}</div>
-  {% endif %}
-</div>
-
-<div class="estate-comparebar" id="comparebar">
-  <span id="compare-count"></span>
-  <a class="estate-btn" id="compare-go" href="#">{{ _("Compare") }}</a>
-  <button type="button" class="link" id="compare-clear">{{ _("Clear") }}</button>
-</div>
-<div class="estate-toast" id="toast"></div>
+{% block site_content %}
+{% if mode == "home" %}{% include "templates/estate/home.html" %}{% else %}{% include "templates/estate/results.html" %}{% endif %}
 {% endblock %}
-{% block script %}
-{{ super() }}
-<script src="/assets/thinknxg_estate/vendor/leaflet/leaflet.js"></script>
+{% block page_script %}
+{% if mode == "home" %}
 <script>
-(function () {
-  var T = {
-    signin: {{ _("Please sign in to save properties and searches.") | tojson }},
-    saved: {{ _("Saved") | tojson }}, removed: {{ _("Removed from saved") | tojson }},
-    searchSaved: {{ _("Search saved. We'll email you new matches.") | tojson }},
-    error: {{ _("Something went wrong. Please try again.") | tojson }},
-    compareMax: {{ _("You can compare up to three properties.") | tojson }},
-    selected: {{ _("{0} selected") | tojson }},
-    noPins: {{ _("{0} of {1} matching properties have a map location.") | tojson }},
-    view: {{ _("View details") | tojson }}
-  };
-  var isVisitor = {{ "true" if is_visitor else "false" }};
-  function toast(msg) {
-    var t = document.getElementById("toast"); t.innerText = msg; t.style.display = "block";
-    clearTimeout(t._h); t._h = setTimeout(function () { t.style.display = "none"; }, 2600);
-  }
-  function needSignIn() {
-    toast(T.signin);
-    setTimeout(function () { location.href = "/properties/account?next=" + encodeURIComponent(location.pathname + location.search); }, 900);
-  }
-  function call(method, args, ok) {
-    frappe.call({ method: method, args: args, type: "POST",
-      callback: function (r) { ok && ok(r.message); },
-      error: function (r) { if (r && r.status === 403) { needSignIn(); } else { toast(T.error); } } });
-  }
-
-  // Wishlist hearts
-  document.querySelectorAll(".estate-heart").forEach(function (btn) {
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-      if (!isVisitor) { return needSignIn(); }
-      call("thinknxg_estate.portal.api.visitor.toggle_wishlist", { listing: btn.dataset.listing }, function (m) {
-        btn.classList.toggle("on", !!m.saved); toast(m.saved ? T.saved : T.removed);
-      });
-    });
-  });
-
-  // Save search
-  document.getElementById("save-search").addEventListener("click", function () {
-    if (!isVisitor) { return needSignIn(); }
-    var f = new FormData(document.getElementById("search-form")), args = {};
-    ["city", "unit_type", "bedrooms", "min_price", "max_price"].forEach(function (k) { args[k] = f.get(k) || ""; });
-    call("thinknxg_estate.portal.api.visitor.save_search", args, function () { toast(T.searchSaved); });
-  });
-
-  // Compare (remembered in this browser only)
-  var KEY = "estate_compare";
-  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { return []; } }
-  function store(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
-  var picked = load();
-  function paint() {
-    var bar = document.getElementById("comparebar");
-    bar.classList.toggle("show", picked.length > 0);
-    document.getElementById("compare-count").innerText = T.selected.replace("{0}", picked.length);
-    document.getElementById("compare-go").href = "/properties/compare?l=" + picked.map(encodeURIComponent).join(",");
-    document.querySelectorAll(".compare-box").forEach(function (b) { b.checked = picked.indexOf(b.dataset.listing) > -1; });
-  }
-  document.querySelectorAll(".compare-box").forEach(function (b) {
-    b.addEventListener("change", function () {
-      var i = picked.indexOf(b.dataset.listing);
-      if (b.checked && i < 0) { if (picked.length >= 3) { b.checked = false; return toast(T.compareMax); } picked.push(b.dataset.listing); }
-      if (!b.checked && i > -1) { picked.splice(i, 1); }
-      store(picked); paint();
-    });
-  });
-  document.getElementById("compare-clear").addEventListener("click", function () { picked = []; store(picked); paint(); });
-  paint();
-
-  // Map view
-  var el = document.getElementById("estate-map");
-  if (el && window.L) {
-    var map = L.map(el, { scrollWheelZoom: false });
-    L.tileLayer({{ map_tile_url | tojson }}, { maxZoom: 19, attribution: {{ map_attribution | tojson }} }).addTo(map);
-    map.setView([{{ map_lat }}, {{ map_lng }}], {{ map_zoom }});
-    L.Icon.Default.imagePath = "/assets/thinknxg_estate/vendor/leaflet/images/";
-    var params = new URLSearchParams(el.dataset.query); var args = {};
-    params.forEach(function (v, k) { args[k] = v; });
-    frappe.call({ method: "thinknxg_estate.portal.api.listings.map_points", args: args, callback: function (r) {
-      var m = r.message, bounds = [];
-      function esc(s) { var d = document.createElement("div"); d.innerText = s == null ? "" : String(s); return d.innerHTML; }
-      m.points.forEach(function (p) {
-        var html = '<div class="estate-map-pop">' + (p.cover ? '<img src="' + encodeURI(p.cover) + '" alt="">' : "") +
-          "<strong>" + esc(p.title) + "</strong>" + esc(m.currency) + " " + esc(Number(p.headline_price || 0).toLocaleString()) +
-          " <small>" + esc(p.price_period || "") + "</small><br><small>" + esc([p.unit_type, p.locality, p.city].filter(Boolean).join(" · ")) +
-          '</small><br><a href="/' + encodeURI(p.route) + '">' + esc(T.view) + " &rarr;</a></div>";
-        L.marker([p.lat, p.lng]).addTo(map).bindPopup(html);
-        bounds.push([p.lat, p.lng]);
-      });
-      if (bounds.length) { map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 }); }
-      document.getElementById("map-note").innerText = T.noPins.replace("{0}", m.points.length).replace("{1}", m.matching);
-    }});
-  }
-})();
+window.ESTATE_HOME = { price: {{ price_bounds | tojson }}, currency: {{ site.currency | tojson }},
+  T: { any: {{ _("Any budget") | tojson }}, upTo: {{ _("Up to {0}") | tojson }}, over: {{ _("{0} and above") | tojson }},
+       places: {{ _("Locations") | tojson }}, projects: {{ _("Properties") | tojson }}, cities: {{ _("Cities") | tojson }}, areas: {{ _("Areas") | tojson }}, listing: {{ _("Properties") | tojson }},
+       recent: {{ _("Recent searches") | tojson }} } };
 </script>
+<script src="/assets/thinknxg_estate/js/estate_home.js"></script>
+{% else %}
+{% if view == "map" %}<script src="/assets/thinknxg_estate/vendor/leaflet/leaflet.js"></script>{% endif %}
+<script>
+window.ESTATE_SEARCH = {
+  view: {{ view | tojson }}, page: {{ page }}, args: {{ args | tojson }}, currency: {{ site.currency | tojson }},
+  price: {{ price_bounds | tojson }}, localities: {{ facets.localities | tojson }},
+  tile: {{ site.map_tile_url | tojson }}, attribution: {{ site.map_attribution | tojson }},
+  center: [{{ map_lat }}, {{ map_lng }}], zoom: {{ map_zoom }},
+  T: { summary: {{ _("{0} properties found") | tojson }}, searchSaved: {{ _("Search saved. We'll email you new matches.") | tojson }},
+       saveNeed: {{ _("Choose at least one filter before saving a search.") | tojson }},
+       showMap: {{ _("Show map") | tojson }}, showList: {{ _("Show list") | tojson }}, view: {{ _("View details") | tojson }},
+       pins: {{ _("{0} of {1} properties have a map location.") | tojson }}, noPins: {{ _("None of these properties has a map location yet.") | tojson }},
+       any: {{ _("Any") | tojson }}, properties: {{ _("Properties") | tojson }}, cities: {{ _("Cities") | tojson }}, areas: {{ _("Areas") | tojson }} }
+};
+</script>
+<script src="/assets/thinknxg_estate/js/estate_search.js"></script>
+{% endif %}
 {% endblock %}

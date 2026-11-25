@@ -782,24 +782,31 @@ def check_saved_searches():
     """Scheduled job (daily): for each enabled Saved Search, find listings published or
     updated since last_checked that match the criteria, notify the visitor by email and
     Notification Log, then advance last_checked."""
-    from thinknxg_estate.portal.api.listings import build_filters
+    from thinknxg_estate.portal.api.listings import build_filters, listing_query
 
     searches = frappe.get_all(
         "Saved Search",
         filters={"enabled": 1},
-        fields=["name", "lead", "location", "unit_type", "bedrooms", "min_rent", "max_rent", "last_checked"],
+        fields=["name", "lead", "location", "unit_type", "bedrooms", "min_rent", "max_rent", "last_checked",
+                "search_params"],
     )
 
     for s in searches:
-        filters = build_filters(unit_type=s.unit_type, bedrooms=s.bedrooms, min_price=s.min_rent,
-                                max_price=s.max_rent)
+        saved = _saved_params(s.search_params)
+        if saved:
+            # Saved from the redesigned /properties: every filter of the search is stored.
+            query = listing_query(**saved)
+            filters, or_filters = query["filters"], query.get("or_filters")
+        else:
+            filters = build_filters(unit_type=s.unit_type, bedrooms=s.bedrooms, min_price=s.min_rent,
+                                    max_price=s.max_rent)
+            or_filters = None
+            if s.location:
+                city, _sep, rest = s.location.partition(", ")
+                # A legacy saved location may be "Area, City"; match either part.
+                or_filters = {"city": rest or city, "locality": city}
         if s.last_checked:
             filters["modified"] = [">", s.last_checked]
-        or_filters = None
-        if s.location:
-            city, _sep, rest = s.location.partition(", ")
-            # A legacy saved location may be "Area, City"; match either part.
-            or_filters = {"city": rest or city, "locality": city}
         matches = frappe.get_all("Listing", filters=filters, or_filters=or_filters,
                                  fields=["name", "title", "route", "headline_price", "city", "locality"],
                                  order_by="published_on desc", limit=20)
@@ -809,6 +816,15 @@ def check_saved_searches():
         frappe.db.set_value("Saved Search", s.name, "last_checked", frappe.utils.now())
 
     frappe.db.commit()
+
+
+def _saved_params(raw):
+    """The filters stored with a saved search, as a dict (empty for older searches)."""
+    try:
+        data = frappe.parse_json(raw) if raw else {}
+    except Exception:
+        return {}
+    return data if isinstance(data, dict) else {}
 
 
 def _notify_saved_search_match(search, matches):
@@ -847,11 +863,13 @@ def _notify_saved_search_match(search, matches):
 
 
 @frappe.whitelist()
-def create_saved_search(location=None, unit_type=None, bedrooms=None, min_rent=None, max_rent=None):
+def create_saved_search(location=None, unit_type=None, bedrooms=None, min_rent=None, max_rent=None,
+                        search_params=None):
     identity = _get_identity_for_current_user()
     doc = frappe.get_doc({
         "doctype": "Saved Search",
         "lead": identity["lead"],
+        "search_params": search_params,
         "location": location,
         "unit_type": unit_type,
         "bedrooms": bedrooms,
@@ -871,7 +889,8 @@ def get_my_saved_searches():
     return frappe.get_all(
         "Saved Search",
         filters={"lead": identity["lead"]},
-        fields=["name", "location", "unit_type", "bedrooms", "min_rent", "max_rent", "enabled", "creation"],
+        fields=["name", "location", "unit_type", "bedrooms", "min_rent", "max_rent", "enabled", "creation",
+                "search_params"],
         order_by="creation desc",
     )
 

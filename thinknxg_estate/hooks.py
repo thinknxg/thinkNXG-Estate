@@ -98,6 +98,10 @@ doc_events = {
 	"Lease Contract": {
 		"on_submit": "thinknxg_estate.estate_portal.doctype.listing.listing.unpublish_unit_listings",
 	},
+	"Listing": {
+		"on_update": "thinknxg_estate.portal.api.catalog.clear_cache",
+		"on_trash": "thinknxg_estate.portal.api.catalog.clear_cache",
+	},
 	"Property": {"on_update": "thinknxg_estate.portal.sync.sync_property_on_update"},
 	"Unit": {"on_update": "thinknxg_estate.portal.sync.sync_unit_on_update"},
 	"Site Visit": {"on_update": "thinknxg_estate.voice.events.on_site_visit_update"},

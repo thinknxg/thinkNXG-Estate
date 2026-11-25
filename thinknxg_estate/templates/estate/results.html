@@ -1,0 +1,171 @@
+{# Search page of /properties: filter sidebar, toolbar, active chips, results and map. #}
+{% macro opt(name, value, label, count, checked) %}
+<label class="eb-opt"><input type="checkbox" name="{{ name }}" value="{{ value }}" {{ "checked" if checked }}><span>{{ label }}</span>{% if count is not none %}<small>{{ count }}</small>{% endif %}</label>
+{% endmacro %}
+{% macro pills(name, items, current) %}
+<div class="eb-pills" data-pills="{{ name }}">
+  {% for value, label in items %}<button type="button" class="eb-pill {{ 'on' if (current or '')|string|lower == value|string|lower }}" data-value="{{ value }}">{{ label }}</button>{% endfor %}
+</div>
+{% endmacro %}
+{% set a = args %}
+
+<div class="eb-results-top">
+  <div class="eb-wrap">
+    <form class="eb-quick" id="quick-search" role="search" onsubmit="return false">
+      <div class="eb-qsearch">
+        <svg class="i"><use href="#i-search"/></svg>
+        <input type="search" id="f-q" name="q" value="{{ a.q or '' }}" placeholder="{{ _('Search by city, area or property name') }}" aria-label="{{ _('Search') }}" autocomplete="off">
+        <div class="eb-suggest" id="q-suggest" role="listbox"></div>
+      </div>
+      <div class="eb-seg" id="purpose-seg" role="group" aria-label="{{ _('Purpose') }}">
+        <button type="button" data-value="" class="{{ 'on' if not a.listing_type }}">{{ _("All") }}</button>
+        {% if site.counts.Rent %}<button type="button" data-value="Rent" class="{{ 'on' if a.listing_type == 'Rent' }}">{{ _("Rent") }}</button>{% endif %}
+        {% if site.counts.Sale %}<button type="button" data-value="Sale" class="{{ 'on' if a.listing_type == 'Sale' }}">{{ _("Buy") }}</button>{% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="{{ 'eb-maprow' if view == 'map' else 'eb-wrap' }}">
+  <div class="eb-layout {{ 'map' if view == 'map' }}">
+    {# ---------------- filter sidebar / mobile drawer ---------------- #}
+    <div class="eb-fback" id="filters-back"></div>
+    <aside class="eb-filters" id="filters" aria-label="{{ _('Filters') }}">
+      <div class="eb-f-head"><h2>{{ _("Filters") }}</h2>
+        <div><button type="button" class="eb-linkbtn" id="clear-all">{{ _("Clear all") }}</button>
+          <button type="button" class="eb-iconbtn eb-fclose" id="filters-close" aria-label="{{ _('Close') }}"><svg class="i"><use href="#i-x"/></svg></button></div>
+      </div>
+      <form class="eb-f-body" id="filter-form" onsubmit="return false">
+        <details class="eb-fg" open>
+          <summary>{{ _("Purpose") }}<svg class="i"><use href="#i-chev-d"/></svg></summary>
+          <div class="eb-fg-body">
+            {{ pills("listing_type", [("", _("Any")), ("Rent", _("Rent")), ("Sale", _("Buy"))], a.listing_type) }}
+            {% if facets.unit_types and site.counts.Commercial %}
+            {{ pills("usage", [("", _("Any use")), ("Residential", _("Residential")), ("Commercial", _("Commercial"))], a.usage) }}
+            {% endif %}
+          </div>
+        </details>
+        {% if facets.cities %}
+        <details class="eb-fg" open>
+          <summary>{{ _("Location") }}<svg class="i"><use href="#i-chev-d"/></svg></summary>
+          <div class="eb-fg-body">
+            {% if facets.cities|length > 6 %}<input type="search" class="eb-fsearch" data-filter-list="#city-list" placeholder="{{ _('Search cities') }}" aria-label="{{ _('Search cities') }}">{% endif %}
+            <div class="eb-scroll" id="city-list">{% for c in facets.cities %}{{ opt("city", c.value, c.value, c.count, c.value in sel.city) }}{% endfor %}</div>
+            {% if facets.localities %}
+            <label class="eb-flabel" style="margin-top:10px">{{ _("Area / locality") }}</label>
+            <input type="search" class="eb-fsearch" data-filter-list="#locality-list" placeholder="{{ _('Search areas') }}" aria-label="{{ _('Search areas') }}">
+            <div class="eb-scroll" id="locality-list">{% for l in facets.localities %}<span data-city="{{ l.city or '' }}">{{ opt("locality", l.value, l.value, l.count, l.value in sel.locality) }}</span>{% endfor %}</div>
+            {% endif %}
+          </div>
+        </details>
+        {% endif %}
+        {% if facets.unit_types %}
+        <details class="eb-fg" open>
+          <summary>{{ _("Property type") }}<svg class="i"><use href="#i-chev-d"/></svg></summary>
+          <div class="eb-fg-body">{% for t in facets.unit_types %}{{ opt("unit_type", t.value, _(t.value), t.count, t.value in sel.unit_type) }}{% endfor %}</div>
+        </details>
+        {% endif %}
+        <details class="eb-fg" open>
+          <summary>{{ _("Budget") }} ({{ site.currency }})<svg class="i"><use href="#i-chev-d"/></svg></summary>
+          <div class="eb-fg-body">
+            <div class="eb-range" id="price-range"><div class="eb-range-track"><div class="eb-range-fill"></div></div>
+              <input type="range" id="price-lo" aria-label="{{ _('Minimum price') }}"><input type="range" id="price-hi" aria-label="{{ _('Maximum price') }}"></div>
+            <div class="eb-minmax">
+              <div><label for="min_price">{{ _("Min") }}</label><input type="number" min="0" inputmode="numeric" name="min_price" id="min_price" value="{{ a.min_price or '' }}" placeholder="{{ _('No min') }}"></div>
+              <div><label for="max_price">{{ _("Max") }}</label><input type="number" min="0" inputmode="numeric" name="max_price" id="max_price" value="{{ a.max_price or '' }}" placeholder="{{ _('No max') }}"></div>
+            </div>
+          </div>
+        </details>
+        <details class="eb-fg" open>
+          <summary>{{ _("Bedrooms") }}<svg class="i"><use href="#i-chev-d"/></svg></summary>
+          <div class="eb-fg-body">{{ pills("bedrooms", [("", _("Any")), ("studio", _("Studio")), ("1", "1+"), ("2", "2+"), ("3", "3+"), ("4", "4+"), ("5", "5+")], a.bedrooms) }}</div>
+        </details>
+        <details class="eb-fg" {{ "open" if a.bathrooms }}>
+          <summary>{{ _("Bathrooms") }}<svg class="i"><use href="#i-chev-d"/></svg></summary>
+          <div class="eb-fg-body">{{ pills("bathrooms", [("", _("Any")), ("1", "1+"), ("2", "2+"), ("3", "3+"), ("4", "4+")], a.bathrooms) }}</div>
+        </details>
+        {% if facets.area[1] %}
+        <details class="eb-fg" {{ "open" if a.min_area or a.max_area }}>
+          <summary>{{ _("Area (sqm)") }}<svg class="i"><use href="#i-chev-d"/></svg></summary>
+          <div class="eb-fg-body"><div class="eb-minmax">
+            <div><label for="min_area">{{ _("Min") }}</label><input type="number" min="0" inputmode="numeric" name="min_area" id="min_area" value="{{ a.min_area or '' }}" placeholder="{{ facets.area[0]|int }}"></div>
+            <div><label for="max_area">{{ _("Max") }}</label><input type="number" min="0" inputmode="numeric" name="max_area" id="max_area" value="{{ a.max_area or '' }}" placeholder="{{ facets.area[1]|int }}"></div></div></div>
+        </details>
+        {% endif %}
+        {% if facets.furnishing %}
+        <details class="eb-fg" {{ "open" if sel.furnishing }}>
+          <summary>{{ _("Furnishing") }}<svg class="i"><use href="#i-chev-d"/></svg></summary>
+          <div class="eb-fg-body">{% for f in facets.furnishing %}{{ opt("furnishing", f.value, _(f.value), f.count, f.value in sel.furnishing) }}{% endfor %}</div>
+        </details>
+        {% endif %}
+        {% if facets.amenities %}
+        <details class="eb-fg" {{ "open" if sel.amenity }}>
+          <summary>{{ _("Amenities") }}<svg class="i"><use href="#i-chev-d"/></svg></summary>
+          <div class="eb-fg-body">{% for m in facets.amenities %}{{ opt("amenity", m.value, _(m.value), m.count, m.value in sel.amenity) }}{% endfor %}</div>
+        </details>
+        {% endif %}
+        <details class="eb-fg" {{ "open" if a.featured or a.new or a.permit or a.development_status }}>
+          <summary>{{ _("More options") }}<svg class="i"><use href="#i-chev-d"/></svg></summary>
+          <div class="eb-fg-body">
+            {% if site.counts.projects %}
+            {{ pills("development_status", [("", _("Any status")), ("Ready", _("Ready to move")), ("Under Development", _("Under construction"))], a.development_status) }}
+            {% endif %}
+            {% if facets.featured %}<label class="eb-opt"><input type="checkbox" name="featured" value="1" {{ "checked" if a.featured }}><span>{{ _("Featured only") }}</span><small>{{ facets.featured }}</small></label>{% endif %}
+            {% if facets.new %}<label class="eb-opt"><input type="checkbox" name="new" value="1" {{ "checked" if a.new }}><span>{{ _("New listings (last 30 days)") }}</span><small>{{ facets.new }}</small></label>{% endif %}
+            {% if facets.permit %}<label class="eb-opt"><input type="checkbox" name="permit" value="1" {{ "checked" if a.permit }}><span>{{ _("Permit number on file") }}</span><small>{{ facets.permit }}</small></label>{% endif %}
+          </div>
+        </details>
+      </form>
+      <div class="eb-f-foot"><button type="button" class="eb-btn eb-btn-ghost" id="clear-all-m">{{ _("Clear all") }}</button><button type="button" class="eb-btn" id="apply-filters">{{ _("Show results") }} (<span class="n-total">{{ total }}</span>)</button></div>
+    </aside>
+
+    {# ---------------- results ---------------- #}
+    <section class="eb-results" aria-live="polite">
+      <div class="{{ 'eb-wrap' if view == 'map' else '' }}" {% if view == "map" %}style="padding-top:16px"{% endif %}>
+      <div class="eb-toolbar">
+        <div>
+          <h1 id="r-heading">{{ heading }}</h1>
+          <div class="sub" id="r-summary">{{ _("{0} properties found").format(total) }}</div>
+        </div>
+        <div class="eb-tb-r">
+          <button type="button" class="eb-pillbtn eb-fbtn" id="filters-open"><svg class="i"><use href="#i-sliders"/></svg>{{ _("Filters") }}{% if filters_active %} <b class="eb-dot" style="position:static">{{ filters_active }}</b>{% endif %}</button>
+          <button type="button" class="eb-pillbtn" id="save-search"><svg class="i"><use href="#i-heart"/></svg><span class="eb-hide-sm">{{ _("Save this search") }}</span></button>
+          <select class="eb-select" id="f-sort" aria-label="{{ _('Sort by') }}">
+            {% for key, label in sorts %}<option value="{{ key }}" {{ "selected" if sort == key }}>{{ label }}</option>{% endfor %}
+          </select>
+          <div class="eb-seg" id="view-seg" role="group" aria-label="{{ _('View') }}">
+            <button type="button" data-view="grid" class="{{ 'on' if view == 'grid' }}" aria-label="{{ _('Grid view') }}"><svg class="i"><use href="#i-grid"/></svg><span class="eb-hide-sm">{{ _("Grid") }}</span></button>
+            <button type="button" data-view="list" class="{{ 'on' if view == 'list' }}" aria-label="{{ _('List view') }}"><svg class="i"><use href="#i-list"/></svg><span class="eb-hide-sm">{{ _("List") }}</span></button>
+            <button type="button" data-view="map" class="{{ 'on' if view == 'map' }}" aria-label="{{ _('Map view') }}"><svg class="i"><use href="#i-map"/></svg><span class="eb-hide-sm">{{ _("Map") }}</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="eb-chips" id="chips">
+        {% for c in chips %}<button type="button" class="eb-chip" data-key="{{ c.key }}" data-value="{{ c.value or '' }}">{{ c.label }}<svg class="i"><use href="#i-x"/></svg></button>{% endfor %}
+      </div>
+      </div>
+
+      {% if view == "map" %}
+      <div class="eb-split" id="split">
+        <div class="eb-split-list" id="split-list">
+          <div class="eb-cards" id="cards">{{ cards_html }}</div>
+          <div class="eb-empty" id="empty" {% if results %}hidden{% endif %}>{% include "templates/estate/empty.html" %}</div>
+          <nav class="eb-pager" id="pager">{% include "templates/estate/pager.html" %}</nav>
+        </div>
+        <div class="eb-split-map">
+          <div id="estate-map" role="application" aria-label="{{ _('Map of matching properties') }}"></div>
+          <div class="eb-maptools"><button type="button" id="search-area"><svg class="i"><use href="#i-search"/></svg>{{ _("Search this area") }}</button></div>
+          <div class="eb-mapnote" id="map-note"></div>
+        </div>
+      </div>
+      <button type="button" class="eb-mapfab" id="map-toggle"><svg class="i"><use href="#i-map"/></svg><span>{{ _("Show map") }}</span></button>
+      {% else %}
+      <div>
+        <div class="eb-cards {{ 'list' if view == 'list' }}" id="cards">{{ cards_html }}</div>
+        <div class="eb-empty" id="empty" {% if results %}hidden{% endif %}>{% include "templates/estate/empty.html" %}</div>
+        <nav class="eb-pager" id="pager" aria-label="{{ _('Pages') }}">{% include "templates/estate/pager.html" %}</nav>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+</div>

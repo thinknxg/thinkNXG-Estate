@@ -1,0 +1,60 @@
+<header class="eb-header" id="eb-header">
+  <div class="eb-wrap eb-header-in">
+    <button type="button" class="eb-iconbtn eb-burger" id="eb-burger" aria-label="{{ _('Menu') }}" aria-expanded="false" aria-controls="eb-drawer">
+      <svg class="i"><use href="#i-menu"/></svg></button>
+    <a class="eb-brand" href="/properties" aria-label="{{ _('thinkNXG Estate home') }}">
+      <img src="/assets/thinknxg_estate/images/thinknxg_estate_logo.svg" alt="" width="34" height="34">
+      <span>think<b>NXG</b> <em>Estate</em></span>
+    </a>
+    <nav class="eb-nav" aria-label="{{ _('Main') }}">
+      {% for n in site.nav %}
+      <a href="{{ n.url }}" class="{{ 'on' if site.active == n.key }}" {% if site.active == n.key %}aria-current="page"{% endif %}>{{ n.label }}</a>
+      {% endfor %}
+    </nav>
+    <div class="eb-tools">
+      {% if site.cities %}
+      <div class="eb-menu" data-menu>
+        <button type="button" class="eb-pillbtn" data-menu-btn aria-haspopup="true" aria-expanded="false">
+          <svg class="i"><use href="#i-pin"/></svg><span class="eb-hide-sm">{{ _("Location") }}</span><svg class="i i-sm"><use href="#i-chev-d"/></svg></button>
+        <div class="eb-pop" role="menu">
+          <a role="menuitem" href="/properties">{{ _("All locations") }}</a>
+          {% for c in site.cities %}<a role="menuitem" href="/properties?city={{ c.value|urlencode }}">{{ c.value }} <small>{{ c.count }}</small></a>{% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% if site.other_lang %}
+      <button type="button" class="eb-iconbtn eb-hide-sm" id="eb-lang" data-lang="{{ site.other_lang }}" title="{{ site.other_label }}" aria-label="{{ site.other_label }}">
+        <svg class="i"><use href="#i-globe"/></svg></button>
+      {% endif %}
+      <a class="eb-iconbtn eb-heartlink" href="/properties/account#saved" aria-label="{{ _('Saved properties') }}">
+        <svg class="i"><use href="#i-heart"/></svg>{% if site.saved_count %}<b class="eb-dot">{{ site.saved_count }}</b>{% endif %}</a>
+      {% if site.staff %}
+      <a class="eb-textbtn eb-hide-md" href="/app">{{ _("Open desk") }}</a>
+      {% elif site.visitor %}
+      <a class="eb-textbtn eb-hide-md" href="/properties/account"><svg class="i"><use href="#i-user"/></svg>{{ _("My account") }}</a>
+      {% else %}
+      <a class="eb-textbtn eb-hide-md" href="/properties/account">{{ _("Sign in") }}</a>
+      <a class="eb-textbtn eb-hide-md eb-strong" href="/properties/account#register">{{ _("Register") }}</a>
+      {% endif %}
+      <a class="eb-btn eb-btn-sm eb-hide-sm" href="{{ '/owner-portal' if site.owner_portal else '/contact' }}">{{ _("List your property") }}</a>
+    </div>
+  </div>
+</header>
+<div class="eb-drawer" id="eb-drawer" hidden>
+  <div class="eb-drawer-back" data-close></div>
+  <aside class="eb-drawer-panel" role="dialog" aria-modal="true" aria-label="{{ _('Menu') }}">
+    <div class="eb-drawer-head"><strong>{{ _("Menu") }}</strong>
+      <button type="button" class="eb-iconbtn" data-close aria-label="{{ _('Close') }}"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <nav class="eb-drawer-nav">
+      {% for n in site.nav %}<a href="{{ n.url }}">{{ n.label }}<small>{{ n.count }}</small></a>{% endfor %}
+      <a href="/properties">{{ _("All properties") }}<small>{{ site.counts.total }}</small></a>
+      <hr>
+      {% if site.visitor %}<a href="/properties/account">{{ _("My account") }}</a>
+      {% elif site.staff %}<a href="/app">{{ _("Open desk") }}</a>
+      {% else %}<a href="/properties/account">{{ _("Sign in") }}</a><a href="/properties/account#register">{{ _("Register") }}</a>{% endif %}
+      <a href="/properties/account#saved">{{ _("Saved properties") }}</a>
+      {% if site.other_lang %}<a href="#" data-lang="{{ site.other_lang }}" class="eb-langlink">{{ site.other_label }}</a>{% endif %}
+    </nav>
+    <a class="eb-btn eb-full" href="{{ '/owner-portal' if site.owner_portal else '/contact' }}">{{ _("List your property") }}</a>
+  </aside>
+</div>

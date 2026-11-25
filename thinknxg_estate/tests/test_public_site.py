@@ -200,3 +200,99 @@ class TestRedirect(IntegrationTestCase):
 	def test_old_listings_url_redirects(self):
 		redirects = frappe.get_hooks("website_redirects")
 		self.assertIn({"source": "/listings", "target": "/properties"}, redirects)
+
+
+class TestRedesignedSearch(IntegrationTestCase):
+	"""Backend filters, rendered results, suggestions and saved-search params behind the new /properties."""
+
+	def _listing(self, villa):
+		return published({"property_ref": villa.name, "unit": ["is", "not set"]})
+
+	def test_filters_facets_and_bounds(self):
+		from thinknxg_estate.portal.api.listings import listing_query
+
+		villa = make_villa("RS1", lat=23.6, lng=58.5)
+		name = self._listing(villa)
+
+		def found(**kw):
+			return name in frappe.get_all("Listing", pluck="name", limit_page_length=0, **listing_query(**kw))
+
+		self.assertEqual(frappe.db.get_value("Listing", name, ["usage", "development_status"]),
+		                 (villa.usage, "Ready"))
+		self.assertTrue(found(category="villas"))
+		self.assertTrue(found(unit_type="Villa,Studio", city="Muscat"))
+		self.assertTrue(found(q="Villa RS1"))
+		self.assertFalse(found(q="no-such-place-anywhere"))
+		self.assertTrue(found(north=24, south=23, east=59, west=58))
+		self.assertFalse(found(north=1, south=0, east=1, west=0), "a 0,0 box must not match unlocated properties")
+		self.assertFalse(found(bedrooms=5))
+		self.assertTrue(found(bedrooms=4, bathrooms=3))
+
+	def test_amenity_filter_needs_all_selected(self):
+		from thinknxg_estate.portal.api.listings import listing_query
+
+		villa = make_villa("RS2")
+		name = self._listing(villa)
+		amenity = frappe.get_all("Amenity", pluck="name", limit=2)
+		if len(amenity) < 2:
+			self.skipTest("needs two Amenity records")
+		villa.append("amenities", {"amenity": amenity[0]})
+		villa.save()
+		query = lambda a: name in frappe.get_all("Listing", pluck="name", limit_page_length=0, **listing_query(amenity=a))
+		self.assertTrue(query(amenity[0]))
+		self.assertFalse(query(",".join(amenity)))
+
+	def test_results_html_and_chips(self):
+		from thinknxg_estate.portal.api import catalog
+
+		make_villa("RS3")
+		out = catalog.search_results(page=1, layout="list", city="Muscat", bedrooms="3")
+		self.assertGreater(out["total"], 0)
+		self.assertIn("<article", out["html"])
+		self.assertEqual({c["key"] for c in out["chips"]}, {"city", "bedrooms"})
+		empty = catalog.search_results(page=1, layout="grid", q="zzz-nothing-matches")
+		self.assertEqual(empty["total"], 0)
+		self.assertNotIn("<article", empty["html"])
+
+	def test_suggest_and_parse_args(self):
+		from thinknxg_estate.portal.api import catalog
+
+		make_villa("RS4")
+		items = catalog.suggest("mus")["items"]
+		self.assertTrue(any(i["type"] == "city" and i["value"] == "Muscat" for i in items))
+		self.assertEqual(catalog.suggest("")["items"], [])
+		args = catalog.parse_args({"city": "Muscat", "featured": "0", "south": "0", "north": "1", "junk": "x"})
+		self.assertEqual(args, {"city": "Muscat", "south": "0", "north": "1"})
+
+	def test_saved_search_keeps_full_params(self):
+		import json
+
+		from thinknxg_estate.portal.api import visitor
+		from thinknxg_estate.portal.api.listings import listing_query
+
+		email = make_visitor("redesign.visitor@example.com")
+		frappe.set_user(email)
+		try:
+			out = visitor.save_search(params=json.dumps({"city": "Muscat", "category": "villas", "evil": "1"}))
+			saved = frappe.get_doc("Saved Search", out["name"] if isinstance(out, dict) and "name" in out else out)
+			params = json.loads(saved.search_params)
+			self.assertEqual(params, {"city": "Muscat", "category": "villas"})
+			self.assertTrue(listing_query(**params)["filters"])
+		finally:
+			frappe.set_user("Administrator")
+
+	def test_language_switch_accepts_only_supported_languages(self):
+		from thinknxg_estate.portal.api import visitor
+
+		with self.assertRaises(frappe.ValidationError):
+			visitor.set_language("xx")
+
+	def test_facet_refresh_follows_the_property(self):
+		from thinknxg_estate.portal.sync import refresh_listing_facets
+
+		villa = make_villa("RS5")
+		name = self._listing(villa)
+		frappe.db.set_value("Listing", name, {"usage": "Commercial", "development_status": "Under Development"})
+		refresh_listing_facets(villa.name)
+		self.assertEqual(frappe.db.get_value("Listing", name, ["usage", "development_status"]),
+		                 (villa.usage, "Ready"))

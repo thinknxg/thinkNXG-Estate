@@ -1,23 +1,25 @@
-{% extends "templates/web.html" %}
-{% block page_content %}
-<div class="estate-page py-4">
-  <a href="/properties" class="small text-muted">&larr; {{ _("All properties") }}</a>
-  <h1 class="mt-2 mb-4">{{ _("Compare properties") }}</h1>
+{% extends "templates/estate/base.html" %}
+{% block head_extra %}<link rel="canonical" href="{{ canonical }}">{% endblock %}
+{% block site_content %}
+<div class="eb-wrap eb-account">
+  <ol class="eb-crumbs" style="padding-top:0"><li><a href="/properties">{{ _("Properties") }}</a></li><li><span aria-current="page">{{ _("Compare properties") }}</span></li></ol>
+  <h1 style="margin-bottom:24px">{{ _("Compare properties") }}</h1>
   {% if not rows %}
-  <div class="estate-empty">{{ _("Tick Compare on up to three properties to see them side by side.") }}</div>
+  <div class="eb-empty"><svg class="i"><use href="#i-scale"/></svg><h3>{{ _("Nothing to compare yet") }}</h3>
+    <p>{{ _("Tick Compare on up to three properties to see them side by side.") }}</p><a class="eb-btn" href="/properties">{{ _("Browse properties") }}</a></div>
   {% else %}
-  <div class="estate-card" style="overflow-x:auto">
-    <table class="estate-table estate-compare">
+  <div class="eb-card" style="overflow-x:auto;padding:0">
+    <table class="eb-cmp">
       <tr><th></th>{% for r in rows %}<td>
-        {% if r.cover %}<img src="{{ r.cover }}" alt="">{% endif %}
-        <div class="mt-2"><a href="/{{ r.route }}"><strong>{{ r.title }}</strong></a></div></td>{% endfor %}</tr>
-      <tr><th>{{ _("Price") }}</th>{% for r in rows %}<td><strong>{{ currency }} {{ amount(r.headline_price) }}</strong>
-        <span class="text-muted small">{{ _(r.price_period or "") }}</span></td>{% endfor %}</tr>
+        {% if r.cover %}<img src="{{ r.cover }}" alt="{{ r.title }}" loading="lazy">{% else %}<div class="eb-cmp-none"><svg class="i i-lg"><use href="#i-image"/></svg></div>{% endif %}
+        <div style="margin-top:10px"><a href="/{{ r.route }}"><strong>{{ r.title }}</strong></a></div></td>{% endfor %}</tr>
+      <tr><th>{{ _("Price") }}</th>{% for r in rows %}<td><strong style="font-size:18px;color:var(--eb-navy)">{{ currency }} {{ amount(r.headline_price) }}</strong>
+        <small style="color:var(--eb-muted)"> {{ _(r.price_period or "") }}</small></td>{% endfor %}</tr>
       {% for key, label in specs %}
-      <tr><th>{{ label }}</th>{% for r in rows %}<td>{% if key == "area_sqm" and r[key] %}{{ r[key]|int }}{% else %}{{ _(r[key]) if r[key] else "–" }}{% endif %}</td>{% endfor %}</tr>
+      <tr><th>{{ label }}</th>{% for r in rows %}<td>{% if key == "area_sqm" and r[key] %}{{ r[key]|int }}{% elif key == "listing_type" %}{{ _("Rent") if r[key] == "Rent" else _("Sale") }}{% else %}{{ _(r[key]) if r[key] else "–" }}{% endif %}</td>{% endfor %}</tr>
       {% endfor %}
-      <tr><th>{{ _("Amenities") }}</th>{% for r in rows %}<td>{% for a in r.amenities %}<span class="estate-badge muted me-1 mb-1">{{ _(a) }}</span>{% else %}–{% endfor %}</td>{% endfor %}</tr>
-      <tr><th></th>{% for r in rows %}<td><a class="estate-btn" href="/{{ r.route }}">{{ _("View details") }}</a></td>{% endfor %}</tr>
+      <tr><th>{{ _("Amenities") }}</th>{% for r in rows %}<td>{% for a in r.amenities %}<span class="eb-tag" style="display:inline-block;margin:0 4px 4px 0">{{ _(a) }}</span>{% else %}–{% endfor %}</td>{% endfor %}</tr>
+      <tr><th></th>{% for r in rows %}<td><a class="eb-btn eb-btn-sm" href="/{{ r.route }}">{{ _("View details") }}</a></td>{% endfor %}</tr>
     </table>
   </div>
   {% endif %}

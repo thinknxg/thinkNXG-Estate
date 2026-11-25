@@ -46,13 +46,31 @@ def saved_listing_names():
     return names
 
 
+SEARCH_KEYS = ("q", "listing_type", "usage", "development_status", "category", "unit_type", "city", "locality",
+               "bedrooms", "bathrooms", "furnishing", "amenity", "min_price", "max_price", "min_area", "max_area",
+               "featured", "new", "permit", "project")
+
+
 @frappe.whitelist(methods=["POST"])
-def save_search(city=None, unit_type=None, bedrooms=None, min_price=None, max_price=None, **_ignored):
-    """Save the current /properties filters; the daily job emails new matches."""
-    if not any([city, unit_type, cint(bedrooms), flt(min_price), flt(max_price)]):
-        frappe.throw(_("Choose at least one filter (city, type, bedrooms or price) before saving a search."))
-    return lp.create_saved_search(location=city, unit_type=unit_type, bedrooms=cint(bedrooms) or None,
-                                  min_rent=flt(min_price) or None, max_rent=flt(max_price) or None)
+def save_search(params=None, city=None, unit_type=None, bedrooms=None, min_price=None, max_price=None, **_ignored):
+    """Save the current /properties search (every filter); the daily job emails new matches.
+    Callers that only know the original five filters (city, type, bedrooms, price) still work."""
+    saved = {}
+    if params:
+        raw = frappe.parse_json(params) if isinstance(params, str) else params
+        saved = {k: str(v)[:300] for k, v in (raw or {}).items() if k in SEARCH_KEYS and str(v).strip()}
+    else:
+        saved = {k: v for k, v in (("city", city), ("unit_type", unit_type), ("bedrooms", bedrooms),
+                                   ("min_price", min_price), ("max_price", max_price)) if v}
+    if not saved:
+        frappe.throw(_("Choose at least one filter before saving a search."))
+    from thinknxg_estate.portal.api.listings import csv
+
+    return lp.create_saved_search(
+        location=", ".join(csv(saved.get("city")) or csv(saved.get("locality")))[:140] or None,
+        unit_type=(csv(saved.get("unit_type")) or [None])[0], bedrooms=cint(saved.get("bedrooms")) or None,
+        min_rent=flt(saved.get("min_price")) or None, max_rent=flt(saved.get("max_price")) or None,
+        search_params=frappe.as_json(saved))
 
 
 @frappe.whitelist(methods=["POST"])
@@ -65,6 +83,15 @@ def account_context():
     names = list(saved_listing_names())
     wishlist = _rows(names[:30]) if names else []
     searches = lp.get_my_saved_searches()
+    from urllib.parse import urlencode
+
+    from thinknxg_estate.portal.api import catalog
+
+    for s in searches:
+        saved = lp._saved_params(s.get("search_params"))
+        if saved:
+            s["summary"] = ", ".join(c["label"] for c in catalog.chips(saved))
+            s["url"] = "/properties?" + urlencode(saved)
     requests = lp.get_my_requests()
     # Enquiries sent from listing pages while signed in (Listing Inquiry, owned by the user).
     requests["enquiries"] = (requests.get("enquiries") or []) + frappe.get_all(
@@ -98,3 +125,15 @@ def _rows(names):
     for r in rows:
         r["cover"] = covers.get(r.name)
     return rows
+
+
+@frappe.whitelist(methods=["POST"])
+def set_language(language):
+    """Remember the signed-in visitor's language (English or Arabic) on their own account, so the
+    site opens in it on every device. Guests keep it in a browser cookie instead."""
+    if language not in ("en", "ar") or not frappe.db.exists("Language", {"name": language, "enabled": 1}):
+        frappe.throw(_("This language is not available."))
+    if frappe.session.user == "Guest" or frappe.db.get_value("User", frappe.session.user, "user_type") != "Website User":
+        return {"language": language}
+    frappe.db.set_value("User", frappe.session.user, "language", language, update_modified=False)
+    return {"language": language}

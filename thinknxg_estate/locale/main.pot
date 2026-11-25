@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: thinkNXG Estate VERSION\n"
 "Report-Msgid-Bugs-To: sales@kreatao.com\n"
-"POT-Creation-Date: 2026-11-24 14:14+0553\n"
-"PO-Revision-Date: 2026-11-24 14:14+0553\n"
+"POT-Creation-Date: 2026-11-25 07:31+0553\n"
+"PO-Revision-Date: 2026-11-25 07:31+0553\n"
 "Last-Translator: sales@kreatao.com\n"
 "Language-Team: sales@kreatao.com\n"
 "MIME-Version: 1.0\n"
@@ -187,6 +187,14 @@ msgstr ""
 msgid "1 (Annual)"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:75
+msgid "1 listing"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:116
+msgid "1 property"
+msgstr ""
+
 #. Option for the 'Time Slot' (Select) field in DocType 'Site Visit Booking'
 #. Option for the 'Preferred Time' (Select) field in DocType 'Listing Inquiry'
 #: thinknxg_estate/estate_crm/doctype/site_visit_booking/site_visit_booking.json:62
@@ -349,6 +357,10 @@ msgstr ""
 msgid "A job already exists for this request."
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:175
+msgid "A property site that works from the same records the property managers use."
+msgstr ""
+
 #: thinknxg_estate/estate_crm/doctype/re_deal/re_deal.py:20
 msgid "A submitted Lease Contract is required to mark a deal Won."
 msgstr ""
@@ -391,6 +403,10 @@ msgstr ""
 #. Option for the 'Task' (Select) field in DocType 'Voice Usage Log'
 #: thinknxg_estate/estate_voice/doctype/voice_usage_log/voice_usage_log.json:26
 msgid "ASR"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:66
+msgid "About this property"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1452
@@ -452,6 +468,10 @@ msgstr ""
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.json:343
 #: thinknxg_estate/estate_property/doctype/property_owner/property_owner.json:184
 msgid "Accounts User"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:177
+msgid "Accurate, current listings"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:950
@@ -539,6 +559,10 @@ msgstr ""
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.json:174
 #: thinknxg_estate/estate_leasing/doctype/tenant/tenant.json:52
 msgid "Admin"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:179
+msgid "Advanced search and filters"
 msgstr ""
 
 #: thinknxg_estate/estate_maintenance/report/re_maintenance_overview/re_maintenance_overview.py:42
@@ -658,6 +682,7 @@ msgstr ""
 msgid "Agreement Expiry"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/results.html:21
 #: thinknxg_estate/www/re-portal/index.html:623
 #: thinknxg_estate/www/re-portal/index.html:979
 #: thinknxg_estate/www/re-portal/index.html:1007
@@ -706,9 +731,12 @@ msgstr ""
 msgid "All Units"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:7
-#: thinknxg_estate/www/properties/account.html:4
-#: thinknxg_estate/www/properties/compare.html:4
+#: thinknxg_estate/templates/estate/header.html:20
+msgid "All locations"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/footer.html:16
+#: thinknxg_estate/templates/estate/header.html:50
 msgid "All properties"
 msgstr ""
 
@@ -750,12 +778,16 @@ msgstr ""
 #. Label of the amenities (Table MultiSelect) field in DocType 'Property'
 #. Label of a Sidebar Item
 #: thinknxg_estate/estate_property/doctype/property/property.json:299
-#: thinknxg_estate/templates/generators/listing.html:38
+#: thinknxg_estate/templates/estate/results.html:103
 #: thinknxg_estate/thinknxg_estate/sidebar/thinknxg_estate/thinknxg_estate.json:132
-#: thinknxg_estate/www/properties/compare.html:19
+#: thinknxg_estate/www/properties/compare.html:21
 #: thinknxg_estate/www/re-portal/index.html:469
 #: thinknxg_estate/www/re-portal/index.html:2439
 msgid "Amenities"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:86
+msgid "Amenities and facilities"
 msgstr ""
 
 #. Name of a DocType
@@ -874,7 +906,7 @@ msgstr ""
 msgid "Annual rent"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:52
+#: thinknxg_estate/templates/generators/listing.html:94
 msgid "Annual rent split into cheques. The final schedule is set in your lease."
 msgstr ""
 
@@ -890,16 +922,33 @@ msgstr ""
 msgid "Anthropic"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:54
-#: thinknxg_estate/www/properties/account.html:55
-#: thinknxg_estate/www/properties/index.html:19
-#: thinknxg_estate/www/properties/index.html:24
-#: thinknxg_estate/www/properties/index.html:29
-#: thinknxg_estate/www/properties/index.html:34
-#: thinknxg_estate/www/properties/index.html:51
-#: thinknxg_estate/www/properties/index.html:56
-#: thinknxg_estate/www/properties/index.html:61
+#: thinknxg_estate/templates/estate/home.html:44
+#: thinknxg_estate/templates/estate/results.html:42
+#: thinknxg_estate/templates/estate/results.html:81
+#: thinknxg_estate/templates/estate/results.html:85
+#: thinknxg_estate/www/properties/index.html:31
 msgid "Any"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:39
+#: thinknxg_estate/www/properties/index.html:14
+msgid "Any budget"
+msgstr ""
+
+#: thinknxg_estate/www/properties/account.html:48
+msgid "Any location"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:111
+msgid "Any status"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:33
+msgid "Any type"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:44
+msgid "Any use"
 msgstr ""
 
 #. Option for the 'Preferred Property Type' (Select) field in DocType 'RE Lead'
@@ -911,6 +960,10 @@ msgstr ""
 #: thinknxg_estate/estate_property/doctype/property/property.json:85
 #: thinknxg_estate/www/re-portal/index.html:639
 msgid "Apartment Building"
+msgstr ""
+
+#: thinknxg_estate/portal/api/listings.py:42
+msgid "Apartments"
 msgstr ""
 
 #. Label of the api_version (Data) field in DocType 'WhatsApp Settings'
@@ -973,7 +1026,7 @@ msgid "Archived"
 msgstr ""
 
 #. Label of the locality (Data) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:177
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:197
 #: thinknxg_estate/www/properties/compare.py:18
 #: thinknxg_estate/www/re-portal/index.html:847
 msgid "Area"
@@ -997,6 +1050,7 @@ msgstr ""
 #. Label of the area_sqm (Float) field in DocType 'Unit'
 #: thinknxg_estate/estate_property/doctype/property/property.json:344
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:171
+#: thinknxg_estate/templates/estate/results.html:89
 #: thinknxg_estate/www/properties/compare.py:19
 #: thinknxg_estate/www/re-portal/index.html:707
 #: thinknxg_estate/www/re-portal/index.html:815
@@ -1011,13 +1065,23 @@ msgstr ""
 msgid "Area / Wilaya"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:49
+#: thinknxg_estate/templates/estate/results.html:55
 msgid "Area / locality"
 msgstr ""
 
 #. Label of the area_sqm (Float) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:154
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:157
 msgid "Area Sqm"
+msgstr ""
+
+#: thinknxg_estate/portal/api/catalog.py:231
+#, python-brace-format
+msgid "Area {0} – {1} sqm"
+msgstr ""
+
+#: thinknxg_estate/www/properties/index.html:15
+#: thinknxg_estate/www/properties/index.html:31
+msgid "Areas"
 msgstr ""
 
 #: thinknxg_estate/estate_finance/report/re_outstanding_rent/re_outstanding_rent.js:12
@@ -1170,24 +1234,24 @@ msgstr ""
 msgid "Auto-set by owner_remittance.py - traces which lease this owner payout relates to."
 msgstr ""
 
-#: thinknxg_estate/portal/sync.py:104
+#: thinknxg_estate/portal/sync.py:139
 msgid "Auto-unpublished: Unit.annual_rent is blank."
 msgstr ""
 
-#: thinknxg_estate/estate_portal/doctype/listing/listing.py:153
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:221
 #, python-brace-format
 msgid "Auto-unpublished: lease {0} submitted."
 msgstr ""
 
-#: thinknxg_estate/portal/sync.py:131
+#: thinknxg_estate/portal/sync.py:166
 msgid "Auto-unpublished: property not live, not shown on the website, leased, or without an annual rent."
 msgstr ""
 
-#: thinknxg_estate/portal/sync.py:99
+#: thinknxg_estate/portal/sync.py:134
 msgid "Auto-unpublished: property not live, unit not shown on the website, or unit not Vacant/Reserved."
 msgstr ""
 
-#: thinknxg_estate/portal/sync.py:122
+#: thinknxg_estate/portal/sync.py:157
 msgid "Auto-unpublished: the property now has units, which are listed separately."
 msgstr ""
 
@@ -1202,6 +1266,10 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:4351
 msgid "Available Now"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:72
+msgid "Available for"
 msgstr ""
 
 #: thinknxg_estate/estate_voice/report/voice_command_analytics/voice_command_analytics.py:82
@@ -1341,12 +1409,12 @@ msgstr ""
 #. Label of the bathrooms (Int) field in DocType 'Listing'
 #. Label of the bathrooms (Int) field in DocType 'Property'
 #. Label of the bathrooms (Int) field in DocType 'Unit'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:142
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:145
 #: thinknxg_estate/estate_property/doctype/property/property.json:354
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:181
-#: thinknxg_estate/templates/generators/listing.html:32
+#: thinknxg_estate/templates/estate/results.html:84
+#: thinknxg_estate/templates/generators/listing.html:59
 #: thinknxg_estate/www/properties/compare.py:18
-#: thinknxg_estate/www/properties/index.html:54
 #: thinknxg_estate/www/re-portal/index.html:709
 #: thinknxg_estate/www/re-portal/index.html:817
 #: thinknxg_estate/www/re-portal/index.html:1728
@@ -1362,13 +1430,14 @@ msgstr ""
 #. Label of the bedrooms (Int) field in DocType 'Listing'
 #. Label of the bedrooms (Int) field in DocType 'Property'
 #. Label of the bedrooms (Int) field in DocType 'Unit'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:134
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:137
 #: thinknxg_estate/estate_property/doctype/property/property.json:349
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:176
-#: thinknxg_estate/templates/generators/listing.html:31
-#: thinknxg_estate/www/properties/account.html:53
+#: thinknxg_estate/templates/estate/home.html:42
+#: thinknxg_estate/templates/estate/results.html:80
+#: thinknxg_estate/templates/generators/listing.html:57
+#: thinknxg_estate/templates/generators/listing.html:58
 #: thinknxg_estate/www/properties/compare.py:18
-#: thinknxg_estate/www/properties/index.html:32
 #: thinknxg_estate/www/re-portal/index.html:708
 #: thinknxg_estate/www/re-portal/index.html:816
 #: thinknxg_estate/www/re-portal/index.html:1727
@@ -1463,6 +1532,10 @@ msgstr ""
 msgid "Branding"
 msgstr ""
 
+#: thinknxg_estate/templates/generators/listing.html:10
+msgid "Breadcrumb"
+msgstr ""
+
 #: thinknxg_estate/www/re-portal/index.html:1226
 msgid "Break Clause Activation"
 msgstr ""
@@ -1533,6 +1606,23 @@ msgstr ""
 msgid "Brokerage Name"
 msgstr ""
 
+#: thinknxg_estate/www/properties/compare.html:9
+msgid "Browse properties"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:110
+msgid "Browse properties in the cities where we have listings."
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:188
+msgid "Browse the whole site in English or Arabic, with full right-to-left layout."
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:38
+#: thinknxg_estate/templates/estate/results.html:69
+msgid "Budget"
+msgstr ""
+
 #. Label of the weight_budget (Int) field in DocType 'Lead Score Model'
 #: thinknxg_estate/estate_voice/doctype/lead_score_model/lead_score_model.json:37
 msgid "Budget Fit"
@@ -1551,6 +1641,10 @@ msgstr ""
 #: thinknxg_estate/voice/ai/scoring.py:33
 #, python-brace-format
 msgid "Budget {0}/{1}, conversation {2}/{3}, visits {4}/{5}, response {6}/{7}, loan {8}/{9}."
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:60
+msgid "Built-up area"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1814
@@ -1580,6 +1674,10 @@ msgstr ""
 #. Option for the 'Interest Type' (Select) field in DocType 'RE Lead'
 #: thinknxg_estate/estate_crm/doctype/re_deal/re_deal.json:113
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.json:136
+#: thinknxg_estate/portal/site.py:30
+#: thinknxg_estate/templates/estate/home.html:12
+#: thinknxg_estate/templates/estate/results.html:23
+#: thinknxg_estate/templates/estate/results.html:42
 #: thinknxg_estate/www/re-portal/index.html:1533
 msgid "Buy"
 msgstr ""
@@ -1605,7 +1703,7 @@ msgstr ""
 #. Label of the re_lead (Link) field in DocType 'Site Visit Booking'
 #: thinknxg_estate/estate_crm/doctype/property_enquiry/property_enquiry.json:91
 #: thinknxg_estate/estate_crm/doctype/property_wishlist/property_wishlist.json:25
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:36
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:37
 #: thinknxg_estate/estate_crm/doctype/site_visit_booking/site_visit_booking.json:43
 msgid "CRM Lead"
 msgstr ""
@@ -1845,29 +1943,38 @@ msgstr ""
 msgid "Choose a property to save."
 msgstr ""
 
-#: thinknxg_estate/portal/api/visitor.py:53
-msgid "Choose at least one filter (city, type, bedrooms or price) before saving a search."
+#: thinknxg_estate/portal/api/visitor.py:66
+#: thinknxg_estate/www/properties/index.html:28
+msgid "Choose at least one filter before saving a search."
 msgstr ""
 
 #: thinknxg_estate/estate_crm/doctype/site_visit_booking/site_visit_booking.py:11
 msgid "Choose the property (and unit, if it has units) to be viewed."
 msgstr ""
 
-#: thinknxg_estate/estate_portal/doctype/listing/listing.py:23
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:30
 msgid "Choose the unit being listed, or the property if it is let as a whole."
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:61
+#: thinknxg_estate/www/properties/index.html:15
+#: thinknxg_estate/www/properties/index.html:31
+msgid "Cities"
 msgstr ""
 
 #. Label of the city (Data) field in DocType 'Listing'
 #. Label of the city (Data) field in DocType 'Property'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:170
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:190
 #: thinknxg_estate/estate_property/doctype/property/property.json:216
 #: thinknxg_estate/estate_property/report/property_register/property_register.js:4
 #: thinknxg_estate/thinknxg_estate/page/estate_dashboard/estate_dashboard.js:27
-#: thinknxg_estate/www/properties/account.html:53
 #: thinknxg_estate/www/properties/compare.py:17
-#: thinknxg_estate/www/properties/index.html:22
 #: thinknxg_estate/www/re-portal/index.html:672
 msgid "City"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:26
+msgid "City / Location / Area"
 msgstr ""
 
 #. Option for the 'Category' (Select) field in DocType 'Maintenance Request'
@@ -1881,7 +1988,7 @@ msgstr ""
 msgid "Clarifying"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:129
+#: thinknxg_estate/templates/estate/footer.html:50
 #: thinknxg_estate/www/re-portal/index.html:3002
 #: thinknxg_estate/www/re-portal/index.html:3169
 #: thinknxg_estate/www/re-portal/index.html:4970
@@ -1892,6 +1999,15 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1801
 msgid "Clear Dates"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:35
+#: thinknxg_estate/templates/estate/results.html:119
+msgid "Clear all"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/empty.html:4
+msgid "Clear all filters"
 msgstr ""
 
 #. Description of the 'Transcript Retention Days' (Int) field in DocType 'AI
@@ -1937,6 +2053,9 @@ msgstr ""
 msgid "Client Name, Unit and Date/Time are required."
 msgstr ""
 
+#: thinknxg_estate/templates/estate/header.html:47
+#: thinknxg_estate/templates/estate/results.html:36
+#: thinknxg_estate/templates/generators/listing.html:185
 #: thinknxg_estate/www/re-portal/index.html:1841
 msgid "Close"
 msgstr ""
@@ -2022,10 +2141,15 @@ msgstr ""
 msgid "Commands Issued"
 msgstr ""
 
+#. Option for the 'Usage' (Select) field in DocType 'Listing'
 #. Option for the 'Usage' (Select) field in DocType 'Property'
 #. Option for the 'Usage' (Select) field in DocType 'Unit'
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:173
 #: thinknxg_estate/estate_property/doctype/property/property.json:323
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:143
+#: thinknxg_estate/portal/site.py:32
+#: thinknxg_estate/templates/estate/home.html:14
+#: thinknxg_estate/templates/estate/results.html:44
 #: thinknxg_estate/www/re-portal/index.html:628
 #: thinknxg_estate/www/re-portal/index.html:691
 #: thinknxg_estate/www/re-portal/index.html:807
@@ -2037,6 +2161,10 @@ msgstr ""
 #: thinknxg_estate/estate_property/doctype/property/property.json:85
 #: thinknxg_estate/www/re-portal/index.html:640
 msgid "Commercial Tower"
+msgstr ""
+
+#: thinknxg_estate/portal/api/listings.py:50
+msgid "Commercial properties"
 msgstr ""
 
 #. Label of the com_sb (Section Break) field in DocType 'Commission Entry'
@@ -2209,13 +2337,15 @@ msgstr ""
 msgid "Company…"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:108
-#: thinknxg_estate/www/properties/index.html:128
+#: thinknxg_estate/templates/estate/footer.html:49
+#: thinknxg_estate/templates/generators/listing.html:32
+#: thinknxg_estate/templates/includes/property_cards.html:49
 msgid "Compare"
 msgstr ""
 
 #: thinknxg_estate/www/properties/compare.html:5
-#: thinknxg_estate/www/properties/compare.py:15
+#: thinknxg_estate/www/properties/compare.html:6
+#: thinknxg_estate/www/properties/compare.py:13
 msgid "Compare properties"
 msgstr ""
 
@@ -2304,6 +2434,7 @@ msgstr ""
 msgid "Considering"
 msgstr ""
 
+#: thinknxg_estate/templates/generators/listing.html:180
 #: thinknxg_estate/www/re-portal/index.html:1016
 #: thinknxg_estate/www/re-portal/index.html:1044
 #: thinknxg_estate/www/re-portal/index.html:1607
@@ -2315,9 +2446,17 @@ msgstr ""
 msgid "Contact Email"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:199
+msgid "Contact Our Team"
+msgstr ""
+
 #. Label of the contact_whatsapp (Data) field in DocType 'RE Portal Settings'
 #: thinknxg_estate/estate_portal/doctype/re_portal_settings/re_portal_settings.json:55
 msgid "Contact Whatsapp"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/footer.html:30
+msgid "Contact us"
 msgstr ""
 
 #. Option for the 'Pipeline Stage' (Select) field in DocType 'RE Deal'
@@ -2331,7 +2470,7 @@ msgstr ""
 
 #. Label of the content_sb (Section Break) field in DocType 'Listing'
 #. Option for the 'Command Group' (Select) field in DocType 'Voice Command'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:206
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:228
 #: thinknxg_estate/estate_voice/doctype/voice_command/voice_command.json:45
 msgid "Content"
 msgstr ""
@@ -2400,6 +2539,11 @@ msgstr ""
 #: thinknxg_estate/estate_crm/doctype/reservation/reservation.json:76
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:69
 msgid "Converted"
+msgstr ""
+
+#. Description of the 'Development status' (Data) field in DocType 'Listing'
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:184
+msgid "Copied from the property: Active (ready to move) or Under Development."
 msgstr ""
 
 #. Description of the 'Body Preview' (Small Text) field in DocType 'WhatsApp
@@ -2485,11 +2629,11 @@ msgstr ""
 msgid "Create a renewal follow-up ToDo this many days before end date"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:25
+#: thinknxg_estate/www/properties/account.html:26
 msgid "Create account"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:18
+#: thinknxg_estate/www/properties/account.html:20
 msgid "Create an account"
 msgstr ""
 
@@ -2608,7 +2752,7 @@ msgstr ""
 #: thinknxg_estate/estate_finance/doctype/owner_statement_line/owner_statement_line.json:11
 #: thinknxg_estate/estate_finance/report/owner_statement/owner_statement.py:42
 #: thinknxg_estate/estate_voice/doctype/command_entity/command_entity.json:29
-#: thinknxg_estate/www/properties/account.html:65
+#: thinknxg_estate/www/properties/account.html:57
 #: thinknxg_estate/www/re-portal/index.html:1044
 #: thinknxg_estate/www/re-portal/index.html:1963
 #: thinknxg_estate/www/re-portal/index.html:2313
@@ -2762,7 +2906,7 @@ msgstr ""
 msgid "Defaults to mobile if left blank"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:57
+#: thinknxg_estate/www/properties/account.html:49
 #: thinknxg_estate/www/re-portal/index.html:2924
 #: thinknxg_estate/www/re-portal/index.html:3090
 #: thinknxg_estate/www/re-portal/index.html:4113
@@ -2908,7 +3052,7 @@ msgstr ""
 #: thinknxg_estate/estate_finance/report/owner_statement/owner_statement.py:50
 #: thinknxg_estate/estate_leasing/doctype/lease_charge/lease_charge.json:28
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_request/maintenance_request.json:98
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:211
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:233
 #: thinknxg_estate/estate_property/doctype/property_unit_charge/property_unit_charge.json:28
 #: thinknxg_estate/estate_voice/doctype/voice_command/voice_command.json:99
 #: thinknxg_estate/www/re-portal/index.html:1674
@@ -2945,6 +3089,11 @@ msgstr ""
 msgid "Determined by property country"
 msgstr ""
 
+#. Label of the development_status (Data) field in DocType 'Listing'
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:181
+msgid "Development status"
+msgstr ""
+
 #: thinknxg_estate/voice/intent/dispatcher.py:164
 msgid "Did you mean:"
 msgstr ""
@@ -2959,6 +3108,18 @@ msgstr ""
 #. Label of the disabled (Check) field in DocType 'Tenant'
 #: thinknxg_estate/estate_leasing/doctype/tenant/tenant.json:166
 msgid "Disabled"
+msgstr ""
+
+#: thinknxg_estate/www/properties/index.py:72
+msgid "Discover exceptional properties and request a viewing online."
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:8
+msgid "Discover exceptional properties, verified listings, and your next investment opportunity."
+msgstr ""
+
+#: thinknxg_estate/templates/estate/footer.html:6
+msgid "Discover properties to rent and buy, and request a viewing online."
 msgstr ""
 
 #. Label of the display_sb (Section Break) field in DocType 'RE Portal
@@ -3069,6 +3230,7 @@ msgstr ""
 #: thinknxg_estate/estate_finance/doctype/rent_installment/rent_installment.json:33
 #: thinknxg_estate/estate_finance/doctype/tenancy_bulk_payment_row/tenancy_bulk_payment_row.json:55
 #: thinknxg_estate/estate_finance/report/re_outstanding_rent/re_outstanding_rent.py:53
+#: thinknxg_estate/tests/test_translations.py:61
 #: thinknxg_estate/www/re-portal/index.html:607
 #: thinknxg_estate/www/re-portal/index.html:1856
 #: thinknxg_estate/www/re-portal/index.html:4725
@@ -3197,18 +3359,19 @@ msgstr ""
 #: thinknxg_estate/estate_leasing/doctype/tenant/tenant.json:83
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:55
 #: thinknxg_estate/estate_property/doctype/property_owner/property_owner.json:60
-#: thinknxg_estate/www/properties/account.html:10
-#: thinknxg_estate/www/properties/account.html:22
+#: thinknxg_estate/templates/generators/listing.html:143
+#: thinknxg_estate/www/properties/account.html:12
+#: thinknxg_estate/www/properties/account.html:23
 #: thinknxg_estate/www/re-portal/index.html:1069
 msgid "Email"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:94
+#: thinknxg_estate/templates/generators/listing.html:143
 #: thinknxg_estate/www/re-portal/index.html:971
 msgid "Email (optional)"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:91
+#: thinknxg_estate/www/properties/account.html:82
 msgid "Email or password is incorrect."
 msgstr ""
 
@@ -3313,7 +3476,7 @@ msgstr ""
 #. Label of the enabled (Check) field in DocType 'WhatsApp Settings'
 #. Label of the enabled (Check) field in DocType 'Portal Chat Settings'
 #. Label of the enabled (Check) field in DocType 'Voice Command'
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:45
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:46
 #: thinknxg_estate/estate_crm/doctype/whatsapp_settings/whatsapp_settings.json:21
 #: thinknxg_estate/estate_portal/doctype/portal_chat_settings/portal_chat_settings.json:41
 #: thinknxg_estate/estate_voice/doctype/voice_command/voice_command.json:52
@@ -3351,12 +3514,16 @@ msgstr ""
 msgid "English Translation"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:187
+msgid "English and Arabic"
+msgstr ""
+
 #. Label of a Sidebar Item
 #: thinknxg_estate/thinknxg_estate/sidebar/thinknxg_estate/thinknxg_estate.json:497
 msgid "Enquiries"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:70
+#: thinknxg_estate/www/properties/account.html:62
 msgid "Enquiries, viewings and lease requests you send will appear here."
 msgstr ""
 
@@ -3365,7 +3532,7 @@ msgstr ""
 #: thinknxg_estate/channels/timeline.py:105
 #: thinknxg_estate/channels/timeline.py:133
 #: thinknxg_estate/estate_voice/doctype/customer_thread/customer_thread.json:87
-#: thinknxg_estate/www/properties/account.html:66
+#: thinknxg_estate/www/properties/account.html:58
 msgid "Enquiry"
 msgstr ""
 
@@ -3466,10 +3633,20 @@ msgstr ""
 msgid "Estimated Damage Cost"
 msgstr ""
 
+#. Description of the 'Search filters' (Long Text) field in DocType 'Saved
+#. Search'
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:97
+msgid "Every filter of the search as saved from /properties (JSON)."
+msgstr ""
+
 #. Description of the 'Template Name' (Data) field in DocType 'WhatsApp
 #. Template'
 #: thinknxg_estate/estate_voice/doctype/whatsapp_template/whatsapp_template.json:19
 msgid "Exact template name registered with Meta"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:94
+msgid "Exceptional Properties, Handpicked for You"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Voice Intent'
@@ -3581,6 +3758,18 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:876
 msgid "Expiry date (optional)"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/footer.html:13
+msgid "Explore"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:110
+msgid "Explore by Location"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:95
+msgid "Explore standout properties selected for quality, location, and value."
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:959
@@ -3972,15 +4161,20 @@ msgid "Fair"
 msgstr ""
 
 #. Label of the featured (Check) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:100
-#: thinknxg_estate/www/properties/index.html:102
-#: thinknxg_estate/www/properties/index.py:45
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:102
+#: thinknxg_estate/portal/api/catalog.py:232
+#: thinknxg_estate/templates/generators/listing.html:20
+#: thinknxg_estate/templates/includes/property_cards.html:22
 msgid "Featured"
 msgstr ""
 
 #. Label of the is_featured (Check) field in DocType 'Property'
 #: thinknxg_estate/estate_property/doctype/property/property.json:414
 msgid "Featured on Portal"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:113
+msgid "Featured only"
 msgstr ""
 
 #. Label of the feed_token (Data) field in DocType 'Listing Feed Settings'
@@ -4036,6 +4230,13 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:180
+msgid "Filter by location, type, price, bedrooms, amenities and more, and switch between grid, list and map views."
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:33
+#: thinknxg_estate/templates/estate/results.html:34
+#: thinknxg_estate/templates/estate/results.html:131
 #: thinknxg_estate/www/re-portal/index.html:1779
 #: thinknxg_estate/www/re-portal/index.html:1971
 #: thinknxg_estate/www/re-portal/index.html:2024
@@ -4069,6 +4270,14 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1622
 msgid "Find Your Next Home"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:7
+msgid "Find a Place You'll Love to Call Home."
+msgstr ""
+
+#: thinknxg_estate/www/properties/index.py:71
+msgid "Find properties to rent and buy"
 msgstr ""
 
 #. Label of the first_contacted_on (Datetime) field in DocType 'RE Lead'
@@ -4108,10 +4317,15 @@ msgstr ""
 
 #. Label of the floor (Select) field in DocType 'Unit'
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:122
+#: thinknxg_estate/templates/generators/listing.html:76
 #: thinknxg_estate/www/re-portal/index.html:800
 #: thinknxg_estate/www/re-portal/index.html:1711
 #: thinknxg_estate/www/re-portal/index.html:1765
 msgid "Floor"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:77
+msgid "Floors in building"
 msgstr ""
 
 #. Option for the 'Purpose' (Select) field in DocType 'WhatsApp Template'
@@ -4125,6 +4339,25 @@ msgstr ""
 msgid "For OpenAI Whisper. Leave empty to use the AI provider key when the provider is OpenAI."
 msgstr ""
 
+#: thinknxg_estate/templates/estate/footer.html:26
+msgid "For owners"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:180
+#: thinknxg_estate/portal/api/catalog.py:211
+#: thinknxg_estate/templates/generators/listing.html:19
+#: thinknxg_estate/templates/includes/property_cards.html:21
+msgid "For rent"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:180
+#: thinknxg_estate/portal/api/catalog.py:211
+#: thinknxg_estate/templates/estate/home.html:62
+#: thinknxg_estate/templates/generators/listing.html:19
+#: thinknxg_estate/templates/includes/property_cards.html:21
+msgid "For sale"
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'Security Deposit'
 #: thinknxg_estate/estate_finance/doctype/security_deposit/security_deposit.json:85
 #: thinknxg_estate/www/re-portal/index.html:2038
@@ -4132,7 +4365,7 @@ msgstr ""
 msgid "Forfeited"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:15
+#: thinknxg_estate/www/properties/account.html:17
 msgid "Forgot password?"
 msgstr ""
 
@@ -4211,8 +4444,8 @@ msgstr ""
 msgid "Full Name and Mobile are required."
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:92
-#: thinknxg_estate/www/properties/account.html:21
+#: thinknxg_estate/templates/generators/listing.html:141
+#: thinknxg_estate/www/properties/account.html:22
 msgid "Full name"
 msgstr ""
 
@@ -4234,11 +4467,13 @@ msgstr ""
 #. Label of the furnishing (Data) field in DocType 'Listing'
 #. Label of the furnishing (Select) field in DocType 'Property'
 #. Label of the furnishing (Select) field in DocType 'Unit'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:162
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:165
 #: thinknxg_estate/estate_property/doctype/property/property.json:364
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:191
+#: thinknxg_estate/templates/estate/results.html:97
+#: thinknxg_estate/templates/generators/listing.html:61
+#: thinknxg_estate/templates/generators/listing.html:78
 #: thinknxg_estate/www/properties/compare.py:19
-#: thinknxg_estate/www/properties/index.html:59
 msgid "Furnishing"
 msgstr ""
 
@@ -4297,8 +4532,12 @@ msgstr ""
 msgid "Great — {0} will call you shortly to confirm a time."
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:77
+#: thinknxg_estate/templates/estate/results.html:137
 msgid "Grid"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:137
+msgid "Grid view"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:778
@@ -4313,7 +4552,7 @@ msgid "Ground Floor"
 msgstr ""
 
 #. Name of a role
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:317
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:339
 msgid "Guest"
 msgstr ""
 
@@ -4331,8 +4570,12 @@ msgstr ""
 msgid "Has Lease Request"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:196
+msgid "Have a Property to Sell or Rent?"
+msgstr ""
+
 #. Label of the headline_price (Currency) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:189
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:210
 msgid "Headline Price"
 msgstr ""
 
@@ -4364,7 +4607,7 @@ msgstr ""
 msgid "Hi {0},<br><br>Your account is ready. You can now save listings to your wishlist, book site visits, and submit lease requests directly from the portal.<br><br>— {brand}"
 msgstr ""
 
-#: thinknxg_estate/core/listing_portal_api/listing_portal.py:838
+#: thinknxg_estate/core/listing_portal_api/listing_portal.py:854
 #, python-brace-format
 msgid "Hi {0},<br><br>{1} new listing(s) just became available matching your saved search:<br>{2}<br><br>See all your saved searches at {link}.<br><br>— {brand}"
 msgstr ""
@@ -4382,6 +4625,10 @@ msgstr ""
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_request/maintenance_request.json:78
 #: thinknxg_estate/www/re-portal/index.html:1671
 msgid "High"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:81
+msgid "Highest priced first"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1607
@@ -4551,12 +4798,12 @@ msgid "Inbound messages in the window that count as full marks"
 msgstr ""
 
 #. Label of the syndicate_bayut (Check) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:249
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:271
 msgid "Include in Bayut Feed"
 msgstr ""
 
 #. Label of the syndicate_property_finder (Check) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:244
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:266
 msgid "Include in Property Finder Feed"
 msgstr ""
 
@@ -4623,7 +4870,6 @@ msgstr ""
 msgid "Input Tokens"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:87
 #: thinknxg_estate/www/re-portal/index.html:4366
 msgid "Inquire"
 msgstr ""
@@ -4631,6 +4877,11 @@ msgstr ""
 #. Label of the who_sb (Section Break) field in DocType 'Listing Inquiry'
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:34
 msgid "Inquirer"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:157
+#: thinknxg_estate/templates/generators/listing.html:179
+msgid "Inquiry"
 msgstr ""
 
 #. Label of the inquiry_hourly_limit (Int) field in DocType 'RE Portal
@@ -4787,6 +5038,10 @@ msgstr ""
 #: thinknxg_estate/estate_crm/doctype/site_visit/site_visit.json:66
 #: thinknxg_estate/voice/customer/pipeline.py:14
 msgid "Interested"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:134
+msgid "Interested in this property?"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1533
@@ -4996,6 +5251,10 @@ msgstr ""
 msgid "Land"
 msgstr ""
 
+#: thinknxg_estate/portal/api/listings.py:46
+msgid "Land and plots"
+msgstr ""
+
 #. Option for the 'Ownership Type' (Select) field in DocType 'Property'
 #. Option for the 'Ownership Type' (Select) field in DocType 'Unit'
 #: thinknxg_estate/estate_property/doctype/property/property.json:106
@@ -5029,8 +5288,8 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.py:46
-msgid "Largest"
+#: thinknxg_estate/portal/api/catalog.py:362
+msgid "Largest area"
 msgstr ""
 
 #. Label of the last_active (Datetime) field in DocType 'Portal Chat Session'
@@ -5044,7 +5303,7 @@ msgid "Last Assigned Agent"
 msgstr ""
 
 #. Label of the last_checked (Datetime) field in DocType 'Saved Search'
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:54
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:55
 msgid "Last Checked"
 msgstr ""
 
@@ -5070,6 +5329,10 @@ msgstr ""
 msgid "Last search results and referenced documents, for follow-ups like 'book a visit for the second one'"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:94
+msgid "Latest properties"
+msgstr ""
+
 #. Label of the latitude (Float) field in DocType 'Property'
 #: thinknxg_estate/estate_property/doctype/property/property.json:237
 #: thinknxg_estate/www/re-portal/index.html:675
@@ -5088,7 +5351,7 @@ msgstr ""
 #: thinknxg_estate/estate_crm/doctype/property_wishlist/property_wishlist.json:17
 #: thinknxg_estate/estate_crm/doctype/re_deal/re_deal.json:51
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.json:53
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:28
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:29
 #: thinknxg_estate/estate_crm/doctype/site_visit_booking/site_visit_booking.json:35
 #: thinknxg_estate/estate_voice/doctype/conversation_session/conversation_session.json:56
 #: thinknxg_estate/estate_voice/doctype/customer_thread/customer_thread.json:50
@@ -5235,6 +5498,7 @@ msgstr ""
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.json:292
 #: thinknxg_estate/estate_leasing/doctype/move_in_out_inspection/move_in_out_inspection.json:46
 #: thinknxg_estate/fixtures/custom_field.json:65
+#: thinknxg_estate/tests/test_translations.py:58
 #: thinknxg_estate/thinknxg_estate/workspace/thinknxg_estate/thinknxg_estate.json:391
 #: thinknxg_estate/www/re-portal/index.html:1209
 #: thinknxg_estate/www/re-portal/index.html:1868
@@ -5358,11 +5622,11 @@ msgstr ""
 msgid "Lease expiries (next 12 months)"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:68
+#: thinknxg_estate/www/properties/account.html:60
 msgid "Lease request"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:226
+#: thinknxg_estate/templates/generators/listing.html:203
 msgid "Lease request sent. You can follow it in your account."
 msgstr ""
 
@@ -5410,7 +5674,7 @@ msgstr ""
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.json:358
 #: thinknxg_estate/estate_leasing/doctype/move_in_out_inspection/move_in_out_inspection.json:204
 #: thinknxg_estate/estate_leasing/doctype/tenant/tenant.json:234
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:328
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:350
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:214
 #: thinknxg_estate/estate_portal/doctype/portal_chat_session/portal_chat_session.json:179
 #: thinknxg_estate/estate_property/doctype/amenity/amenity.json:81
@@ -5424,7 +5688,7 @@ msgstr ""
 #: thinknxg_estate/estate_finance/doctype/rent_schedule/rent_schedule.json:118
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.json:332
 #: thinknxg_estate/estate_leasing/doctype/tenant/tenant.json:211
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:306
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:328
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:203
 #: thinknxg_estate/estate_portal/doctype/portal_chat_session/portal_chat_session.json:159
 #: thinknxg_estate/estate_property/doctype/amenity/amenity.json:70
@@ -5464,7 +5728,7 @@ msgid "Leave blank for exempt (e.g. Oman residential rent)"
 msgstr ""
 
 #. Description of the 'Unit' (Link) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:74
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:76
 msgid "Leave empty for a whole property let as one (a villa or a shop with no units)."
 msgstr ""
 
@@ -5473,7 +5737,7 @@ msgstr ""
 msgid "Leave empty for the provider's standard endpoint. Required for Custom."
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:71
+#: thinknxg_estate/templates/generators/listing.html:118
 msgid "Length"
 msgstr ""
 
@@ -5498,6 +5762,11 @@ msgstr ""
 #: thinknxg_estate/www/re-portal/index.html:4911
 #: thinknxg_estate/www/re-portal/index.html:4920
 msgid "Link"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/base.html:32
+#: thinknxg_estate/templates/generators/listing.html:204
+msgid "Link copied"
 msgstr ""
 
 #. Description of the 'Options' (Data) field in DocType 'Command Entity'
@@ -5530,12 +5799,34 @@ msgstr ""
 msgid "Links to core Bank Account doctype. Editable during cheque edit AND at submit time - see pdc_bank_sync.py for the submit-time Payment Entry sync."
 msgstr ""
 
+#: thinknxg_estate/templates/estate/results.html:138
+msgid "List"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:198
+msgid "List Your Property"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:138
+msgid "List view"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/footer.html:28
+#: thinknxg_estate/templates/estate/header.html:39
+#: thinknxg_estate/templates/estate/header.html:58
+msgid "List your property"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:81
+msgid "Listed on"
+msgstr ""
+
 #. Name of a DocType
 #. Label of the basic_sb (Section Break) field in DocType 'Listing'
 #. Label of the listing (Link) field in DocType 'Listing Inquiry'
 #. Label of a Link in the thinkNXG Estate Workspace
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:50
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:272
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:52
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:294
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:88
 #: thinknxg_estate/thinknxg_estate/workspace/thinknxg_estate/thinknxg_estate.json:775
 msgid "Listing"
@@ -5568,11 +5859,11 @@ msgid "Listing Portal"
 msgstr ""
 
 #. Label of the listing_type (Select) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:81
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:83
 msgid "Listing Type"
 msgstr ""
 
-#: thinknxg_estate/portal/api/listings.py:155
+#: thinknxg_estate/portal/api/listings.py:267
 msgid "Listing not found."
 msgstr ""
 
@@ -5587,6 +5878,10 @@ msgstr ""
 #: thinknxg_estate/www/re-portal/index.html:1621
 #: thinknxg_estate/www/re-portal/index.html:2426
 msgid "Listings Portal"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:178
+msgid "Listings come straight from the property register. A property disappears from the site as soon as it is leased or taken off the market."
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1643
@@ -5724,9 +6019,11 @@ msgstr ""
 
 #. Label of the location (Data) field in DocType 'Saved Search'
 #. Label of the addr_sb (Section Break) field in DocType 'Property'
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:65
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:66
 #: thinknxg_estate/estate_property/doctype/property/property.json:201
-#: thinknxg_estate/templates/generators/listing.html:44
+#: thinknxg_estate/templates/estate/header.html:18
+#: thinknxg_estate/templates/estate/results.html:50
+#: thinknxg_estate/templates/generators/listing.html:105
 #: thinknxg_estate/www/re-portal/index.html:665
 msgid "Location"
 msgstr ""
@@ -5734,6 +6031,10 @@ msgstr ""
 #: thinknxg_estate/voice/commands/content.py:48
 #, python-brace-format
 msgid "Location sent to {0}."
+msgstr ""
+
+#: thinknxg_estate/www/properties/index.html:15
+msgid "Locations"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:503
@@ -5776,6 +6077,10 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1445
 msgid "Madmoun Verification"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/header.html:9
+msgid "Main"
 msgstr ""
 
 #. Option for the 'Expense Type' (Select) field in DocType 'Expense Property'
@@ -5935,7 +6240,7 @@ msgstr ""
 
 #. Label of the map_sb (Section Break) field in DocType 'RE Portal Settings'
 #: thinknxg_estate/estate_portal/doctype/re_portal_settings/re_portal_settings.json:96
-#: thinknxg_estate/www/properties/index.html:78
+#: thinknxg_estate/templates/estate/results.html:139
 msgid "Map"
 msgstr ""
 
@@ -5947,6 +6252,22 @@ msgstr ""
 #. Label of the map_tile_url (Data) field in DocType 'RE Portal Settings'
 #: thinknxg_estate/estate_portal/doctype/re_portal_settings/re_portal_settings.json:101
 msgid "Map Tile URL"
+msgstr ""
+
+#: thinknxg_estate/portal/api/catalog.py:238
+msgid "Map area"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:156
+msgid "Map of matching properties"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:106
+msgid "Map showing the property location"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:139
+msgid "Map view"
 msgstr ""
 
 #. Label of the mapping_notes (Small Text) field in DocType 'Listing Feed
@@ -6008,8 +6329,13 @@ msgstr ""
 msgid "Material Cost"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/results.html:75
+#: thinknxg_estate/templates/estate/results.html:92
+msgid "Max"
+msgstr ""
+
 #. Label of the max_rent (Currency) field in DocType 'Saved Search'
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:89
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:90
 msgid "Max Annual Rent"
 msgstr ""
 
@@ -6019,18 +6345,14 @@ msgstr ""
 msgid "Max Visitor Messages per Chat"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:66
-msgid "Max area (sqm)"
-msgstr ""
-
 #. Description of the 'Inquiry Hourly Limit' (Int) field in DocType 'RE Portal
 #. Settings'
 #: thinknxg_estate/estate_portal/doctype/re_portal_settings/re_portal_settings.json:88
 msgid "Max guest inquiries per IP per hour"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:39
-msgid "Max price"
+#: thinknxg_estate/templates/estate/results.html:72
+msgid "Maximum price"
 msgstr ""
 
 #. Label of the media_sb (Section Break) field in DocType 'Property'
@@ -6055,6 +6377,9 @@ msgstr ""
 msgid "Medium"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/header.html:3
+#: thinknxg_estate/templates/estate/header.html:45
+#: thinknxg_estate/templates/estate/header.html:46
 #: thinknxg_estate/www/re-portal/index.html:513
 msgid "Menu"
 msgstr ""
@@ -6065,12 +6390,13 @@ msgstr ""
 #: thinknxg_estate/estate_crm/doctype/property_enquiry/property_enquiry.json:77
 #: thinknxg_estate/estate_crm/doctype/whatsapp_message_log/whatsapp_message_log.json:30
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:149
+#: thinknxg_estate/templates/generators/listing.html:151
 #: thinknxg_estate/www/re-portal/index.html:1016
 #: thinknxg_estate/www/re-portal/index.html:2403
 msgid "Message"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:103
+#: thinknxg_estate/templates/generators/listing.html:151
 msgid "Message (optional)"
 msgstr ""
 
@@ -6104,12 +6430,12 @@ msgid "Meta Cloud API"
 msgstr ""
 
 #. Label of the meta_description (Small Text) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:233
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:255
 msgid "Meta Description"
 msgstr ""
 
 #. Label of the meta_title (Data) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:228
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:250
 msgid "Meta Title"
 msgstr ""
 
@@ -6139,22 +6465,23 @@ msgstr ""
 msgid "Method not allowed."
 msgstr ""
 
+#: thinknxg_estate/templates/estate/results.html:74
+#: thinknxg_estate/templates/estate/results.html:91
+msgid "Min"
+msgstr ""
+
 #. Label of the min_rent (Currency) field in DocType 'Saved Search'
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:84
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:85
 msgid "Min Annual Rent"
 msgstr ""
 
 #. Label of the bedrooms (Int) field in DocType 'Saved Search'
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:79
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:80
 msgid "Min Bedrooms"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:64
-msgid "Min area (sqm)"
-msgstr ""
-
-#: thinknxg_estate/www/properties/index.html:37
-msgid "Min price"
+#: thinknxg_estate/templates/estate/results.html:72
+msgid "Minimum price"
 msgstr ""
 
 #. Option for the 'Condition' (Select) field in DocType 'Inspection Item'
@@ -6187,6 +6514,8 @@ msgstr ""
 #: thinknxg_estate/estate_leasing/doctype/tenant/tenant.json:75
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:47
 #: thinknxg_estate/estate_property/doctype/property_owner/property_owner.json:54
+#: thinknxg_estate/templates/generators/listing.html:142
+#: thinknxg_estate/www/properties/account.html:24
 #: thinknxg_estate/www/re-portal/index.html:966
 #: thinknxg_estate/www/re-portal/index.html:1069
 #: thinknxg_estate/www/re-portal/index.html:1510
@@ -6195,8 +6524,8 @@ msgstr ""
 msgid "Mobile"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:93
-#: thinknxg_estate/www/properties/account.html:23
+#: thinknxg_estate/templates/generators/listing.html:142
+#: thinknxg_estate/www/properties/account.html:24
 msgid "Mobile (e.g. +968...)"
 msgstr ""
 
@@ -6296,12 +6625,16 @@ msgstr ""
 msgid "Monthly Targets"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:58
+#: thinknxg_estate/templates/generators/listing.html:99
 msgid "Monthly equivalent"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:47
-msgid "More filters"
+#: thinknxg_estate/templates/estate/footer.html:35
+msgid "More"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:108
+msgid "More options"
 msgstr ""
 
 #. Option for the 'Inspection Type' (Select) field in DocType 'Move In Out
@@ -6390,12 +6723,13 @@ msgstr ""
 msgid "My Properties"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.py:12
-#: thinknxg_estate/www/properties/index.html:12
+#: thinknxg_estate/templates/estate/header.html:34
+#: thinknxg_estate/templates/estate/header.html:52
+#: thinknxg_estate/www/properties/account.py:10
 msgid "My account"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:61
+#: thinknxg_estate/www/properties/account.html:53
 msgid "My requests"
 msgstr ""
 
@@ -6491,6 +6825,8 @@ msgstr ""
 #: thinknxg_estate/estate_crm/doctype/re_deal/re_deal.json:79
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.json:90
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:69
+#: thinknxg_estate/templates/generators/listing.html:21
+#: thinknxg_estate/templates/includes/property_cards.html:23
 #: thinknxg_estate/www/re-portal/index.html:1008
 msgid "New"
 msgstr ""
@@ -6521,6 +6857,10 @@ msgstr ""
 msgid "New Lease Contract"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:128
+msgid "New Projects & Developments"
+msgstr ""
+
 #: thinknxg_estate/www/re-portal/index.html:632
 #: thinknxg_estate/www/re-portal/index.html:6694
 msgid "New Property"
@@ -6541,8 +6881,21 @@ msgstr ""
 msgid "New lease request for unit {0}"
 msgstr ""
 
-#: thinknxg_estate/core/listing_portal_api/listing_portal.py:836
+#: thinknxg_estate/portal/api/catalog.py:232
+msgid "New listings"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:114
+msgid "New listings (last 30 days)"
+msgstr ""
+
+#: thinknxg_estate/core/listing_portal_api/listing_portal.py:852
 msgid "New listings match your saved search"
+msgstr ""
+
+#: thinknxg_estate/portal/site.py:31
+#: thinknxg_estate/templates/estate/home.html:15
+msgid "New projects"
 msgstr ""
 
 #: thinknxg_estate/core/listing_portal_api/listing_portal.py:552
@@ -6550,17 +6903,26 @@ msgstr ""
 msgid "New site visit requested for unit {0}"
 msgstr ""
 
-#: thinknxg_estate/portal/api/listings.py:243
+#: thinknxg_estate/portal/api/listings.py:355
 #, python-brace-format
 msgid "New viewing request for {0}"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.py:45
+#: thinknxg_estate/portal/api/catalog.py:361
 msgid "Newest"
 msgstr ""
 
 #: thinknxg_estate/estate_finance/report/rent_roll/rent_roll.py:32
 msgid "Next Due"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/pager.html:4
+msgid "Next page"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:189
+#: thinknxg_estate/templates/includes/property_cards.html:32
+msgid "Next photo"
 msgstr ""
 
 #. Label of the installment_no (Int) field in DocType 'Rent Installment'
@@ -6738,6 +7100,14 @@ msgstr ""
 msgid "No matches found."
 msgstr ""
 
+#: thinknxg_estate/templates/estate/results.html:75
+msgid "No max"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:74
+msgid "No min"
+msgstr ""
+
 #: thinknxg_estate/channels/whatsapp.py:58
 msgid "No number"
 msgstr ""
@@ -6756,12 +7126,6 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:3466
 msgid "No pending lease requests."
-msgstr ""
-
-#: thinknxg_estate/templates/generators/listing.html:121
-#: thinknxg_estate/www/properties/account.html:43
-#: thinknxg_estate/www/properties/index.html:92
-msgid "No photo yet"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:5778
@@ -6784,8 +7148,8 @@ msgstr ""
 msgid "No properties"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:122
-msgid "No properties match these filters. Try widening your search, or save it and we'll email you when something comes up."
+#: thinknxg_estate/templates/estate/empty.html:2
+msgid "No properties match these filters"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:2592
@@ -6927,6 +7291,10 @@ msgstr ""
 msgid "None"
 msgstr ""
 
+#: thinknxg_estate/www/properties/index.html:30
+msgid "None of these properties has a map location yet."
+msgstr ""
+
 #. Option for the 'Outcome' (Select) field in DocType 'Site Visit'
 #: thinknxg_estate/estate_crm/doctype/site_visit/site_visit.json:66
 #: thinknxg_estate/voice/customer/pipeline.py:17
@@ -6956,11 +7324,11 @@ msgstr ""
 msgid "Not now"
 msgstr ""
 
-#: thinknxg_estate/portal/sync.py:160
+#: thinknxg_estate/portal/sync.py:196
 msgid "Not permitted"
 msgstr ""
 
-#: thinknxg_estate/core/listing_portal_api/listing_portal.py:884
+#: thinknxg_estate/core/listing_portal_api/listing_portal.py:903
 msgid "Not permitted."
 msgstr ""
 
@@ -7008,6 +7376,10 @@ msgstr ""
 
 #: thinknxg_estate/voice/commands/queries.py:61
 msgid "Nothing due today — you're clear."
+msgstr ""
+
+#: thinknxg_estate/www/properties/compare.html:8
+msgid "Nothing to compare yet"
 msgstr ""
 
 #: thinknxg_estate/voice/commands/lead.py:59
@@ -7093,6 +7465,10 @@ msgstr ""
 #: thinknxg_estate/www/re-portal/index.html:804
 #: thinknxg_estate/www/re-portal/index.html:1715
 msgid "Office"
+msgstr ""
+
+#: thinknxg_estate/portal/api/listings.py:47
+msgid "Office spaces"
 msgstr ""
 
 #. Option for the 'Country' (Select) field in DocType 'Property'
@@ -7238,12 +7614,19 @@ msgstr ""
 msgid "Open a lead or deal first."
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:32
+#: thinknxg_estate/templates/estate/header.html:32
+#: thinknxg_estate/templates/estate/header.html:53
+#: thinknxg_estate/www/properties/account.html:33
 msgid "Open desk"
 msgstr ""
 
 #: thinknxg_estate/www/owner-portal/index.html:26
 msgid "Open maintenance"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:43
+#, python-brace-format
+msgid "Open photo {0} of {1}"
 msgstr ""
 
 #. Option for the 'Provider' (Select) field in DocType 'AI Settings'
@@ -7528,6 +7911,7 @@ msgstr ""
 msgid "Owner Type"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/footer.html:29
 #: thinknxg_estate/www/owner-portal/index.html:6
 msgid "Owner portal"
 msgstr ""
@@ -7671,6 +8055,10 @@ msgstr ""
 msgid "Page Size"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/results.html:166
+msgid "Pages"
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'Commission Entry'
 #. Option for the 'Status' (Select) field in DocType 'Expense Property'
 #. Option for the 'Status' (Select) field in DocType 'Rent Installment'
@@ -7718,6 +8106,7 @@ msgstr ""
 #. Charge'
 #: thinknxg_estate/estate_leasing/doctype/lease_charge/lease_charge.json:21
 #: thinknxg_estate/estate_property/doctype/property_unit_charge/property_unit_charge.json:21
+#: thinknxg_estate/templates/generators/listing.html:62
 #: thinknxg_estate/www/re-portal/index.html:2097
 msgid "Parking"
 msgstr ""
@@ -7730,6 +8119,10 @@ msgstr ""
 #: thinknxg_estate/www/re-portal/index.html:821
 #: thinknxg_estate/www/re-portal/index.html:1732
 msgid "Parking Slots"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:79
+msgid "Parking spaces"
 msgstr ""
 
 #. Label of the parse_sb (Section Break) field in DocType 'Voice Intent'
@@ -7795,8 +8188,8 @@ msgstr ""
 msgid "Passport"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:11
-#: thinknxg_estate/www/properties/account.html:24
+#: thinknxg_estate/www/properties/account.html:13
+#: thinknxg_estate/www/properties/account.html:25
 msgid "Password"
 msgstr ""
 
@@ -7896,7 +8289,7 @@ msgstr ""
 msgid "Payment against Expense Property {0}"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:51
+#: thinknxg_estate/templates/generators/listing.html:92
 msgid "Payment plan"
 msgstr ""
 
@@ -7938,16 +8331,16 @@ msgid "Penthouse"
 msgstr ""
 
 #. Option for the 'Price Period' (Select) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:201
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:223
 msgid "Per Month"
 msgstr ""
 
 #. Option for the 'Price Period' (Select) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:201
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:223
 msgid "Per Year"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:57
+#: thinknxg_estate/templates/generators/listing.html:98
 msgid "Per cheque"
 msgstr ""
 
@@ -7989,8 +8382,22 @@ msgid "Period To"
 msgstr ""
 
 #. Label of the permit_number (Data) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:259
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:281
 msgid "Permit Number"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:80
+msgid "Permit number"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:115
+msgid "Permit number on file"
+msgstr ""
+
+#: thinknxg_estate/portal/api/catalog.py:232
+#: thinknxg_estate/templates/generators/listing.html:23
+#: thinknxg_estate/templates/includes/property_cards.html:25
+msgid "Permit on file"
 msgstr ""
 
 #. Option for the 'Category' (Select) field in DocType 'Maintenance Request'
@@ -8026,12 +8433,26 @@ msgstr ""
 msgid "Photo 2"
 msgstr ""
 
+#: thinknxg_estate/templates/generators/listing.html:184
+msgid "Photo gallery"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:204
+#, python-brace-format
+msgid "Photo {0} of {1}"
+msgstr ""
+
 #. Label of the photos (Table) field in DocType 'Listing'
 #. Label of the photos (Table) field in DocType 'Property'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:216
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:238
 #: thinknxg_estate/estate_property/doctype/property/property.json:293
 #: thinknxg_estate/www/re-portal/index.html:2133
 msgid "Photos"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:50
+#: thinknxg_estate/templates/includes/property_cards.html:17
+msgid "Photos coming soon"
 msgstr ""
 
 #. Label of a Sidebar Item
@@ -8050,7 +8471,7 @@ msgstr ""
 msgid "Planned"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:173
+#: thinknxg_estate/templates/generators/listing.html:202
 msgid "Please check your details and try again."
 msgstr ""
 
@@ -8062,15 +8483,15 @@ msgstr ""
 msgid "Please choose a start date from today onwards."
 msgstr ""
 
-#: thinknxg_estate/portal/api/listings.py:216
+#: thinknxg_estate/portal/api/listings.py:328
 msgid "Please choose a viewing date and time."
 msgstr ""
 
-#: thinknxg_estate/portal/api/listings.py:219
+#: thinknxg_estate/portal/api/listings.py:331
 msgid "Please choose a viewing date within the next 90 days."
 msgstr ""
 
-#: thinknxg_estate/portal/api/listings.py:182
+#: thinknxg_estate/portal/api/listings.py:294
 msgid "Please enter a valid mobile number."
 msgstr ""
 
@@ -8142,7 +8563,7 @@ msgstr ""
 msgid "Please set the statement period."
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:139
+#: thinknxg_estate/templates/estate/base.html:28
 msgid "Please sign in to save properties and searches."
 msgstr ""
 
@@ -8158,6 +8579,14 @@ msgstr ""
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_request/maintenance_request.json:69
 #: thinknxg_estate/www/re-portal/index.html:1667
 msgid "Plumbing"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:54
+msgid "Popular"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/footer.html:21
+msgid "Popular locations"
 msgstr ""
 
 #. Option for the 'Request Source' (Select) field in DocType 'RE Lead'
@@ -8238,7 +8667,7 @@ msgid "Portal Settings"
 msgstr ""
 
 #. Label of the synd_sb (Section Break) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:239
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:261
 msgid "Portal Syndication"
 msgstr ""
 
@@ -8347,6 +8776,10 @@ msgstr ""
 msgid "Posting Date"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/footer.html:43
+msgid "Powered by"
+msgstr ""
+
 #: thinknxg_estate/templates/includes/footer/footer_powered.html:1
 #, python-brace-format
 msgid "Powered by {0}"
@@ -8391,19 +8824,39 @@ msgstr ""
 msgid "Preferred Viewing Date"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:96
+#: thinknxg_estate/templates/generators/listing.html:145
 msgid "Preferred date"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:147
+msgid "Preferred time"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:81
+msgid "Premium"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:153
+msgid "Premium Properties"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1268
 msgid "Preview PDF"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/pager.html:2
+msgid "Previous page"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:187
+#: thinknxg_estate/templates/includes/property_cards.html:31
+msgid "Previous photo"
+msgstr ""
+
 #. Label of the price_sb (Section Break) field in DocType 'Listing'
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.js:56
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:183
-#: thinknxg_estate/www/properties/account.html:53
-#: thinknxg_estate/www/properties/compare.html:14
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:204
+#: thinknxg_estate/www/properties/compare.html:16
 msgid "Price"
 msgstr ""
 
@@ -8417,7 +8870,7 @@ msgid "Price Negotiation"
 msgstr ""
 
 #. Label of the price_period (Select) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:200
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:222
 msgid "Price Period"
 msgstr ""
 
@@ -8425,11 +8878,16 @@ msgstr ""
 msgid "Price is the blocker"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.py:46
+#: thinknxg_estate/portal/api/catalog.py:229
+#, python-brace-format
+msgid "Price {0} – {1}"
+msgstr ""
+
+#: thinknxg_estate/portal/api/catalog.py:362
 msgid "Price: high to low"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.py:45
+#: thinknxg_estate/portal/api/catalog.py:361
 msgid "Price: low to high"
 msgstr ""
 
@@ -8439,6 +8897,10 @@ msgstr ""
 #: thinknxg_estate/estate_maintenance/report/re_maintenance_overview/re_maintenance_overview.py:40
 #: thinknxg_estate/www/re-portal/index.html:1682
 msgid "Priority"
+msgstr ""
+
+#: thinknxg_estate/portal/site.py:41
+msgid "Privacy policy"
 msgstr ""
 
 #. Label of the probability (Percent) field in DocType 'RE Deal'
@@ -8462,18 +8924,30 @@ msgstr ""
 msgid "Processing"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:140
+msgid "Project details"
+msgstr ""
+
 #. Label of a Sidebar Item
 #. Label of a shortcut in the thinkNXG Estate Workspace
-#: thinknxg_estate/estate_portal/doctype/listing/listing.py:84
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:178
+#: thinknxg_estate/portal/api/catalog.py:348 thinknxg_estate/portal/site.py:51
+#: thinknxg_estate/templates/estate/home.html:60
 #: thinknxg_estate/thinknxg_estate/page/estate_dashboard/estate_dashboard.js:56
 #: thinknxg_estate/thinknxg_estate/page/estate_dashboard/estate_dashboard.js:109
 #: thinknxg_estate/thinknxg_estate/sidebar/thinknxg_estate/thinknxg_estate.json:71
 #: thinknxg_estate/thinknxg_estate/workspace/thinknxg_estate/thinknxg_estate.json:155
 #: thinknxg_estate/www/owner-portal/index.html:18
-#: thinknxg_estate/www/properties/index.py:54
+#: thinknxg_estate/www/properties/compare.html:5
+#: thinknxg_estate/www/properties/index.html:15
+#: thinknxg_estate/www/properties/index.html:31
 #: thinknxg_estate/www/re-portal/index.html:361
 #: thinknxg_estate/www/re-portal/index.html:2417
 msgid "Properties"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:128
+msgid "Properties that are still under development, open for reservation."
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:2417
@@ -8521,7 +8995,8 @@ msgstr ""
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_request/maintenance_request.json:46
 #: thinknxg_estate/estate_maintenance/report/re_maintenance_overview/re_maintenance_overview.js:3
 #: thinknxg_estate/estate_maintenance/report/re_maintenance_overview/re_maintenance_overview.py:36
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:117
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:120
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:151
 #: thinknxg_estate/estate_property/doctype/property/property.json:71
 #: thinknxg_estate/estate_property/doctype/property/property.json:473
 #: thinknxg_estate/estate_property/doctype/property_document/property_document.json:21
@@ -8532,7 +9007,7 @@ msgstr ""
 #: thinknxg_estate/thinknxg_estate/page/estate_dashboard/estate_dashboard.js:25
 #: thinknxg_estate/thinknxg_estate/workspace/thinknxg_estate/thinknxg_estate.json:303
 #: thinknxg_estate/www/owner-portal/index.html:63
-#: thinknxg_estate/www/properties/account.html:65
+#: thinknxg_estate/www/properties/account.html:57
 #: thinknxg_estate/www/re-portal/index.html:1016
 #: thinknxg_estate/www/re-portal/index.html:1044
 #: thinknxg_estate/www/re-portal/index.html:1094
@@ -8551,6 +9026,7 @@ msgid "Property"
 msgstr ""
 
 #: thinknxg_estate/i18n_labels.py:24
+#: thinknxg_estate/tests/test_translations.py:60
 msgctxt "Lease Contract"
 msgid "Property"
 msgstr ""
@@ -8696,7 +9172,7 @@ msgstr ""
 #: thinknxg_estate/estate_leasing/doctype/tenant/tenant.json:200
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_job/maintenance_job.json:228
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_request/maintenance_request.json:159
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:295
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:317
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:192
 #: thinknxg_estate/estate_property/doctype/amenity/amenity.json:59
 #: thinknxg_estate/estate_property/doctype/property/property.json:496
@@ -8801,12 +9277,19 @@ msgstr ""
 msgid "Property categories"
 msgstr ""
 
+#: thinknxg_estate/templates/generators/listing.html:69
+msgid "Property details"
+msgstr ""
+
 #: thinknxg_estate/core/listing_portal_api/listing_portal.py:415
 msgid "Property not found or not published."
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:31
+#: thinknxg_estate/templates/estate/results.html:64
+#: thinknxg_estate/templates/generators/listing.html:56
+#: thinknxg_estate/templates/generators/listing.html:73
 #: thinknxg_estate/www/properties/compare.py:17
-#: thinknxg_estate/www/properties/index.html:27
 msgid "Property type"
 msgstr ""
 
@@ -8815,12 +9298,12 @@ msgstr ""
 msgid "Property {0} already has a pending whole-property lease request ({1}). Please wait for it to be approved or rejected before submitting another."
 msgstr ""
 
-#: thinknxg_estate/estate_portal/doctype/listing/listing.py:77
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:92
 #, python-brace-format
 msgid "Property {0} has units; list each unit instead of the whole property."
 msgstr ""
 
-#: thinknxg_estate/estate_portal/doctype/listing/listing.py:80
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:95
 #, python-brace-format
 msgid "Property {0} is under a lease and cannot be published."
 msgstr ""
@@ -8870,7 +9353,7 @@ msgid "Provider call failed; see Error Log"
 msgstr ""
 
 #. Description of the 'Route' (Data) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:60
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:62
 msgid "Public URL path, e.g. property/sea-view-2br-qurum"
 msgstr ""
 
@@ -8879,13 +9362,13 @@ msgid "Publish Live"
 msgstr ""
 
 #. Label of the is_published (Check) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:94
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:96
 msgid "Published"
 msgstr ""
 
 #. Label of the published_on (Date) field in DocType 'Listing'
 #. Label of the published_on (Datetime) field in DocType 'Property'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:105
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:107
 #: thinknxg_estate/estate_property/doctype/property/property.json:127
 msgid "Published On"
 msgstr ""
@@ -8914,6 +9397,8 @@ msgstr ""
 
 #. Label of the purpose (Select) field in DocType 'WhatsApp Template'
 #: thinknxg_estate/estate_voice/doctype/whatsapp_template/whatsapp_template.json:39
+#: thinknxg_estate/templates/estate/results.html:20
+#: thinknxg_estate/templates/estate/results.html:40
 msgid "Purpose"
 msgstr ""
 
@@ -9023,7 +9508,7 @@ msgstr ""
 #: thinknxg_estate/estate_crm/doctype/re_deal/re_deal.json:197
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.json:305
 #: thinknxg_estate/estate_crm/doctype/reservation/reservation.json:126
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:112
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:120
 #: thinknxg_estate/estate_crm/doctype/site_visit/site_visit.json:101
 #: thinknxg_estate/estate_crm/doctype/whatsapp_message_log/whatsapp_message_log.json:79
 #: thinknxg_estate/estate_crm/doctype/whatsapp_settings/whatsapp_settings.json:73
@@ -9037,7 +9522,7 @@ msgstr ""
 #: thinknxg_estate/estate_leasing/doctype/tenant/tenant.json:189
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_job/maintenance_job.json:203
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_request/maintenance_request.json:148
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:284
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:306
 #: thinknxg_estate/estate_portal/doctype/listing_feed_settings/listing_feed_settings.json:147
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:181
 #: thinknxg_estate/estate_portal/doctype/portal_chat_session/portal_chat_session.json:149
@@ -9142,7 +9627,7 @@ msgid "REGA — Ejar KSA"
 msgstr ""
 
 #. Description of the 'Permit Number' (Data) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:256
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:278
 msgid "RERA / Trakheesi advertising permit — required by both portals for UAE listings; the feed skips listings without it"
 msgstr ""
 
@@ -9164,6 +9649,16 @@ msgstr ""
 #. Label of the rationale (Small Text) field in DocType 'Sentiment Reading'
 #: thinknxg_estate/estate_voice/doctype/sentiment_reading/sentiment_reading.json:50
 msgid "Rationale"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:196
+msgid "Reach genuine property seekers and manage your listings with thinkNXG Estate."
+msgstr ""
+
+#: thinknxg_estate/portal/api/catalog.py:216
+#: thinknxg_estate/templates/estate/results.html:111
+#: thinknxg_estate/templates/generators/listing.html:75
+msgid "Ready to move"
 msgstr ""
 
 #: thinknxg_estate/voice/customer/pipeline.py:14
@@ -9204,6 +9699,15 @@ msgstr ""
 msgid "Recent Activity"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:58
+#: thinknxg_estate/www/properties/index.html:16
+msgid "Recent searches"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:172
+msgid "Recently viewed"
+msgstr ""
+
 #. Name of a role
 #: thinknxg_estate/estate_crm/doctype/lead_source_re/lead_source_re.json:57
 #: thinknxg_estate/estate_crm/doctype/property_enquiry/property_enquiry.json:120
@@ -9213,7 +9717,7 @@ msgstr ""
 #: thinknxg_estate/estate_crm/doctype/site_visit_booking/site_visit_booking.json:107
 #: thinknxg_estate/estate_leasing/doctype/tenant/tenant.json:240
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_request/maintenance_request.json:186
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:333
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:355
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:219
 #: thinknxg_estate/estate_property/doctype/amenity/amenity.json:86
 #: thinknxg_estate/estate_property/doctype/property/property.json:528
@@ -9253,6 +9757,7 @@ msgstr ""
 #. Line'
 #: thinknxg_estate/estate_finance/doctype/owner_statement_line/owner_statement_line.json:30
 #: thinknxg_estate/estate_finance/report/owner_statement/owner_statement.py:44
+#: thinknxg_estate/templates/generators/listing.html:71
 msgid "Reference"
 msgstr ""
 
@@ -9344,6 +9849,11 @@ msgstr ""
 msgid "Refunded Amount"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/header.html:37
+#: thinknxg_estate/templates/estate/header.html:54
+msgid "Register"
+msgstr ""
+
 #: thinknxg_estate/www/re-portal/index.html:1442
 #: thinknxg_estate/www/re-portal/index.html:1456
 #: thinknxg_estate/www/re-portal/index.html:1470
@@ -9395,6 +9905,10 @@ msgstr ""
 #. Invoice'
 #: thinknxg_estate/fixtures/custom_field.json:220
 msgid "Related Sales Invoice"
+msgstr ""
+
+#: thinknxg_estate/portal/api/catalog.py:361
+msgid "Relevance"
 msgstr ""
 
 #. Label of the remarks (Small Text) field in DocType 'Commission Entry'
@@ -9450,7 +9964,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:140
+#: thinknxg_estate/templates/estate/base.html:29
 msgid "Removed from saved"
 msgstr ""
 
@@ -9479,8 +9993,14 @@ msgstr ""
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.json:136
 #: thinknxg_estate/estate_leasing/doctype/lease_charge/lease_charge.json:21
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.js:18
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:82
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:84
 #: thinknxg_estate/estate_property/doctype/property_unit_charge/property_unit_charge.json:21
+#: thinknxg_estate/portal/site.py:29
+#: thinknxg_estate/templates/estate/home.html:13
+#: thinknxg_estate/templates/estate/results.html:22
+#: thinknxg_estate/templates/estate/results.html:42
+#: thinknxg_estate/templates/generators/listing.html:72
+#: thinknxg_estate/www/properties/compare.html:19
 #: thinknxg_estate/www/re-portal/index.html:1533
 #: thinknxg_estate/www/re-portal/index.html:2097
 #: thinknxg_estate/www/re-portal/index.html:7026
@@ -9661,7 +10181,6 @@ msgid "Rent installment {0}"
 msgstr ""
 
 #: thinknxg_estate/www/properties/compare.py:17
-#: thinknxg_estate/www/properties/index.html:17
 msgid "Rent or buy"
 msgstr ""
 
@@ -9716,7 +10235,7 @@ msgstr ""
 #. Label of the req_sb (Section Break) field in DocType 'Maintenance Request'
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_request/maintenance_request.json:30
 #: thinknxg_estate/estate_maintenance/report/re_maintenance_overview/re_maintenance_overview.py:35
-#: thinknxg_estate/www/properties/account.html:65
+#: thinknxg_estate/www/properties/account.html:57
 msgid "Request"
 msgstr ""
 
@@ -9729,11 +10248,19 @@ msgstr ""
 msgid "Request Source"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:65
+#: thinknxg_estate/templates/generators/listing.html:112
 msgid "Request a lease"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:143
+#: thinknxg_estate/templates/generators/listing.html:137
+msgid "Request a viewing"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:182
+msgid "Request a viewing online and our team confirms a time with you. Track every request in your account."
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:202
 msgid "Request viewing"
 msgstr ""
 
@@ -9743,7 +10270,7 @@ msgstr ""
 msgid "Requested"
 msgstr ""
 
-#: thinknxg_estate/portal/api/listings.py:238
+#: thinknxg_estate/portal/api/listings.py:350
 #, python-brace-format
 msgid "Requested from the listing page by {0} ({1})"
 msgstr ""
@@ -9834,10 +10361,13 @@ msgstr ""
 msgid "Resident Card"
 msgstr ""
 
+#. Option for the 'Usage' (Select) field in DocType 'Listing'
 #. Option for the 'Usage' (Select) field in DocType 'Property'
 #. Option for the 'Usage' (Select) field in DocType 'Unit'
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:173
 #: thinknxg_estate/estate_property/doctype/property/property.json:323
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:143
+#: thinknxg_estate/templates/estate/results.html:44
 #: thinknxg_estate/www/re-portal/index.html:627
 #: thinknxg_estate/www/re-portal/index.html:691
 #: thinknxg_estate/www/re-portal/index.html:807
@@ -9908,7 +10438,7 @@ msgid "Room"
 msgstr ""
 
 #. Label of the route (Data) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:63
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:65
 msgid "Route"
 msgstr ""
 
@@ -9918,7 +10448,7 @@ msgid "Rows"
 msgstr ""
 
 #. Label of the seo_sb (Section Break) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:223
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:245
 msgid "SEO"
 msgstr ""
 
@@ -9933,7 +10463,9 @@ msgid "SLA breached: lead {0} ({1}) not contacted — agent {2}"
 msgstr ""
 
 #. Option for the 'Listing Type' (Select) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:82
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:84
+#: thinknxg_estate/templates/generators/listing.html:72
+#: thinknxg_estate/www/properties/compare.html:19
 msgid "Sale"
 msgstr ""
 
@@ -9984,9 +10516,9 @@ msgstr ""
 msgid "Saudi Arabia"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:15
-#: thinknxg_estate/templates/generators/listing.html:197
-#: thinknxg_estate/www/properties/index.html:105
+#: thinknxg_estate/templates/generators/listing.html:31
+#: thinknxg_estate/templates/generators/listing.html:203
+#: thinknxg_estate/templates/includes/property_cards.html:28
 #: thinknxg_estate/www/re-portal/index.html:2940
 #: thinknxg_estate/www/re-portal/index.html:3112
 #: thinknxg_estate/www/re-portal/index.html:3590
@@ -10085,7 +10617,11 @@ msgstr ""
 msgid "Save Work Order"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:19
+#: thinknxg_estate/templates/estate/home.html:186
+msgid "Save a search and we email you when new matching properties are listed."
+msgstr ""
+
+#: thinknxg_estate/www/properties/account.html:7
 msgid "Save properties, get emails when new matches appear, and track your viewing and lease requests."
 msgstr ""
 
@@ -10093,13 +10629,13 @@ msgstr ""
 msgid "Save the lead to refresh matching properties."
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:75
+#: thinknxg_estate/templates/estate/results.html:132
 msgid "Save this search"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:15
-#: thinknxg_estate/templates/generators/listing.html:197
-#: thinknxg_estate/www/properties/index.html:140
+#: thinknxg_estate/templates/estate/base.html:29
+#: thinknxg_estate/templates/generators/listing.html:31
+#: thinknxg_estate/templates/generators/listing.html:203
 msgid "Saved"
 msgstr ""
 
@@ -10109,7 +10645,7 @@ msgid "Saved On"
 msgstr ""
 
 #. Name of a DocType
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:100
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:108
 msgid "Saved Search"
 msgstr ""
 
@@ -10118,12 +10654,18 @@ msgstr ""
 msgid "Saved Searches"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:39
+#: thinknxg_estate/templates/estate/header.html:29
+#: thinknxg_estate/templates/estate/header.html:55
+#: thinknxg_estate/www/properties/account.html:40
 msgid "Saved properties"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:50
+#: thinknxg_estate/www/properties/account.html:44
 msgid "Saved searches"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:185
+msgid "Saved-search alerts"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:4032
@@ -10142,10 +10684,6 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1602
 msgid "Schedule Viewing"
-msgstr ""
-
-#: thinknxg_estate/templates/generators/listing.html:88
-msgid "Schedule a viewing"
 msgstr ""
 
 #. Label of the scheduled_date (Date) field in DocType 'Maintenance Job'
@@ -10188,18 +10726,40 @@ msgstr ""
 msgid "Score Visits"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:45
+#: thinknxg_estate/templates/estate/home.html:48
+#: thinknxg_estate/templates/estate/results.html:17
 #: thinknxg_estate/www/re-portal/index.html:1626
 msgid "Search"
 msgstr ""
 
 #. Label of the criteria_sb (Section Break) field in DocType 'Saved Search'
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:60
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:61
 msgid "Search Criteria"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:56
+msgid "Search areas"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1625
 msgid "Search by area, property name, or unit type…"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:17
+msgid "Search by city, area or property name"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:52
+msgid "Search cities"
+msgstr ""
+
+#. Label of the search_params (Long Text) field in DocType 'Saved Search'
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:95
+msgid "Search filters"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:11
+msgid "Search for"
 msgstr ""
 
 #: thinknxg_estate/voice/commands/queries.py:47
@@ -10210,13 +10770,21 @@ msgstr ""
 msgid "Search properties, tenants…"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:141
+#: thinknxg_estate/www/properties/index.html:27
 msgid "Search saved. We'll email you new matches."
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:157
+msgid "Search this area"
 msgstr ""
 
 #. Option for the 'Floor' (Select) field in DocType 'Unit'
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:123
 msgid "Second Floor"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:183
+msgid "Secure inquiries"
 msgstr ""
 
 #. Name of a DocType
@@ -10419,7 +10987,7 @@ msgstr ""
 msgid "Semi-Annual"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:67
+#: thinknxg_estate/templates/generators/listing.html:115
 msgid "Send a lease request for this unit. Our team will review it and contact you; nothing is binding until you sign."
 msgstr ""
 
@@ -10427,12 +10995,13 @@ msgstr ""
 msgid "Send a voice note or text command."
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:105
-#: thinknxg_estate/templates/generators/listing.html:143
+#: thinknxg_estate/templates/generators/listing.html:136
+#: thinknxg_estate/templates/generators/listing.html:153
+#: thinknxg_estate/templates/generators/listing.html:202
 msgid "Send inquiry"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:73
+#: thinknxg_estate/templates/generators/listing.html:121
 msgid "Send lease request"
 msgstr ""
 
@@ -10567,6 +11136,10 @@ msgstr ""
 msgid "Seventh Floor"
 msgstr ""
 
+#: thinknxg_estate/templates/generators/listing.html:33
+msgid "Share"
+msgstr ""
+
 #. Description of the 'Monthly AI Budget' (Currency) field in DocType 'AI
 #. Settings'
 #: thinknxg_estate/estate_voice/doctype/ai_settings/ai_settings.json:126
@@ -10588,9 +11161,26 @@ msgstr ""
 msgid "Shop"
 msgstr ""
 
+#: thinknxg_estate/portal/api/listings.py:48
+msgid "Shops"
+msgstr ""
+
 #. Description of the 'Featured on Portal' (Check) field in DocType 'Property'
 #: thinknxg_estate/estate_property/doctype/property/property.json:411
 msgid "Show in the highlighted Featured row at the top of the public listings page."
+msgstr ""
+
+#: thinknxg_estate/www/properties/index.html:29
+msgid "Show list"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:161
+#: thinknxg_estate/www/properties/index.html:29
+msgid "Show map"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/results.html:119
+msgid "Show results"
 msgstr ""
 
 #. Description of the 'Published to Portal' (Check) field in DocType 'Property'
@@ -10615,18 +11205,19 @@ msgstr ""
 msgid "Shown to the LLM as the tool description"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:78
-#: thinknxg_estate/www/properties/account.html:8
-#: thinknxg_estate/www/properties/account.html:12
-#: thinknxg_estate/www/properties/index.html:12
+#: thinknxg_estate/templates/estate/header.html:36
+#: thinknxg_estate/templates/estate/header.html:54
+#: thinknxg_estate/templates/generators/listing.html:124
+#: thinknxg_estate/www/properties/account.html:10
+#: thinknxg_estate/www/properties/account.html:14
 msgid "Sign in"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:77
+#: thinknxg_estate/templates/generators/listing.html:123
 msgid "Sign in to request a lease and track it in your account."
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:36
+#: thinknxg_estate/www/properties/account.html:37
 msgid "Sign out"
 msgstr ""
 
@@ -10640,7 +11231,7 @@ msgstr ""
 msgid "Signed Contract Copy"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:117
+#: thinknxg_estate/templates/generators/listing.html:167
 msgid "Similar properties"
 msgstr ""
 
@@ -10721,6 +11312,10 @@ msgstr ""
 msgid "Sixth Floor"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/base.html:12
+msgid "Skip to content"
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'WhatsApp Message Log'
 #: thinknxg_estate/estate_crm/doctype/whatsapp_message_log/whatsapp_message_log.json:39
 #: thinknxg_estate/www/re-portal/index.html:2394
@@ -10763,14 +11358,12 @@ msgstr ""
 msgid "Something went wrong running that command. It has been logged."
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:174
-#: thinknxg_estate/templates/generators/listing.html:183
-#: thinknxg_estate/www/properties/account.html:84
-#: thinknxg_estate/www/properties/index.html:142
+#: thinknxg_estate/templates/estate/base.html:30
+#: thinknxg_estate/www/properties/account.html:75
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:41
+#: thinknxg_estate/templates/estate/results.html:133
 msgid "Sort by"
 msgstr ""
 
@@ -10877,8 +11470,12 @@ msgstr ""
 msgid "Start Date"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:69
+#: thinknxg_estate/templates/generators/listing.html:117
 msgid "Start date"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:139
+msgid "Starting from"
 msgstr ""
 
 #. Label of the state_sb (Section Break) field in DocType 'Conversation
@@ -10956,8 +11553,9 @@ msgstr ""
 #: thinknxg_estate/estate_voice/doctype/voice_intent/voice_intent.json:114
 #: thinknxg_estate/estate_voice/doctype/voice_message/voice_message.json:72
 #: thinknxg_estate/estate_voice/doctype/whatsapp_webhook_log/whatsapp_webhook_log.json:54
+#: thinknxg_estate/templates/generators/listing.html:75
 #: thinknxg_estate/www/owner-portal/index.html:63
-#: thinknxg_estate/www/properties/account.html:65
+#: thinknxg_estate/www/properties/account.html:57
 #: thinknxg_estate/www/re-portal/index.html:607
 #: thinknxg_estate/www/re-portal/index.html:847
 #: thinknxg_estate/www/re-portal/index.html:988
@@ -10993,6 +11591,10 @@ msgstr ""
 
 #. Option for the 'Unit Type' (Select) field in DocType 'Unit'
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:134
+#: thinknxg_estate/portal/api/catalog.py:224
+#: thinknxg_estate/templates/estate/home.html:44
+#: thinknxg_estate/templates/estate/results.html:81
+#: thinknxg_estate/templates/generators/listing.html:58
 #: thinknxg_estate/www/re-portal/index.html:803
 #: thinknxg_estate/www/re-portal/index.html:1714
 msgid "Studio"
@@ -11145,7 +11747,7 @@ msgstr ""
 msgid "System Manager"
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:48
+#: thinknxg_estate/www/properties/account.html:42
 msgid "Tap the heart on any property to save it here."
 msgstr ""
 
@@ -11249,7 +11851,7 @@ msgstr ""
 #. Option for the 'Billable To' (Select) field in DocType 'Maintenance Job'
 #. Label of the tenant (Link) field in DocType 'Maintenance Request'
 #. Label of a Link in the thinkNXG Estate Workspace
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:123
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:131
 #: thinknxg_estate/estate_finance/doctype/post_dated_cheque/post_dated_cheque.json:42
 #: thinknxg_estate/estate_finance/doctype/post_dated_cheque/post_dated_cheque.json:234
 #: thinknxg_estate/estate_finance/doctype/rent_credit_balance/rent_credit_balance.json:34
@@ -11483,6 +12085,10 @@ msgstr ""
 msgid "Terms & Conditions"
 msgstr ""
 
+#: thinknxg_estate/portal/site.py:41
+msgid "Terms and conditions"
+msgstr ""
+
 #. Option for the 'Entity Type' (Select) field in DocType 'Command Entity'
 #. Option for the 'Channel' (Select) field in DocType 'Voice Intent'
 #: thinknxg_estate/estate_voice/doctype/command_entity/command_entity.json:29
@@ -11498,11 +12104,11 @@ msgstr ""
 msgid "Thanks! I don't have an exact match right now — an agent will call you shortly with options."
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:166
+#: thinknxg_estate/templates/generators/listing.html:201
 msgid "Thanks. We'll be in touch shortly."
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:165
+#: thinknxg_estate/templates/generators/listing.html:201
 msgid "Thanks. We'll call you to confirm the viewing."
 msgstr ""
 
@@ -11536,13 +12142,21 @@ msgstr ""
 msgid "That property has no map coordinates saved."
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:153
+msgid "The highest-priced properties currently available."
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:95
+msgid "The newest properties on the market."
+msgstr ""
+
 #. Description of the 'CRM Lead' (Link) field in DocType 'Property Enquiry'
 #. Description of the 'CRM Lead' (Link) field in DocType 'Property Wishlist'
 #. Description of the 'CRM Lead' (Link) field in DocType 'Saved Search'
 #. Description of the 'CRM Lead' (Link) field in DocType 'Site Visit Booking'
 #: thinknxg_estate/estate_crm/doctype/property_enquiry/property_enquiry.json:93
 #: thinknxg_estate/estate_crm/doctype/property_wishlist/property_wishlist.json:27
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:38
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:39
 #: thinknxg_estate/estate_crm/doctype/site_visit_booking/site_visit_booking.json:45
 msgid "The unified CRM lead for this visitor."
 msgstr ""
@@ -11562,6 +12176,10 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1382
 msgid "This contract will be auto-registered with Oman Municipality upon submission. Ejari / Tawtheeq registration is required for UAE properties within 30 days of lease commencement. PDC cheques must be logged individually under the PDC Schedule tab."
+msgstr ""
+
+#: thinknxg_estate/portal/api/visitor.py:135
+msgid "This language is not available."
 msgstr ""
 
 #: thinknxg_estate/crm/api.py:220
@@ -11591,7 +12209,7 @@ msgstr ""
 msgid "Thread Message"
 msgstr ""
 
-#: thinknxg_estate/www/properties/compare.html:7
+#: thinknxg_estate/www/properties/compare.html:9
 msgid "Tick Compare on up to three properties to see them side by side."
 msgstr ""
 
@@ -11622,7 +12240,7 @@ msgstr ""
 #. Label of the title (Data) field in DocType 'Listing'
 #: thinknxg_estate/estate_crm/doctype/re_deal/re_deal.json:44
 #: thinknxg_estate/estate_leasing/doctype/lease_contract/lease_contract.json:56
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:56
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:58
 msgid "Title"
 msgstr ""
 
@@ -11673,7 +12291,7 @@ msgid "Token"
 msgstr ""
 
 #. Option for the 'Price Period' (Select) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:201
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:223
 #: thinknxg_estate/www/re-portal/index.html:1415
 msgid "Total"
 msgstr ""
@@ -11781,6 +12399,10 @@ msgstr ""
 msgid "Translation"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/empty.html:3
+msgid "Try widening your search, or save it and we'll email you when something comes up."
+msgstr ""
+
 #. Label of the enquiry_type (Select) field in DocType 'Property Enquiry'
 #. Label of the entry_type (Select) field in DocType 'Owner Statement Line'
 #: thinknxg_estate/estate_crm/doctype/property_enquiry/property_enquiry.json:60
@@ -11789,7 +12411,6 @@ msgstr ""
 #: thinknxg_estate/estate_finance/doctype/owner_statement_line/owner_statement_line.json:17
 #: thinknxg_estate/estate_finance/report/owner_statement/owner_statement.py:43
 #: thinknxg_estate/estate_finance/report/rent_roll/rent_roll.py:21
-#: thinknxg_estate/www/properties/account.html:53
 #: thinknxg_estate/www/re-portal/index.html:607
 #: thinknxg_estate/www/re-portal/index.html:847
 #: thinknxg_estate/www/re-portal/index.html:1016
@@ -11825,6 +12446,15 @@ msgstr ""
 #: thinknxg_estate/estate_property/doctype/property/property.json:134
 #: thinknxg_estate/www/re-portal/index.html:701
 msgid "Under Offer"
+msgstr ""
+
+#: thinknxg_estate/portal/api/catalog.py:215
+#: thinknxg_estate/templates/estate/home.html:134
+#: thinknxg_estate/templates/estate/results.html:111
+#: thinknxg_estate/templates/generators/listing.html:22
+#: thinknxg_estate/templates/generators/listing.html:75
+#: thinknxg_estate/templates/includes/property_cards.html:24
+msgid "Under construction"
 msgstr ""
 
 #. Option for the 'Furnishing' (Select) field in DocType 'Property'
@@ -11873,7 +12503,7 @@ msgstr ""
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_job/maintenance_job.json:53
 #: thinknxg_estate/estate_maintenance/doctype/maintenance_request/maintenance_request.json:36
 #: thinknxg_estate/estate_maintenance/report/re_maintenance_overview/re_maintenance_overview.py:37
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:71
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:73
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:96
 #: thinknxg_estate/estate_property/doctype/property_photo/property_photo.json:27
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:45
@@ -12015,7 +12645,7 @@ msgid "Unit Register"
 msgstr ""
 
 #. Label of the denorm_sb (Section Break) field in DocType 'Listing'
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:111
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:114
 msgid "Unit Snapshot (auto)"
 msgstr ""
 
@@ -12033,8 +12663,8 @@ msgstr ""
 #. Label of the unit_type (Data) field in DocType 'Saved Search'
 #. Label of the unit_type (Data) field in DocType 'Listing'
 #. Label of the unit_type (Select) field in DocType 'Unit'
-#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:70
-#: thinknxg_estate/estate_portal/doctype/listing/listing.json:126
+#: thinknxg_estate/estate_crm/doctype/saved_search/saved_search.json:71
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:129
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:133
 #: thinknxg_estate/estate_property/report/unit_availability/unit_availability.js:6
 msgid "Unit Type"
@@ -12073,7 +12703,7 @@ msgstr ""
 msgid "Unit {0} is {1}. Only Vacant or Reserved units can be leased."
 msgstr ""
 
-#: thinknxg_estate/estate_portal/doctype/listing/listing.py:73
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:88
 #, python-brace-format
 msgid "Unit {0} is {1}; only Vacant or Reserved units can be published."
 msgstr ""
@@ -12141,6 +12771,11 @@ msgstr ""
 msgid "Unrecognised"
 msgstr ""
 
+#: thinknxg_estate/www/properties/index.html:14
+#, python-brace-format
+msgid "Up to {0}"
+msgstr ""
+
 #: thinknxg_estate/www/re-portal/index.html:936
 msgid "Upcoming Events"
 msgstr ""
@@ -12162,12 +12797,15 @@ msgstr ""
 msgid "Upload Photo"
 msgstr ""
 
+#. Label of the usage (Select) field in DocType 'Listing'
 #. Label of the usage_sb (Section Break) field in DocType 'Portal Chat Session'
 #. Label of the usage (Select) field in DocType 'Property'
 #. Label of the usage (Select) field in DocType 'Unit'
+#: thinknxg_estate/estate_portal/doctype/listing/listing.json:172
 #: thinknxg_estate/estate_portal/doctype/portal_chat_session/portal_chat_session.json:96
 #: thinknxg_estate/estate_property/doctype/property/property.json:322
 #: thinknxg_estate/estate_property/doctype/unit/unit.json:142
+#: thinknxg_estate/templates/generators/listing.html:74
 msgid "Usage"
 msgstr ""
 
@@ -12197,7 +12835,7 @@ msgstr ""
 msgid "Use Property for building-wide bulk PDC, or Unit to scope it to a single unit."
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:59
+#: thinknxg_estate/www/properties/account.html:51
 msgid "Use Save this search on the property search page to get email alerts."
 msgstr ""
 
@@ -12352,6 +12990,7 @@ msgstr ""
 #: thinknxg_estate/public/js/estate_timeline.js:29
 #: thinknxg_estate/public/js/property_live_toggle.js:30
 #: thinknxg_estate/public/js/unit_lease_contract.js:17
+#: thinknxg_estate/templates/estate/results.html:136
 #: thinknxg_estate/voice/commands/queries.py:39
 #: thinknxg_estate/www/re-portal/index.html:3088
 #: thinknxg_estate/www/re-portal/index.html:4608
@@ -12368,15 +13007,32 @@ msgstr ""
 msgid "View Items"
 msgstr ""
 
-#: thinknxg_estate/www/properties/compare.html:20
-#: thinknxg_estate/www/properties/index.html:109
-#: thinknxg_estate/www/properties/index.html:146
+#: thinknxg_estate/templates/estate/home.html:97
+#: thinknxg_estate/templates/estate/home.html:129
+#: thinknxg_estate/templates/estate/home.html:154
+#: thinknxg_estate/templates/generators/listing.html:167
+msgid "View all"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:47
+#, python-brace-format
+msgid "View all {0} photos"
+msgstr ""
+
+#: thinknxg_estate/templates/includes/property_cards.html:50
+#: thinknxg_estate/www/properties/compare.html:22
+#: thinknxg_estate/www/properties/index.html:29
 msgid "View details"
+msgstr ""
+
+#: thinknxg_estate/www/properties/account.html:49
+msgid "View results"
 msgstr ""
 
 #. Option for the 'Inquiry Type' (Select) field in DocType 'Listing Inquiry'
 #: thinknxg_estate/estate_portal/doctype/listing_inquiry/listing_inquiry.json:119
-#: thinknxg_estate/www/properties/account.html:67
+#: thinknxg_estate/templates/generators/listing.html:181
+#: thinknxg_estate/www/properties/account.html:59
 msgid "Viewing"
 msgstr ""
 
@@ -12386,6 +13042,10 @@ msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:1499
 msgid "Viewings This Week"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:181
+msgid "Viewings made simple"
 msgstr ""
 
 #. Option for the 'Preferred Property Type' (Select) field in DocType 'RE Lead'
@@ -12400,6 +13060,10 @@ msgstr ""
 #: thinknxg_estate/estate_property/doctype/property/property.json:85
 #: thinknxg_estate/www/re-portal/index.html:639
 msgid "Villa Compound"
+msgstr ""
+
+#: thinknxg_estate/portal/api/listings.py:45
+msgid "Villas"
 msgstr ""
 
 #. Option for the 'Id Type' (Select) field in DocType 'Tenant KYC Document'
@@ -12567,6 +13231,10 @@ msgstr ""
 msgid "Warehouse"
 msgstr ""
 
+#: thinknxg_estate/portal/api/listings.py:49
+msgid "Warehouses"
+msgstr ""
+
 #. Option for the 'Score Band' (Select) field in DocType 'RE Lead'
 #. Option for the 'Band' (Select) field in DocType 'Lead Score Log'
 #: thinknxg_estate/estate_crm/doctype/re_lead/re_lead.json:242
@@ -12609,7 +13277,7 @@ msgid "Welcome to {0}"
 msgstr ""
 
 #: thinknxg_estate/www/owner-portal/index.html:7
-#: thinknxg_estate/www/properties/account.html:35
+#: thinknxg_estate/www/properties/account.html:36
 #, python-brace-format
 msgid "Welcome, {0}"
 msgstr ""
@@ -12683,7 +13351,8 @@ msgstr ""
 msgid "WhatsApp is disabled"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:111
+#: thinknxg_estate/templates/generators/listing.html:157
+#: thinknxg_estate/templates/generators/listing.html:179
 msgid "WhatsApp us"
 msgstr ""
 
@@ -12700,6 +13369,10 @@ msgstr ""
 
 #: thinknxg_estate/voice/commands/scheduling.py:16
 msgid "When should I book it? For example 'tomorrow at 4pm'."
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:27
+msgid "Where do you want to live?"
 msgstr ""
 
 #. Description of the 'Unit Vocabulary' (Select) field in DocType 'Voice Locale
@@ -12764,6 +13437,10 @@ msgstr ""
 #: thinknxg_estate/www/re-portal/index.html:3857
 #: thinknxg_estate/www/re-portal/index.html:3863
 msgid "Whole Property (no unit)"
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:175
+msgid "Why Choose thinkNXG Estate"
 msgstr ""
 
 #. Label of the reason (Small Text) field in DocType 'Lead Score Log'
@@ -12844,11 +13521,11 @@ msgstr ""
 msgid "You are not permitted to use this function."
 msgstr ""
 
-#: thinknxg_estate/www/properties/account.html:31
+#: thinknxg_estate/www/properties/account.html:32
 msgid "You are signed in as a staff user. Visitor accounts are for the public; open the desk to work with leads and listings."
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:143
+#: thinknxg_estate/templates/estate/base.html:31
 msgid "You can compare up to three properties."
 msgstr ""
 
@@ -12867,6 +13544,18 @@ msgstr ""
 
 #: thinknxg_estate/voice/customer/pipeline.py:40
 msgid "You've been opted out. Reply START to resume."
+msgstr ""
+
+#: thinknxg_estate/www/properties/account.html:6
+msgid "Your account"
+msgstr ""
+
+#: thinknxg_estate/templates/generators/listing.html:160
+msgid "Your details go only to our team and are used to answer this inquiry."
+msgstr ""
+
+#: thinknxg_estate/templates/estate/home.html:184
+msgid "Your details go only to our team. Inquiry forms are protected against spam, and your account is private."
 msgstr ""
 
 #: thinknxg_estate/www/owner-portal/index.html:8
@@ -12893,12 +13582,12 @@ msgstr ""
 msgid "available from {0}"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:97
+#: thinknxg_estate/templates/includes/property_cards.html:43
 msgid "bath"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:123
-#: thinknxg_estate/www/properties/index.html:97
+#: thinknxg_estate/templates/includes/property_cards.html:42
+#: thinknxg_estate/www/properties/account.html:48
 msgid "bed"
 msgstr ""
 
@@ -12910,11 +13599,11 @@ msgstr ""
 msgid "budget"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:54
+#: thinknxg_estate/templates/generators/listing.html:96
 msgid "cheque"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:54
+#: thinknxg_estate/templates/generators/listing.html:96
 msgid "cheques"
 msgstr ""
 
@@ -12940,12 +13629,23 @@ msgstr ""
 msgid "expiring in 30 days"
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:152
+#: thinknxg_estate/portal/api/catalog.py:349
+msgid "for rent"
+msgstr ""
+
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:152
+#: thinknxg_estate/portal/api/catalog.py:349
+msgid "for sale"
+msgstr ""
+
 #: thinknxg_estate/voice/customer/pipeline.py:213
 #, python-brace-format
 msgid "gave visit feedback: {0}"
 msgstr ""
 
 #: thinknxg_estate/crm/matching.py:131
+#: thinknxg_estate/portal/api/catalog.py:351
 #, python-brace-format
 msgid "in {0}"
 msgstr ""
@@ -12954,7 +13654,7 @@ msgstr ""
 msgid "location"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:72
+#: thinknxg_estate/templates/generators/listing.html:119
 msgid "months"
 msgstr ""
 
@@ -12986,8 +13686,8 @@ msgstr ""
 msgid "slightly above budget"
 msgstr ""
 
-#: thinknxg_estate/templates/generators/listing.html:33
-#: thinknxg_estate/www/properties/index.html:97
+#: thinknxg_estate/templates/generators/listing.html:60
+#: thinknxg_estate/templates/includes/property_cards.html:44
 msgid "sqm"
 msgstr ""
 
@@ -13011,12 +13711,20 @@ msgstr ""
 msgid "thinkNXG Estate Dashboard"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/header.html:5
+msgid "thinkNXG Estate home"
+msgstr ""
+
 #: thinknxg_estate/www/re-portal/index.html:7
 msgid "thinkNXG Estate — One Platform. Every Property. Complete Control."
 msgstr ""
 
 #: thinknxg_estate/crm/tasks.py:28
 msgid "unassigned"
+msgstr ""
+
+#: thinknxg_estate/portal/api/catalog.py:213
+msgid "usage"
 msgstr ""
 
 #: thinknxg_estate/www/owner-portal/index.html:21
@@ -13049,9 +13757,14 @@ msgstr ""
 msgid "{0} ({1}) {2}."
 msgstr ""
 
-#: thinknxg_estate/estate_portal/doctype/listing/listing.py:35
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:42
 #, python-brace-format
 msgid "{0} already has a published listing ({1})."
+msgstr ""
+
+#: thinknxg_estate/www/properties/index.html:14
+#, python-brace-format
+msgid "{0} and above"
 msgstr ""
 
 #: thinknxg_estate/voice/commands/lead.py:151
@@ -13086,6 +13799,16 @@ msgstr ""
 msgid "{0} installment(s) fetched."
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:75
+#, python-brace-format
+msgid "{0} listings"
+msgstr ""
+
+#: thinknxg_estate/www/properties/index.py:96
+#, python-brace-format
+msgid "{0} listings: {1}. Compare prices, photos and locations, and request a viewing online."
+msgstr ""
+
 #: thinknxg_estate/voice/commands/lead.py:94
 #, python-brace-format
 msgid "{0} marked Qualified. Score {1} ({2})."
@@ -13096,7 +13819,7 @@ msgstr ""
 msgid "{0} matching properties:"
 msgstr ""
 
-#: thinknxg_estate/core/listing_portal_api/listing_portal.py:829
+#: thinknxg_estate/core/listing_portal_api/listing_portal.py:845
 #, python-brace-format
 msgid "{0} new listing(s) match your saved search"
 msgstr ""
@@ -13111,9 +13834,9 @@ msgstr ""
 msgid "{0} of {1} installments failed to process. Check Error Log for details."
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:145
+#: thinknxg_estate/www/properties/index.html:30
 #, python-brace-format
-msgid "{0} of {1} matching properties have a map location."
+msgid "{0} of {1} properties have a map location."
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:2484
@@ -13128,17 +13851,21 @@ msgid ""
 "{1}"
 msgstr ""
 
+#: thinknxg_estate/templates/estate/home.html:116
 #: thinknxg_estate/www/re-portal/index.html:2514
 #, python-brace-format
 msgid "{0} properties"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:73
+#: thinknxg_estate/portal/api/catalog.py:294
+#: thinknxg_estate/templates/estate/results.html:128
+#: thinknxg_estate/tests/test_translations.py:59
+#: thinknxg_estate/www/properties/index.html:27
 #, python-brace-format
 msgid "{0} properties found"
 msgstr ""
 
-#: thinknxg_estate/www/properties/index.html:144
+#: thinknxg_estate/templates/estate/base.html:32
 #, python-brace-format
 msgid "{0} selected"
 msgstr ""
@@ -13158,12 +13885,27 @@ msgstr ""
 msgid "{0} {1}"
 msgstr ""
 
+#: thinknxg_estate/estate_portal/doctype/listing/listing.py:151
+#, python-brace-format
+msgid "{0} {1} in {2}."
+msgstr ""
+
 #: thinknxg_estate/www/re-portal/index.html:2514
 #: thinknxg_estate/www/re-portal/index.html:2631
 #: thinknxg_estate/www/re-portal/index.html:4352
 #: thinknxg_estate/www/re-portal/index.html:4457
 #, python-brace-format
 msgid "{0}% VAT"
+msgstr ""
+
+#: thinknxg_estate/portal/api/catalog.py:227
+#, python-brace-format
+msgid "{0}+ bathrooms"
+msgstr ""
+
+#: thinknxg_estate/portal/api/catalog.py:225
+#, python-brace-format
+msgid "{0}+ bedrooms"
 msgstr ""
 
 #: thinknxg_estate/www/re-portal/index.html:2127

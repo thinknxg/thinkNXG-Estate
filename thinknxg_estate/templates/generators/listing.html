@@ -1,231 +1,208 @@
-{% extends "templates/web.html" %}
-{% block head_include %}
+{% extends "templates/estate/base.html" %}
+{% block head_extra %}
 <link rel="stylesheet" href="/assets/thinknxg_estate/vendor/leaflet/leaflet.css">
+<link rel="canonical" href="{{ canonical }}">
+{% if cover %}<link rel="preload" as="image" href="{{ cover }}">{% endif %}
+<script type="application/ld+json">{{ jsonld | safe }}</script>
 {% endblock %}
-{% block page_content %}
-<div class="estate-page py-4">
-  <a href="/properties" class="small text-muted">&larr; {{ _("All properties") }}</a>
-  <div class="estate-toolbar mt-2">
+{% block site_content %}
+<div class="eb-wrap">
+  <nav aria-label="{{ _('Breadcrumb') }}">
+    <ol class="eb-crumbs">
+      {% for name, link in crumbs %}<li>{% if not loop.last %}<a href="{{ link }}">{{ name }}</a>{% else %}<span aria-current="page">{{ name }}</span>{% endif %}</li>{% endfor %}
+    </ol>
+  </nav>
+
+  <div class="eb-d-head">
     <div>
-      <h1 class="mb-1">{{ doc.title }}</h1>
-      <div class="text-muted">{{ doc.locality or "" }}{{ ", " if doc.locality and doc.city }}{{ doc.city or "" }}
-        <span class="estate-badge ms-2">{{ _(doc.listing_type) }}</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+        <span class="eb eb-dark">{{ _("For rent") if doc.listing_type == "Rent" else _("For sale") }}</span>
+        {% if doc.featured %}<span class="eb eb-gold">{{ _("Featured") }}</span>{% endif %}
+        {% if doc.published_on and doc.published_on|string >= new_after %}<span class="eb eb-teal">{{ _("New") }}</span>{% endif %}
+        {% if doc.development_status == "Under Development" %}<span class="eb eb-gold">{{ _("Under construction") }}</span>{% endif %}
+        {% if doc.permit_number %}<span class="eb eb-light" style="border:1px solid var(--eb-line)">{{ _("Permit on file") }}</span>{% endif %}
+      </div>
+      <h1>{{ doc.title }}</h1>
+      {% if place %}<div class="eb-d-place"><svg class="i"><use href="#i-pin"/></svg>{{ place }}{% if building and building != doc.title %} · {{ building }}{% endif %}</div>{% endif %}
     </div>
-    <button type="button" class="estate-btn secondary" id="save-btn" data-on="{{ 1 if is_saved else 0 }}">
-      &#9829; <span>{{ _("Saved") if is_saved else _("Save") }}</span></button>
+    <div class="eb-d-price">
+      <b>{{ currency }} {{ amount(doc.headline_price) }}</b><small>{{ _(doc.price_period or "") }}</small>
+      <div class="eb-d-actions">
+        <button type="button" class="eb-act pc-heart-act {{ 'on' if is_saved }}" id="save-btn" data-listing="{{ doc.name }}" aria-pressed="{{ 'true' if is_saved else 'false' }}"><svg class="i"><use href="#i-heart"/></svg><span>{{ _("Saved") if is_saved else _("Save") }}</span></button>
+        <button type="button" class="eb-act" id="cmp-btn" data-compare="{{ doc.name }}"><svg class="i"><use href="#i-scale"/></svg><span>{{ _("Compare") }}</span></button>
+        <button type="button" class="eb-act" id="share-btn"><svg class="i"><use href="#i-share"/></svg><span>{{ _("Share") }}</span></button>
+      </div>
+    </div>
   </div>
 
-  {% if cover %}<div class="estate-cover-lg" id="cover" style="background-image:url('{{ cover }}')"></div>{% endif %}
-  {% if gallery|length > 1 %}
-  <div class="estate-gallery">
-    {% for img in gallery %}<img src="{{ img }}" alt="" data-src="{{ img }}">{% endfor %}
+  {# ---------------- gallery ---------------- #}
+  {% if gallery %}
+  {% set n = gallery|length %}
+  <div class="eb-gal {{ 'one' if n == 1 else ('two' if n == 2 else ('three' if n == 3 else ('four' if n == 4 else ''))) }}" id="gallery">
+    {% for img in gallery[:5] %}
+    <button type="button" class="eb-gimg" data-i="{{ loop.index0 }}" aria-label="{{ _('Open photo {0} of {1}').format(loop.index, n) }}">
+      <img src="{{ img }}" alt="{{ doc.title }}{% if captions[loop.index0] %} – {{ captions[loop.index0] }}{% endif %}" {% if loop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
+    </button>
+    {% endfor %}
+    {% if n > 1 %}<button type="button" class="eb-gal-all" data-i="0"><svg class="i"><use href="#i-camera"/></svg>{{ _("View all {0} photos").format(n) }}</button>{% endif %}
   </div>
+  {% else %}
+  <div class="eb-gal-empty"><span><svg class="i i-lg"><use href="#i-image"/></svg><br>{{ _("Photos coming soon") }}</span></div>
   {% endif %}
 
-  <div class="row">
-    <div class="col-md-8">
-      <h4 class="mb-3">{{ currency }} {{ amount(doc.headline_price) }}
-        <span class="text-muted fs-6">{{ _(doc.price_period or "") }}</span></h4>
-      <div class="d-flex gap-4 flex-wrap text-muted mb-4">
-        {% if doc.unit_type %}<span>{{ _(doc.unit_type) }}</span>{% endif %}
-        {% if doc.bedrooms and doc.bedrooms > 0 %}<span>{{ doc.bedrooms }} {{ _("Bedrooms") }}</span>{% endif %}
-        {% if doc.bathrooms and doc.bathrooms > 0 %}<span>{{ doc.bathrooms }} {{ _("Bathrooms") }}</span>{% endif %}
-        {% if doc.area_sqm %}<span>{{ doc.area_sqm|int }} {{ _("sqm") }}</span>{% endif %}
-        {% if doc.furnishing %}<span>{{ _(doc.furnishing) }}</span>{% endif %}
+  <div class="eb-d-layout">
+    <div>
+      <div class="eb-facts">
+        {% if doc.unit_type %}<div class="eb-fact"><svg class="i"><use href="#i-building"/></svg><b>{{ _(doc.unit_type) }}</b><span>{{ _("Property type") }}</span></div>{% endif %}
+        {% if doc.bedrooms and doc.bedrooms > 0 %}<div class="eb-fact"><svg class="i"><use href="#i-bed"/></svg><b>{{ doc.bedrooms }}</b><span>{{ _("Bedrooms") }}</span></div>
+        {% elif doc.unit_type == "Studio" %}<div class="eb-fact"><svg class="i"><use href="#i-bed"/></svg><b>{{ _("Studio") }}</b><span>{{ _("Bedrooms") }}</span></div>{% endif %}
+        {% if doc.bathrooms and doc.bathrooms > 0 %}<div class="eb-fact"><svg class="i"><use href="#i-bath"/></svg><b>{{ doc.bathrooms }}</b><span>{{ _("Bathrooms") }}</span></div>{% endif %}
+        {% if doc.area_sqm %}<div class="eb-fact"><svg class="i"><use href="#i-area"/></svg><b>{{ doc.area_sqm|int }} {{ _("sqm") }}</b><span>{{ _("Built-up area") }}</span></div>{% endif %}
+        {% if doc.furnishing %}<div class="eb-fact"><svg class="i"><use href="#i-door"/></svg><b>{{ _(doc.furnishing) }}</b><span>{{ _("Furnishing") }}</span></div>{% endif %}
+        {% if parking %}<div class="eb-fact"><svg class="i"><use href="#i-car"/></svg><b>{{ parking }}</b><span>{{ _("Parking") }}</span></div>{% endif %}
       </div>
-      <div class="mb-4">{{ doc.description or "" }}</div>
-      {% if amenities %}
-      <h5>{{ _("Amenities") }}</h5>
-      <div class="d-flex gap-2 flex-wrap mb-4">
-        {% for a in amenities %}<span class="estate-badge muted">{{ _(a) }}</span>{% endfor %}
-      </div>
+
+      {% if doc.description %}
+      <section class="eb-block"><h2>{{ _("About this property") }}</h2><div class="eb-desc">{{ doc.description }}</div></section>
       {% endif %}
-      {% if latitude and longitude %}
-      <h5>{{ _("Location") }}</h5>
-      <div id="listing-map" class="estate-map-sm mb-2" data-lat="{{ latitude }}" data-lng="{{ longitude }}"></div>
-      <div class="small text-muted mb-4">{{ address_line or "" }}</div>
+
+      <section class="eb-block"><h2>{{ _("Property details") }}</h2>
+        <div class="eb-specs">
+          <div><span>{{ _("Reference") }}</span><b>{{ doc.name }}</b></div>
+          <div><span>{{ _("Available for") }}</span><b>{{ _("Rent") if doc.listing_type == "Rent" else _("Sale") }}</b></div>
+          {% if doc.unit_type %}<div><span>{{ _("Property type") }}</span><b>{{ _(doc.unit_type) }}</b></div>{% endif %}
+          {% if doc.usage %}<div><span>{{ _("Usage") }}</span><b>{{ _(doc.usage) }}</b></div>{% endif %}
+          <div><span>{{ _("Status") }}</span><b>{{ _("Under construction") if doc.development_status == "Under Development" else _("Ready to move") }}</b></div>
+          {% if floor %}<div><span>{{ _("Floor") }}</span><b>{{ _(floor) }}</b></div>{% endif %}
+          {% if total_floors %}<div><span>{{ _("Floors in building") }}</span><b>{{ total_floors }}</b></div>{% endif %}
+          {% if doc.furnishing %}<div><span>{{ _("Furnishing") }}</span><b>{{ _(doc.furnishing) }}</b></div>{% endif %}
+          {% if parking %}<div><span>{{ _("Parking spaces") }}</span><b>{{ parking }}</b></div>{% endif %}
+          {% if doc.permit_number %}<div><span>{{ _("Permit number") }}</span><b>{{ doc.permit_number }}</b></div>{% endif %}
+          {% if doc.published_on %}<div><span>{{ _("Listed on") }}</span><b>{{ frappe.format_date(doc.published_on) }}</b></div>{% endif %}
+        </div>
+      </section>
+
+      {% if amenities %}
+      <section class="eb-block"><h2>{{ _("Amenities and facilities") }}</h2>
+        <div class="eb-amen">{% for a in amenities %}<div class="eb-am"><svg class="i"><use href="#i-{{ a.icon }}"/></svg>{{ _(a.name) }}</div>{% endfor %}</div>
+      </section>
       {% endif %}
 
       {% if doc.listing_type == "Rent" and doc.headline_price and doc.price_period == "Per Year" %}
-      <div class="estate-card mb-4">
-        <h5>{{ _("Payment plan") }}</h5>
-        <p class="small text-muted">{{ _("Annual rent split into cheques. The final schedule is set in your lease.") }}</p>
-        <div class="estate-seg mb-3" id="plan-seg">
-          {% for n in [1, 2, 4, 6, 12] %}<button type="button" data-n="{{ n }}" class="{{ 'active' if n == 4 }}">{{ n }} {{ _("cheques") if n > 1 else _("cheque") }}</button>{% endfor %}
+      <section class="eb-block eb-plan"><h2>{{ _("Payment plan") }}</h2>
+        <div class="eb-card">
+          <p style="color:var(--eb-muted);font-size:14px;margin-bottom:14px">{{ _("Annual rent split into cheques. The final schedule is set in your lease.") }}</p>
+          <div class="eb-seg" id="plan-seg">
+            {% for n in [1, 2, 4, 6, 12] %}<button type="button" data-n="{{ n }}" class="{{ 'on' if n == 4 }}">{{ n }} {{ _("cheques") if n > 1 else _("cheque") }}</button>{% endfor %}
+          </div>
+          <div class="eb-kpis"><div class="eb-kpi"><span>{{ _("Per cheque") }}</span><strong id="plan-per"></strong></div>
+            <div class="eb-kpi"><span>{{ _("Monthly equivalent") }}</span><strong id="plan-month"></strong></div></div>
         </div>
-        <div class="estate-kpis">
-          <div class="estate-kpi"><span>{{ _("Per cheque") }}</span><strong id="plan-per"></strong></div>
-          <div class="estate-kpi"><span>{{ _("Monthly equivalent") }}</span><strong id="plan-month"></strong></div>
-        </div>
-      </div>
+      </section>
+      {% endif %}
+
+      {% if latitude and longitude %}
+      <section class="eb-block"><h2>{{ _("Location") }}</h2>
+        <div id="listing-map" class="eb-map-sm" data-lat="{{ latitude }}" data-lng="{{ longitude }}" role="application" aria-label="{{ _('Map showing the property location') }}"></div>
+        {% if address_line %}<div style="margin-top:12px;color:var(--eb-muted);font-size:14px;display:flex;gap:8px"><svg class="i" style="color:var(--eb-teal)"><use href="#i-pin"/></svg>{{ address_line }}</div>{% endif %}
+      </section>
       {% endif %}
 
       {% if can_request_lease %}
-      <div class="estate-card mb-4">
-        <h5>{{ _("Request a lease") }}</h5>
+      <section class="eb-block"><h2>{{ _("Request a lease") }}</h2>
+        <div class="eb-card">
         {% if is_visitor %}
-        <p class="small text-muted">{{ _("Send a lease request for this unit. Our team will review it and contact you; nothing is binding until you sign.") }}</p>
-        <div class="row g-2" id="lease-form">
-          <div class="col-6"><label class="small text-muted">{{ _("Start date") }}</label>
-            <input type="date" class="estate-field" id="lease-start" min="{{ min_viewing_date }}"></div>
-          <div class="col-6"><label class="small text-muted">{{ _("Length") }}</label>
-            <select class="estate-field" id="lease-months">{% for m in [6, 12, 24, 36] %}<option value="{{ m }}" {{ "selected" if m == 12 }}>{{ m }} {{ _("months") }}</option>{% endfor %}</select></div>
-          <div class="col-12"><button class="estate-btn" id="lease-go">{{ _("Send lease request") }}</button>
-            <span class="small ms-2" id="lease-msg"></span></div>
-        </div>
+          <p style="color:var(--eb-muted);font-size:14px;margin-bottom:14px">{{ _("Send a lease request for this unit. Our team will review it and contact you; nothing is binding until you sign.") }}</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="lease-form">
+            <div><label class="eb-flabel" for="lease-start">{{ _("Start date") }}</label><input type="date" class="eb-input" id="lease-start" min="{{ min_viewing_date }}"></div>
+            <div><label class="eb-flabel" for="lease-months">{{ _("Length") }}</label>
+              <select class="eb-input" id="lease-months">{% for m in [6, 12, 24, 36] %}<option value="{{ m }}" {{ "selected" if m == 12 }}>{{ m }} {{ _("months") }}</option>{% endfor %}</select></div>
+          </div>
+          <button class="eb-btn" id="lease-go" type="button">{{ _("Send lease request") }}</button><span style="margin-inline-start:12px;font-size:14px" id="lease-msg"></span>
         {% else %}
-        <p class="small text-muted mb-2">{{ _("Sign in to request a lease and track it in your account.") }}</p>
-        <a class="estate-btn secondary" href="/properties/account?next=/{{ doc.route }}">{{ _("Sign in") }}</a>
+          <p style="color:var(--eb-muted);font-size:14px;margin-bottom:14px">{{ _("Sign in to request a lease and track it in your account.") }}</p>
+          <a class="eb-btn eb-btn-ghost" href="/properties/account?next=/{{ doc.route }}">{{ _("Sign in") }}</a>
         {% endif %}
-      </div>
+        </div>
+      </section>
       {% endif %}
     </div>
 
-    <div class="col-md-4">
-      <div class="estate-card">
-        <div class="estate-tabs" role="tablist">
-          <button type="button" class="active" data-mode="General">{{ _("Inquire") }}</button>
-          <button type="button" data-mode="Viewing">{{ _("Schedule a viewing") }}</button>
+    {# ---------------- sticky inquiry card ---------------- #}
+    <aside class="eb-aside" id="contact-card">
+      <div class="eb-card">
+        <h2>{{ _("Interested in this property?") }}</h2>
+        <div class="eb-modes" role="tablist">
+          <button type="button" role="tab" class="on" data-mode="General">{{ _("Send inquiry") }}</button>
+          <button type="button" role="tab" data-mode="Viewing">{{ _("Request a viewing") }}</button>
         </div>
-        <div id="inq-done" class="alert alert-success d-none"></div>
-        <div id="inq-form">
-          <input class="estate-field" id="inq-name" placeholder="{{ _('Full name') }}" autocomplete="name" value="{{ visitor.full_name or '' }}">
-          <input class="estate-field" id="inq-mobile" placeholder="{{ _('Mobile (e.g. +968...)') }}" autocomplete="tel" value="{{ visitor.phone or '' }}">
-          <input class="estate-field" id="inq-email" placeholder="{{ _('Email (optional)') }}" autocomplete="email" value="{{ visitor.email or '' }}">
-          <div id="inq-viewing" class="d-none">
-            <label class="small text-muted">{{ _("Preferred date") }}</label>
-            <input type="date" class="estate-field" id="inq-date" min="{{ min_viewing_date }}">
-            <select class="estate-field" id="inq-slot">
-              {% for slot in ["10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00", "16:00 - 18:00"] %}
-              <option value="{{ slot }}">{{ slot }}</option>{% endfor %}
+        <div id="inq-done" class="eb-ok" hidden></div>
+        <form id="inq-form" onsubmit="return false">
+          <input class="eb-input" id="inq-name" placeholder="{{ _('Full name') }}" autocomplete="name" aria-label="{{ _('Full name') }}" value="{{ visitor.full_name or '' }}">
+          <input class="eb-input" id="inq-mobile" placeholder="{{ _('Mobile (e.g. +968...)') }}" autocomplete="tel" inputmode="tel" aria-label="{{ _('Mobile') }}" value="{{ visitor.phone or '' }}">
+          <input class="eb-input" id="inq-email" placeholder="{{ _('Email (optional)') }}" autocomplete="email" aria-label="{{ _('Email') }}" value="{{ visitor.email or '' }}">
+          <div id="inq-viewing" hidden>
+            <label class="eb-flabel" for="inq-date">{{ _("Preferred date") }}</label>
+            <input type="date" class="eb-input" id="inq-date" min="{{ min_viewing_date }}">
+            <select class="eb-input" id="inq-slot" aria-label="{{ _('Preferred time') }}">
+              {% for slot in ["10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00", "16:00 - 18:00"] %}<option value="{{ slot }}">{{ slot }}</option>{% endfor %}
             </select>
           </div>
-          <textarea class="estate-field" id="inq-msg" rows="3" placeholder="{{ _('Message (optional)') }}"></textarea>
-          <input type="text" id="inq-website-url" style="display:none" tabindex="-1" autocomplete="off">
-          <button class="estate-btn w-100" id="inq-send">{{ _("Send inquiry") }}</button>
-          <div id="inq-err" class="small text-danger mt-2"></div>
+          <textarea class="eb-input" id="inq-msg" rows="3" placeholder="{{ _('Message (optional)') }}" aria-label="{{ _('Message') }}"></textarea>
+          <input type="text" id="inq-website-url" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="eb-btn eb-full" id="inq-send" type="button">{{ _("Send inquiry") }}</button>
+          <div id="inq-err" class="eb-err" role="alert"></div>
+        </form>
+        <div class="eb-contact">
+          {% if contact_whatsapp %}<a class="eb-btn eb-btn-ghost eb-full" target="_blank" rel="noopener" href="https://wa.me/{{ contact_whatsapp | replace('+','') | replace(' ','') }}?text={{ (_('Inquiry') ~ ': ' ~ doc.title ~ ' (' ~ doc.name ~ ')') | urlencode }}"><svg class="i"><use href="#i-message"/></svg>{{ _("WhatsApp us") }}</a>{% endif %}
+          {% if contact_whatsapp %}<a class="eb-btn eb-btn-ghost eb-full" href="tel:{{ contact_whatsapp | replace(' ','') }}"><svg class="i"><use href="#i-phone"/></svg><span dir="ltr">{{ contact_whatsapp }}</span></a>{% endif %}
         </div>
-        {% if contact_whatsapp %}
-        <a class="estate-btn secondary w-100 mt-2" target="_blank" rel="noopener"
-           href="https://wa.me/{{ contact_whatsapp | replace('+','') | replace(' ','') }}?text=Inquiry:%20{{ doc.title | urlencode }}">
-          {{ _("WhatsApp us") }}</a>
-        {% endif %}
+        <div class="eb-note"><svg class="i i-sm"><use href="#i-lock"/></svg>{{ _("Your details go only to our team and are used to answer this inquiry.") }}</div>
       </div>
-    </div>
+    </aside>
   </div>
-  {% if related %}
-  <h3 class="mt-5 mb-3">{{ _("Similar properties") }}</h3>
-  <div class="estate-grid">
-    {% for r in related %}
-    <div class="estate-listing"><a href="/{{ r.route }}">
-      {% if r.cover %}<div class="cover" style="background-image:url('{{ r.cover }}')"></div>{% else %}<div class="cover empty">{{ _("No photo yet") }}</div>{% endif %}
-      <div class="body"><div class="title">{{ r.title }}</div>
-        <div class="place">{{ r.locality or "" }}{{ " · " if r.locality and r.unit_type }}{{ _(r.unit_type or "") }}{% if r.bedrooms and r.bedrooms > 0 %} · {{ r.bedrooms }} {{ _("bed") }}{% endif %}</div>
-        <div class="price">{{ currency }} {{ amount(r.headline_price) }} <small>{{ _(r.price_period or "") }}</small></div></div>
-    </a></div>
-    {% endfor %}
-  </div>
+
+  {% if similar_count %}
+  <section class="eb-block" style="margin-bottom:56px">
+    <div class="eb-sec-head" style="margin-bottom:20px"><div><h2 style="font-size:24px">{{ _("Similar properties") }}</h2></div><a class="eb-seeall" href="/properties?listing_type={{ doc.listing_type }}{% if doc.city %}&city={{ doc.city|urlencode }}{% endif %}">{{ _("View all") }}<svg class="i i-dir"><use href="#i-arrow"/></svg></a></div>
+    <div class="eb-rail eb-rail-scroll">{{ similar_html }}</div>
+  </section>
   {% endif %}
+  <section class="eb-block" id="recent" hidden style="margin-bottom:56px">
+    <div class="eb-sec-head" style="margin-bottom:20px"><div><h2 style="font-size:24px">{{ _("Recently viewed") }}</h2></div></div>
+    <div class="eb-rail eb-rail-scroll" id="recent-cards"></div>
+  </section>
+</div>
+
+{# mobile contact bar #}
+<div class="eb-mobbar" id="mobbar">
+  <a class="eb-btn eb-btn-ghost" href="{% if contact_whatsapp %}https://wa.me/{{ contact_whatsapp | replace('+','') | replace(' ','') }}?text={{ (_('Inquiry') ~ ': ' ~ doc.title) | urlencode }}{% else %}#contact-card{% endif %}" {% if contact_whatsapp %}target="_blank" rel="noopener"{% endif %} aria-label="{{ _('WhatsApp us') }}"><svg class="i"><use href="#i-message"/></svg></a>
+  <button type="button" class="eb-btn eb-btn-dark" data-jump="General">{{ _("Contact") }}</button>
+  <button type="button" class="eb-btn" data-jump="Viewing"><svg class="i"><use href="#i-calendar"/></svg>{{ _("Viewing") }}</button>
+</div>
+
+<div class="eb-lb" id="lightbox" role="dialog" aria-modal="true" aria-label="{{ _('Photo gallery') }}">
+  <div class="eb-lb-top"><span id="lb-count"></span><button type="button" class="eb-iconbtn" id="lb-close" aria-label="{{ _('Close') }}"><svg class="i"><use href="#i-x"/></svg></button></div>
+  <div class="eb-lb-stage">
+    <button type="button" class="eb-lb-nav eb-lb-prev" id="lb-prev" aria-label="{{ _('Previous photo') }}"><svg class="i"><use href="#i-chev-l"/></svg></button>
+    <img id="lb-img" alt="">
+    <button type="button" class="eb-lb-nav eb-lb-next" id="lb-next" aria-label="{{ _('Next photo') }}"><svg class="i"><use href="#i-chev-r"/></svg></button>
+  </div>
+  <div class="eb-lb-thumbs" id="lb-thumbs"></div>
 </div>
 {% endblock %}
-{% block script %}
-{{ super() }}
-<script>
-(function () {
-  var rendered = new Date().toISOString().slice(0, 19).replace("T", " ");
-  var mode = "General";
-  document.querySelectorAll(".estate-tabs button").forEach(function (tab) {
-    tab.addEventListener("click", function () {
-      document.querySelectorAll(".estate-tabs button").forEach(function (t) { t.classList.remove("active"); });
-      tab.classList.add("active");
-      mode = tab.dataset.mode;
-      document.getElementById("inq-viewing").classList.toggle("d-none", mode !== "Viewing");
-      document.getElementById("inq-send").innerText = mode === "Viewing" ? {{ _("Request viewing") | tojson }} : {{ _("Send inquiry") | tojson }};
-    });
-  });
-  document.getElementById("inq-send").addEventListener("click", function () {
-    var btn = this; btn.disabled = true;
-    frappe.call({
-      method: "thinknxg_estate.portal.api.listings.submit_inquiry",
-      args: {
-        full_name: document.getElementById("inq-name").value,
-        mobile: document.getElementById("inq-mobile").value,
-        email: document.getElementById("inq-email").value,
-        message: document.getElementById("inq-msg").value,
-        listing: "{{ doc.name }}",
-        website_url: document.getElementById("inq-website-url").value,
-        form_ts: rendered,
-        inquiry_type: mode,
-        preferred_date: mode === "Viewing" ? document.getElementById("inq-date").value : null,
-        preferred_time_slot: mode === "Viewing" ? document.getElementById("inq-slot").value : null,
-      },
-      callback: function () {
-        var done = document.getElementById("inq-done");
-        done.innerText = mode === "Viewing"
-          ? {{ _("Thanks. We'll call you to confirm the viewing.") | tojson }}
-          : {{ _("Thanks. We'll be in touch shortly.") | tojson }};
-        document.getElementById("inq-form").classList.add("d-none");
-        done.classList.remove("d-none");
-      },
-      error: function (r) {
-        btn.disabled = false;
-        document.getElementById("inq-err").innerText =
-          (r && r._server_messages) ? {{ _("Please check your details and try again.") | tojson }}
-                                    : {{ _("Something went wrong. Please try again.") | tojson }};
-      },
-    });
-  });
-})();
-</script>
+{% block page_script %}
 <script src="/assets/thinknxg_estate/vendor/leaflet/leaflet.js"></script>
 <script>
-(function () {
-  var generic = {{ _("Something went wrong. Please try again.") | tojson }};
-  function serverMsg(r) {
-    try { var d = document.createElement("div"); d.innerHTML = (function (m) { return JSON.parse(m[m.length - 1]).message; })(JSON.parse(r._server_messages)); return d.innerText; }
-    catch (e) { return generic; }
-  }
-  document.querySelectorAll(".estate-gallery img").forEach(function (img) {
-    img.addEventListener("click", function () {
-      var c = document.getElementById("cover"); if (c) c.style.backgroundImage = "url('" + img.dataset.src + "')";
-    });
-  });
-  var save = document.getElementById("save-btn");
-  save.addEventListener("click", function () {
-    {% if not is_visitor %}location.href = "/properties/account?next=" + encodeURIComponent(location.pathname); return;{% endif %}
-    frappe.call({ method: "thinknxg_estate.portal.api.visitor.toggle_wishlist", type: "POST", args: { listing: {{ doc.name | tojson }} },
-      callback: function (r) { save.querySelector("span").innerText = r.message.saved ? {{ _("Saved") | tojson }} : {{ _("Save") | tojson }}; } });
-  });
-  var mapEl = document.getElementById("listing-map");
-  if (mapEl && window.L) {
-    var ll = [parseFloat(mapEl.dataset.lat), parseFloat(mapEl.dataset.lng)];
-    L.Icon.Default.imagePath = "/assets/thinknxg_estate/vendor/leaflet/images/";
-    var m = L.map(mapEl, { scrollWheelZoom: false }).setView(ll, 15);
-    L.tileLayer({{ map_tile_url | tojson }}, { maxZoom: 19, attribution: {{ map_attribution | tojson }} }).addTo(m);
-    L.marker(ll).addTo(m);
-  }
-  var seg = document.getElementById("plan-seg");
-  if (seg) {
-    var annual = {{ doc.headline_price or 0 }}, cur = {{ currency | tojson }};
-    function fmt(v) { return cur + " " + v.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 }); }
-    function plan(n) {
-      seg.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", +b.dataset.n === n); });
-      document.getElementById("plan-per").innerText = fmt(Math.round(annual / n * 1000) / 1000);
-      document.getElementById("plan-month").innerText = fmt(Math.round(annual / 12 * 1000) / 1000);
-    }
-    seg.querySelectorAll("button").forEach(function (b) { b.addEventListener("click", function () { plan(+b.dataset.n); }); });
-    plan(4);
-  }
-  var lease = document.getElementById("lease-go");
-  if (lease) lease.addEventListener("click", function () {
-    var msg = document.getElementById("lease-msg"); lease.disabled = true;
-    frappe.call({ method: "thinknxg_estate.core.listing_portal_api.listing_portal.request_lease_contract", type: "POST",
-      args: { unit: {{ doc.unit | tojson }}, start_date: document.getElementById("lease-start").value,
-              duration_months: document.getElementById("lease-months").value },
-      callback: function () { msg.className = "small ms-2 text-success";
-        msg.innerText = {{ _("Lease request sent. You can follow it in your account.") | tojson }}; },
-      error: function (r) { lease.disabled = false; msg.className = "small ms-2 text-danger"; msg.innerText = serverMsg(r); } });
-  });
-})();
+window.ESTATE_DETAIL = {
+  name: {{ doc.name | tojson }}, route: {{ doc.route | tojson }}, title: {{ doc.title | tojson }}, gallery: {{ gallery | tojson }},
+  unit: {{ doc.unit | tojson }}, annual: {{ (doc.headline_price or 0) | float }}, currency: {{ currency | tojson }},
+  tile: {{ map_tile_url | tojson }}, attribution: {{ map_attribution | tojson }}, visitor: {{ "true" if is_visitor else "false" }},
+  T: { viewingDone: {{ _("Thanks. We'll call you to confirm the viewing.") | tojson }}, inquiryDone: {{ _("Thanks. We'll be in touch shortly.") | tojson }},
+       sendViewing: {{ _("Request viewing") | tojson }}, send: {{ _("Send inquiry") | tojson }}, check: {{ _("Please check your details and try again.") | tojson }},
+       saved: {{ _("Saved") | tojson }}, save: {{ _("Save") | tojson }}, leaseDone: {{ _("Lease request sent. You can follow it in your account.") | tojson }},
+       photoOf: {{ _("Photo {0} of {1}") | tojson }}, shared: {{ _("Link copied") | tojson }} }
+};
 </script>
+<script src="/assets/thinknxg_estate/js/estate_detail.js"></script>
 {% endblock %}

@@ -40,10 +40,26 @@ class bulk_listing_sync:
 
 
 PROPERTY_TRIGGERS = ("is_live", "published_to_portal", "current_lease", "annual_rent", "status")
+FACET_FIELDS = ("usage", "status", "city", "area")
+
+
+def refresh_listing_facets(property_name=None):
+    """Copy usage, development status and place from properties onto their listings, in one
+    statement, so the website filters stay right after a property is edited. Pass no name to
+    refresh every listing (used by the upgrade patch)."""
+    where = "WHERE l.property_ref = %(p)s" if property_name else ""
+    frappe.db.sql(f"""
+        UPDATE `tabListing` l JOIN `tabProperty` p ON p.name = l.property_ref
+        LEFT JOIN `tabUnit` u ON u.name = l.unit
+        SET l.usage = COALESCE(NULLIF(u.usage, ''), p.usage),
+            l.development_status = IF(p.status = 'Under Development', 'Under Development', 'Ready')
+        {where}""", {"p": property_name})
 
 
 def sync_property_on_update(doc, method=None):
     """doc_events hook: Property on_update -> re-sync its units (or itself) when a rule input changes."""
+    if any(doc.has_value_changed(f) for f in FACET_FIELDS):
+        refresh_listing_facets(doc.name)
     if not any(doc.has_value_changed(f) for f in PROPERTY_TRIGGERS):
         return
     _sync_property(doc.name, doc.is_live)
