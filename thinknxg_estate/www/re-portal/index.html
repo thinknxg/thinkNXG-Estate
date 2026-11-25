@@ -5275,10 +5275,16 @@
       alert(__('Enter a valid payment amount.'));
       return;
     }
+    const postingDate = document.getElementById('pp-date-' + instName).value;
+    if (!postingDate) {
+      alert(__('Select the Posting Date.'));
+      return;
+    }
     try {
       const result = await postApi('re_core', 'record_partial_payment', {
         installment_name: instName,
         amount: amount,
+        payment_date: postingDate,
         mode_of_payment: document.getElementById('pp-mode-' + instName).value,
         remarks: document.getElementById('pp-remarks-' + instName).value || null,
       });
@@ -5351,6 +5357,7 @@
                       <td colspan="9" style="padding:0;">
                         <div style="padding:10px 16px;background:var(--sand);display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
                           <input class="form-input" type="number" step="0.01" min="0.01" id="pp-amount-${i.name}" style="width:110px;" placeholder="Amount">
+                          <input class="form-input" type="date" id="pp-date-${i.name}" value="${new Date().toISOString().slice(0,10)}" max="${new Date().toISOString().slice(0,10)}" style="width:150px;" title="${__('Posting Date')}" aria-label="${__('Posting Date')}" required>
                           <select class="form-input" id="pp-mode-${i.name}" style="min-width:120px;">
                             ${['Cash','Bank Transfer','Cheque','Card'].map(m => `<option>${m}</option>`).join('')}
                           </select>

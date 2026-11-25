@@ -2556,6 +2556,9 @@ def record_partial_payment(installment_name, amount, mode_of_payment="Cash", pay
 	amount = flt(amount)
 	if amount <= 0:
 		frappe.throw("Payment amount must be greater than zero.")
+	if not payment_date:
+		frappe.throw("Posting Date is required to record a payment.")
+	payment_date = frappe.utils.getdate(payment_date)
 
 	schedule_name = frappe.db.get_value("Rent Installment", installment_name, "parent")
 	if not schedule_name:
