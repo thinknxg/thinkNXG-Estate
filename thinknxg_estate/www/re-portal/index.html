@@ -1213,7 +1213,18 @@
             </div>
             <div class="form-group">
               <label class="form-label">{{ _("Schedule End Date") }}</label>
+              <input class="form-input" type="date" id="terminate-schedule-end" disabled>
+              <div style="font-size:12px;color:var(--ink-muted);margin-top:4px;">{{ _("Contractual end of the lease.") }}</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">{{ _("Tenancy End Date") }}</label>
               <input class="form-input" type="date" id="terminate-date" onchange="calculateTerminateOutstandingRent()">
+              <div style="font-size:12px;color:var(--ink-muted);margin-top:4px;">{{ _("Actual last day of the tenancy; used for the final settlement.") }}</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">{{ _("Posting Date") }}</label>
+              <input class="form-input" type="date" id="terminate-posting-date">
+              <div style="font-size:12px;color:var(--ink-muted);margin-top:4px;">{{ _("Date the settlement enters the General Ledger.") }}</div>
             </div>
             <div class="form-group">
               <label class="form-label">{{ _("Reasons") }}</label>
@@ -1240,6 +1251,15 @@
                 <input class="form-input" type="number" step="0.001" id="terminate-outstanding-rent" style="flex:1;" readonly>
                 <button class="btn btn-ghost btn-sm" onclick="calculateTerminateOutstandingRent()">{{ _("Calculate Amount") }}</button>
               </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">{{ _("Deposit Balance Held") }}</label>
+              <input class="form-input" id="terminate-deposit-balance" disabled>
+            </div>
+            <div id="terminate-settlement-box" style="display:none;font-size:14px;line-height:1.5;"></div>
+            <div class="form-group" id="terminate-credit-group" style="display:none;flex-direction:row;align-items:center;gap:8px;">
+              <input type="checkbox" id="terminate-issue-credit" style="width:auto;">
+              <label class="form-label" style="margin:0;" for="terminate-issue-credit">{{ _("Issue credit notes for rent already invoiced after the Tenancy End Date") }}</label>
             </div>
             <div class="form-group">
               <label class="form-label">{{ _("Mode of Payment") }}</label>
@@ -3247,6 +3267,12 @@
     sel.innerHTML = '<option value="">' + __('Loading…') + '</option>';
     setTerminateUnitState('Select property first…');
     document.getElementById('terminate-date').value = '';
+    document.getElementById('terminate-posting-date').value = new Date().toISOString().slice(0, 10);
+    document.getElementById('terminate-schedule-end').value = '';
+    document.getElementById('terminate-deposit-balance').value = '';
+    document.getElementById('terminate-settlement-box').style.display = 'none';
+    document.getElementById('terminate-credit-group').style.display = 'none';
+    document.getElementById('terminate-issue-credit').checked = false;
     document.getElementById('terminate-reason').value = '';
     document.getElementById('terminate-security-deposit').value = '';
     document.getElementById('terminate-outstanding-rent').value = '';
@@ -3341,19 +3367,36 @@
     const row = _terminateEligibleLeases.find(r => r.name === name);
     document.getElementById('terminate-security-deposit').value =
       row && row.security_deposit_amount ? row.security_deposit_amount : '';
+    document.getElementById('terminate-schedule-end').value = (row && row.end_date) || '';
   }
 
+  let _terminateSettlement = null;
   async function calculateTerminateOutstandingRent() {
     const name = document.getElementById('terminate-lease-select').value;
     if (!name) {
       showTerminateMsg('Select a lease contract first.', true);
       return;
     }
-    const uptoDate = document.getElementById('terminate-date').value;
+    const endDate = document.getElementById('terminate-date').value;
     try {
-      const amount = await callApiWithParams('re_core', 'get_lease_outstanding_rent',
-        { name, upto_date: uptoDate || null });
-      document.getElementById('terminate-outstanding-rent').value = amount || 0;
+      const st = await callApiWithParams('re_core', 'get_lease_termination_settlement',
+        { name, tenancy_end_date: endDate || null });
+      _terminateSettlement = st;
+      document.getElementById('terminate-outstanding-rent').value = st.rent_outstanding || 0;
+      document.getElementById('terminate-deposit-balance').value = st.deposit_balance || 0;
+      const adv = st.advance_invoices || [];
+      document.getElementById('terminate-credit-group').style.display = adv.length ? 'flex' : 'none';
+      if (!adv.length) document.getElementById('terminate-issue-credit').checked = false;
+      const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      const net = st.net_settlement || 0;
+      let html = `<div style="color:var(--ink-muted);">${__('Deposit balance')} ${fmtMoney(st.deposit_balance)} + ${__('rent paid after end')} ${fmtMoney(st.paid_after_end)} − ${__('outstanding rent')} ${fmtMoney(st.rent_outstanding)}</div>`
+        + `<div><b>${net >= 0 ? __('Refundable to tenant') : __('Payable by tenant')}: ${fmtMoney(Math.abs(net))}</b></div>`;
+      if (adv.length) {
+        html += `<div style="margin-top:8px;color:var(--red);">${__('Rent already invoiced after the Tenancy End Date — these invoices need credit notes:')}</div><ul style="margin:4px 0 0 18px;">`
+          + adv.map(a => `<li>${esc(a.sales_invoice)} (${esc(a.due_date)}) — ${fmtMoney(a.grand_total)}, ${__('paid')} ${fmtMoney(a.paid)}</li>`).join('') + '</ul>';
+      }
+      const box = document.getElementById('terminate-settlement-box');
+      box.innerHTML = html; box.style.display = 'block';
     } catch (err) {
       console.error(err);
       showTerminateMsg('Failed to calculate outstanding rent: ' + err.message, true);
@@ -3372,6 +3415,7 @@
   async function submitTerminateLease() {
     const name = document.getElementById('terminate-lease-select').value;
     const terminationDate = document.getElementById('terminate-date').value;
+    const postingDate = document.getElementById('terminate-posting-date').value;
     const reasons = document.getElementById('terminate-reasons').value;
     const reason = document.getElementById('terminate-reason').value;
     const outstandingRent = document.getElementById('terminate-outstanding-rent').value;
@@ -3383,6 +3427,8 @@
       showTerminateMsg('Select a lease contract to terminate.', true);
       return;
     }
+    if (!terminationDate) { showTerminateMsg('Select the Tenancy End Date.', true); return; }
+    if (!postingDate) { showTerminateMsg('Select the Posting Date.', true); return; }
     const vacateNote = reasons === 'New Contract'
       ? 'This will reserve the unit for a new contract.'
       : 'This will vacate the unit.';
@@ -3395,7 +3441,9 @@
     try {
       await postApi('re_core', 'terminate_lease_contract', {
         name,
-        termination_date: terminationDate || null,
+        tenancy_end_date: terminationDate,
+        posting_date: postingDate,
+        issue_credit_notes: document.getElementById('terminate-issue-credit').checked ? 1 : 0,
         reason: reason || null,
         reasons: reasons || null,
         outstanding_rent: outstandingRent || 0,
@@ -5523,6 +5571,7 @@
         deduction_amount: document.getElementById('sd-edit-deduction-' + name).value || null,
         deduction_reason: document.getElementById('sd-edit-reason-' + name).value || null,
         refunded_amount: document.getElementById('sd-edit-refunded-' + name).value || null,
+        posting_date: document.getElementById('sd-edit-date-' + name).value || null,
       });
       loadSecurityDepositsList();
     } catch (err) {
@@ -5554,6 +5603,7 @@
               <input class="form-input" type="number" step="0.01" id="sd-edit-deduction-${r.name}" value="${r.deduction_amount || ''}" placeholder="Deduction Amount" style="min-width:130px;">
               <input class="form-input" id="sd-edit-reason-${r.name}" value="${r.deduction_reason || ''}" placeholder="Deduction Reason" style="flex:1;min-width:160px;">
               <input class="form-input" type="number" step="0.01" id="sd-edit-refunded-${r.name}" value="${r.refunded_amount || ''}" placeholder="Refunded Amount" style="min-width:130px;">
+              <input class="form-input" type="date" id="sd-edit-date-${r.name}" value="${new Date().toISOString().slice(0,10)}" title="${__('Posting Date')}" aria-label="${__('Posting Date')}" style="min-width:140px;">
               <button class="btn btn-primary btn-sm" onclick="saveSdEdit('${r.name}')">${__('Save')}</button>
             </div>
           </td>

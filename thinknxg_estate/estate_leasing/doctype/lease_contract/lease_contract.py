@@ -203,9 +203,17 @@ class LeaseContract(Document):
     @frappe.whitelist()
     @requires_permission("write")
     def terminate(self, termination_date=None, reason=None, reasons=None,
-                  outstanding_rent=None, mode_of_payment=None, apply_charge_to_tenant=None):
+                  outstanding_rent=None, mode_of_payment=None, apply_charge_to_tenant=None,
+                  tenancy_end_date=None, posting_date=None, issue_credit_notes=0):
         """Early termination without cancelling the submitted document.
 
+        tenancy_end_date: actual last day of the tenancy (``termination_date`` is the
+                 legacy name for the same value). Decides which rent is owed.
+        posting_date: date the settlement entries (credit notes) enter the General Ledger.
+                 Required whenever credit notes are issued; never defaulted silently.
+        issue_credit_notes: must be set when rent has already been invoiced for periods
+                 after the Tenancy End Date. Those invoices are reversed with credit
+                 notes; the outstanding figure is never just reduced on screen.
         reasons: one of New Contract / Lost to another agent / Tenancy Surrendered /
                  End of Tenancy / Tenancy Breach / Break Clause Activation.
                  "New Contract" holds the unit as Reserved (a new lease is coming);
@@ -213,49 +221,98 @@ class LeaseContract(Document):
                  For whole-property leases (no unit), there is no Reserved/Vacant
                  status to set - the Property's current_lease link is simply cleared.
         """
+        from frappe.utils import cint, nowdate
+
+        from thinknxg_estate.core import lease_settlement as ls
+
         if self.docstatus != 1 or self.status not in ("Active", "Expiring"):
             frappe.throw(_("Only Active or Expiring leases can be terminated."))
-        expected_rent = self.get_outstanding_rent(upto_date=termination_date)
-        if flt(outstanding_rent, 3) != flt(expected_rent, 3):
+        end = getdate(tenancy_end_date or termination_date or nowdate())
+        if end < getdate(self.start_date):
+            frappe.throw(_("Tenancy End Date cannot be before the lease Start Date."))
+
+        settlement = ls.compute_settlement(self, end)
+        if flt(outstanding_rent, 3) != flt(settlement["rent_outstanding"], 3):
             frappe.throw(_(
                 "Outstanding Rent {0} does not match the calculated amount {1} for this lease. "
                 "Use Calculate Amount to fetch the correct figure before terminating."
-            ).format(flt(outstanding_rent, 3), flt(expected_rent, 3)))
-        self.db_set("status", "Terminated")
+            ).format(flt(outstanding_rent, 3), flt(settlement["rent_outstanding"], 3)))
+
+        advance = settlement["advance_invoices"]
+        credit_notes = None
+        if advance:
+            listed = ", ".join(f"{r['sales_invoice']} ({r['due_date']})" for r in advance)
+            if not cint(issue_credit_notes):
+                frappe.throw(_(
+                    "Rent has already been invoiced after the Tenancy End Date: {0}. "
+                    "These invoices must be reversed with credit notes before the lease can be terminated. "
+                    "Confirm the credit notes and provide a Posting Date."
+                ).format(listed))
+            if not posting_date:
+                frappe.throw(_("Posting Date is required to post the credit notes."))
+            credit_notes = ls.issue_credit_notes(self, advance, getdate(posting_date))
+
+        self.db_set({
+            "status": "Terminated",
+            "tenancy_end_date": end,
+            "termination_posting_date": getdate(posting_date) if posting_date else None,
+            "termination_settlement": ls.snapshot(settlement, credit_notes),
+        })
         if self.unit:
             unit_status = "Reserved" if reasons == "New Contract" else "Vacant"
             frappe.db.set_value("Unit", self.unit, {"status": unit_status, "current_lease": None})
         else:
             frappe.db.set_value("Property", self.property, "current_lease", None)
         self._flag_security_deposit(_("was terminated early"))
-        note_parts = []
+        note_parts = [_("Tenancy End Date: {0}").format(end)]
+        if posting_date:
+            note_parts.append(_("Posting Date: {0}").format(getdate(posting_date)))
         if reason:
             note_parts.append(reason)
         if reasons:
             note_parts.append(_("Reason: {0}").format(reasons))
         if flt(outstanding_rent):
             note_parts.append(_("Outstanding Rent: {0}").format(outstanding_rent))
+        if credit_notes:
+            note_parts.append(_("Credit notes: {0}").format(", ".join(c["credit_note"] for c in credit_notes)))
+        if flt(settlement["deposit_balance"]):
+            note_parts.append(_("Deposit balance held: {0}").format(settlement["deposit_balance"]))
         if mode_of_payment:
             note_parts.append(_("Mode of Payment: {0}").format(mode_of_payment))
         if apply_charge_to_tenant:
             note_parts.append(_("Charge applied to tenant"))
-        if note_parts:
-            self.add_comment("Comment", _("Terminated: {0}").format(" | ".join(note_parts)))
+        self.add_comment("Comment", _("Terminated: {0}").format(" | ".join(note_parts)))
+        # Installments after the end date that were never invoiced simply stop; invoiced
+        # ones were credited above.
         for row in frappe.get_all("Rent Installment",
                                   filters={"parent": self.rent_schedule,
                                            "status": ["in", ["Pending", "Overdue"]],
-                                           "due_date": [">", termination_date or frappe.utils.today()]},
+                                           "due_date": [">", end]},
                                   pluck="name"):
             frappe.db.set_value("Rent Installment", row, "status", "Cancelled")
         return self.status
 
     @frappe.whitelist()
+    @requires_permission("write")
+    def get_termination_settlement(self, tenancy_end_date=None):
+        """Read-only settlement preview for the Terminate dialog."""
+        from frappe.utils import nowdate
+
+        from thinknxg_estate.core import lease_settlement as ls
+
+        return ls.compute_settlement(self, tenancy_end_date or nowdate())
+
+    @frappe.whitelist()
     def get_outstanding_rent(self, upto_date=None):
-        """Sum unpaid Rent Installments due on/before upto_date (Calculate Amount button)."""
+        """Unpaid rent due on/before upto_date (Calculate Amount button).
+
+        Counts every unpaid installment, whatever its status - including Invoiced and
+        Partially Paid - and only the unpaid balance of each.
+        """
+        from frappe.utils import nowdate
+
+        from thinknxg_estate.core import lease_settlement as ls
+
         if not self.rent_schedule:
             return 0
-        filters = {"parent": self.rent_schedule, "status": ["in", ["Pending", "Overdue"]]}
-        if upto_date:
-            filters["due_date"] = ["<=", upto_date]
-        rows = frappe.get_all("Rent Installment", filters=filters, pluck="amount")
-        return flt(sum(flt(a) for a in rows), 3)
+        return ls.compute_settlement(self, upto_date or nowdate())["rent_outstanding"]

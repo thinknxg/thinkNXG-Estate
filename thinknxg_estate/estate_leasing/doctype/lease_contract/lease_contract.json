@@ -41,6 +41,11 @@
   "security_deposit",
   "term_notes_sb",
   "terms",
+  "termination_sb",
+  "tenancy_end_date",
+  "termination_posting_date",
+  "termination_col",
+  "termination_settlement",
   "amended_from"
  ],
  "fields": [
@@ -273,6 +278,38 @@
    "fieldname": "terms",
    "fieldtype": "Text Editor",
    "label": "Terms & Conditions"
+  },
+  {
+   "fieldname": "termination_sb",
+   "fieldtype": "Section Break",
+   "label": "Termination",
+   "collapsible": 1,
+   "depends_on": "eval:doc.tenancy_end_date"
+  },
+  {
+   "fieldname": "tenancy_end_date",
+   "fieldtype": "Date",
+   "label": "Tenancy End Date",
+   "read_only": 1,
+   "description": "Actual date the tenancy ended; used for the final settlement. The contractual Schedule End Date is the lease End Date above."
+  },
+  {
+   "fieldname": "termination_posting_date",
+   "fieldtype": "Date",
+   "label": "Termination Posting Date",
+   "read_only": 1,
+   "description": "Date the settlement entries were posted to the General Ledger."
+  },
+  {
+   "fieldname": "termination_col",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "termination_settlement",
+   "fieldtype": "Long Text",
+   "label": "Settlement Snapshot",
+   "read_only": 1,
+   "description": "Settlement figures calculated at termination (JSON)."
   },
   {
    "fieldname": "amended_from",

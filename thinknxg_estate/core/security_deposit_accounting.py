@@ -26,7 +26,7 @@ def create_deposit_journal_entry(doc, method=None):
     frappe.msgprint(_("Journal Entry {0} created for deposit").format(je.name), alert=True)
 
 
-def process_refund_or_forfeit(doc, deduction_amount, refund_amount):
+def process_refund_or_forfeit(doc, deduction_amount, refund_amount, posting_date=None):
     """Called from update_security_deposit after status/amounts are saved.
     Books forfeiture (if any) to income, and refund (if any) as a Payment Entry.
     """
@@ -40,7 +40,8 @@ def process_refund_or_forfeit(doc, deduction_amount, refund_amount):
         je = frappe.new_doc("Journal Entry")
         je.voucher_type = "Journal Entry"
         je.company = doc.company
-        je.posting_date = frappe.utils.today()
+        je.set_posting_time = 1
+        je.posting_date = posting_date or frappe.utils.today()
         je.user_remark = _("Security Deposit deduction - {0}").format(doc.name)
         je.append("accounts", {"account": liability_account, "debit_in_account_currency": deduction_amount,
                                 "party_type": "Customer", "party": customer})
@@ -64,7 +65,9 @@ def process_refund_or_forfeit(doc, deduction_amount, refund_amount):
         if doc.mode_of_payment:
             pe.mode_of_payment = doc.mode_of_payment
         pe.reference_no = doc.name
-        pe.reference_date = frappe.utils.today()
+        pe.set_posting_time = 1
+        pe.posting_date = posting_date or frappe.utils.today()
+        pe.reference_date = posting_date or frappe.utils.today()
         pe.insert(ignore_permissions=True)
         pe.submit()
 

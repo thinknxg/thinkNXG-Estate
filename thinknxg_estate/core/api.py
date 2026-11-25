@@ -1416,7 +1416,8 @@ def get_security_deposits(tenant=None, lease_contract=None, status=None):
 
 @frappe.whitelist()
 @staff_only
-def update_security_deposit(name, status=None, deduction_amount=None, deduction_reason=None, refunded_amount=None):
+def update_security_deposit(name, status=None, deduction_amount=None, deduction_reason=None, refunded_amount=None,
+                            posting_date=None):
     from thinknxg_estate.core.security_deposit_accounting import process_refund_or_forfeit
 
     doc = frappe.get_doc("Security Deposit", name)
@@ -1437,7 +1438,9 @@ def update_security_deposit(name, status=None, deduction_amount=None, deduction_
         new_deduction = flt(doc.deduction_amount) - prev_deduction
         new_refund = flt(doc.refunded_amount) - prev_refunded
         if new_deduction > 0 or new_refund > 0:
-            process_refund_or_forfeit(doc, new_deduction, new_refund)
+            if not posting_date:
+                frappe.throw("Posting Date is required to post the deposit settlement.")
+            process_refund_or_forfeit(doc, new_deduction, new_refund, posting_date=posting_date)
 
     return {"name": doc.name, "status": doc.status}
 
@@ -1769,10 +1772,15 @@ def update_inspection(name, estimated_damage_cost=None, summary=None, tenant_sig
 @staff_only
 def terminate_lease_contract(name, termination_date=None, reason=None, reasons=None,
                               outstanding_rent=None, mode_of_payment=None,
-                              apply_charge_to_tenant=None):
+                              apply_charge_to_tenant=None, tenancy_end_date=None,
+                              posting_date=None, issue_credit_notes=0):
+    """termination_date is the legacy name of tenancy_end_date (the actual end of tenancy)."""
     doc = frappe.get_doc("Lease Contract", name)
     status = doc.terminate(
         termination_date=termination_date,
+        tenancy_end_date=tenancy_end_date,
+        posting_date=posting_date,
+        issue_credit_notes=issue_credit_notes,
         reason=reason,
         reasons=reasons,
         outstanding_rent=outstanding_rent,
@@ -1780,6 +1788,16 @@ def terminate_lease_contract(name, termination_date=None, reason=None, reasons=N
         apply_charge_to_tenant=apply_charge_to_tenant,
     )
     return {"name": doc.name, "status": status, "unit": doc.unit, "reasons": reasons}
+
+
+@frappe.whitelist()
+@staff_only
+def get_lease_termination_settlement(name, tenancy_end_date=None):
+    """Settlement preview: unpaid rent to the Tenancy End Date, invoices raised beyond it
+    (needing credit notes) and the deposit balance actually held."""
+    doc = frappe.get_doc("Lease Contract", name)
+    return doc.get_termination_settlement(tenancy_end_date=tenancy_end_date)
+
 
 @frappe.whitelist()
 @staff_only
