@@ -211,6 +211,50 @@ def _simulate_gross(lease, row, settings):
 	return flt(row["amount"], 3)
 
 
+def termination_context(lease, property=None, unit=None):
+	"""Server-side check that this lease may be terminated by this user and that any
+	property/unit sent by the browser really belong to it. Returns the verified context."""
+	if lease.docstatus != 1:
+		frappe.throw(_("Lease {0} is not submitted and cannot be terminated.").format(lease.name))
+	if lease.status == "Terminated":
+		frappe.throw(_("Lease {0} has already been terminated.").format(lease.name))
+	if lease.status not in ("Active", "Expiring"):
+		frappe.throw(_("Lease {0} is {1}; only Active or Expiring leases can be terminated.").format(lease.name, lease.status))
+	if not lease.flags.ignore_permissions and not frappe.has_permission("Lease Contract", "write", doc=lease):
+		frappe.throw(_("You do not have permission to terminate lease {0}.").format(lease.name), frappe.PermissionError)
+	if property and property != lease.property:
+		frappe.throw(_("Property {0} does not belong to lease {1}.").format(property, lease.name))
+	if unit and unit != lease.unit:
+		frappe.throw(_("Unit {0} does not belong to lease {1}.").format(unit, lease.name))
+	unit_row = None
+	if lease.unit:
+		unit_row = frappe.db.get_value("Unit", lease.unit, ["name", "unit_no", "property"], as_dict=True)
+		if not unit_row:
+			frappe.throw(_("Unit {0} of lease {1} does not exist.").format(lease.unit, lease.name))
+		if lease.property and unit_row.property and unit_row.property != lease.property:
+			frappe.throw(_("Unit {0} belongs to property {1}, not {2}; lease {3} is inconsistent.")
+			             .format(lease.unit, unit_row.property, lease.property, lease.name))
+	tenant = frappe.db.get_value("Tenant", lease.tenant, ["name", "tenant_name", "customer"], as_dict=True)
+	if not tenant:
+		frappe.throw(_("Tenant {0} of lease {1} does not exist.").format(lease.tenant, lease.name))
+	prop_name = lease.property or (unit_row.property if unit_row else None)
+	prop_label = None
+	if prop_name:
+		title = frappe.get_meta("Property").title_field or "name"
+		prop_label = frappe.db.get_value("Property", prop_name, title) or prop_name
+	return {
+		"name": lease.name, "company": lease.company,
+		"currency": frappe.db.get_value("Company", lease.company, "default_currency"),
+		"status": lease.status, "start_date": str(lease.start_date), "end_date": str(lease.end_date),
+		"property": prop_name, "property_label": prop_label,
+		"unit": lease.unit, "unit_no": unit_row.unit_no if unit_row else None,
+		"tenant": tenant.name, "tenant_name": tenant.tenant_name,
+		"rent_schedule": lease.rent_schedule, "security_deposit": lease.security_deposit,
+		"security_deposit_amount": flt(lease.security_deposit_amount),
+		"deposit_balance": deposit_balance(lease.security_deposit),
+	}
+
+
 # --------------------------------------------------------------------------- calculation
 
 def compute_settlement(lease, tenancy_end_date, posting_date=None, charges=None, apply_charge=False):

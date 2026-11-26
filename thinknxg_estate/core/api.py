@@ -1809,7 +1809,8 @@ def update_inspection(name, estimated_damage_cost=None, summary=None, tenant_sig
 def terminate_lease_contract(name, termination_date=None, reason=None, reasons=None,
                               outstanding_rent=None, mode_of_payment=None,
                               apply_charge_to_tenant=None, tenancy_end_date=None,
-                              posting_date=None, issue_credit_notes=0, charges=None, calc_token=None):
+                              posting_date=None, issue_credit_notes=0, charges=None, calc_token=None,
+                              property=None, unit=None):
     """termination_date is the legacy name of tenancy_end_date (the actual end of tenancy)."""
     doc = frappe.get_doc("Lease Contract", name)
     status = doc.terminate(
@@ -1824,6 +1825,8 @@ def terminate_lease_contract(name, termination_date=None, reason=None, reasons=N
         apply_charge_to_tenant=apply_charge_to_tenant,
         charges=charges,
         calc_token=calc_token,
+        property=property,
+        unit=unit,
     )
     return {"name": doc.name, "status": status, "unit": doc.unit, "reasons": reasons,
             "journal_entry": doc.termination_journal_entry,
@@ -1840,6 +1843,20 @@ def get_lease_termination_settlement(name, tenancy_end_date=None, posting_date=N
     return doc.get_termination_settlement(
         tenancy_end_date=tenancy_end_date, posting_date=posting_date,
         charges=charges, apply_charge_to_tenant=apply_charge_to_tenant)
+
+
+@frappe.whitelist()
+@staff_only
+def get_lease_for_termination(name, property=None, unit=None):
+    """Verified context for opening the Terminate Lease page from one lease: Property, Unit,
+    Tenant, Schedule End Date, deposit. Everything is read from the backend records; any
+    property/unit the browser supplies must match them."""
+    from thinknxg_estate.core import lease_settlement as ls
+
+    if not name or not frappe.db.exists("Lease Contract", name):
+        frappe.throw(frappe._("Lease Contract {0} does not exist.").format(name))
+    lease = frappe.get_doc("Lease Contract", name)
+    return ls.termination_context(lease, property, unit)
 
 
 @frappe.whitelist()

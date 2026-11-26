@@ -205,7 +205,7 @@ class LeaseContract(Document):
     def terminate(self, termination_date=None, reason=None, reasons=None,
                   outstanding_rent=None, mode_of_payment=None, apply_charge_to_tenant=None,
                   tenancy_end_date=None, posting_date=None, issue_credit_notes=0,
-                  charges=None, calc_token=None):
+                  charges=None, calc_token=None, property=None, unit=None):
         """Terminate the lease and post the final settlement, all or nothing.
 
         tenancy_end_date: actual last day of the tenancy (``termination_date`` is the legacy
@@ -226,8 +226,7 @@ class LeaseContract(Document):
         # serialise concurrent / double submits on this lease
         frappe.db.sql("select name from `tabLease Contract` where name=%s for update", self.name)
         self.reload()
-        if self.docstatus != 1 or self.status not in ("Active", "Expiring"):
-            frappe.throw(_("Only Active or Expiring leases can be terminated; {0} is {1}.").format(self.name, self.status))
+        ls.termination_context(self, property, unit)  # eligibility, permission, property/unit/tenant consistency
         end = getdate(tenancy_end_date or termination_date or nowdate())
         if end < getdate(self.start_date):
             frappe.throw(_("Tenancy End Date cannot be before the lease Start Date."))
@@ -303,6 +302,7 @@ class LeaseContract(Document):
 
         from thinknxg_estate.core import lease_settlement as ls
 
+        ls.termination_context(self)
         end = getdate(tenancy_end_date or nowdate())
         if end < getdate(self.start_date):
             frappe.throw(_("Tenancy End Date cannot be before the lease Start Date."))

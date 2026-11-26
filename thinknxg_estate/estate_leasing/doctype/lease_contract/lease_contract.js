@@ -1,7 +1,11 @@
 frappe.ui.form.on("Lease Contract", {
 refresh(frm) {
 if (frm.doc.docstatus === 1 && ["Active", "Expiring"].includes(frm.doc.status)) {
-frm.add_custom_button(__("Terminate Lease"), () => {
+frm.add_custom_button(__("Terminate"), () => {
+	// Opens the Terminate Lease page with Property, Unit and Lease Contract taken from this record
+	window.location.href = "/re-portal?screen=terminate_lease&lease=" + encodeURIComponent(frm.doc.name);
+}).addClass("btn-danger");
+frm.add_custom_button(__("Terminate in Dialog"), () => {
 let settlement = null;
 let busy = false;
 const fmt = (v) => format_currency(v || 0, settlement ? settlement.currency : frm.doc.currency);
@@ -125,7 +129,7 @@ dialog.get_primary_btn().prop("disabled", false).text(__("Terminate Lease"));
 dialog.show();
 dialog.get_primary_btn().prop("disabled", true);
 invalidate();
-}).addClass("btn-danger");
+}, __("Actions"));
 }
 if (frm.doc.docstatus === 1 && frm.doc.status === "Terminated" && frm.doc.termination_settlement) {
 frm.add_custom_button(__("Reverse Termination"), () => {

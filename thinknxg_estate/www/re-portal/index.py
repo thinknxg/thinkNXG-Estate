@@ -5,7 +5,10 @@ no_cache = 1
 
 def get_context(context):
     if frappe.session.user == "Guest":
-        frappe.local.flags.redirect_location = "/login?redirect-to=/re-portal"
+        from urllib.parse import quote
+
+        target = "/re-portal" + ("?" + frappe.local.request.query_string.decode() if frappe.local.request.query_string else "")
+        frappe.local.flags.redirect_location = "/login?redirect-to=" + quote(target, safe="")
         raise frappe.Redirect
 
     from thinknxg_estate.core.security import is_console_user

@@ -54,6 +54,13 @@ Row lock on the lease, status re-check (no re-termination or duplicate settlemen
 ## UI
 Desk dialog and `/re-portal` Terminate Lease screen use sections A Lease Information (dates visually distinct), B Financial Position, C Tenant Charges (description, amount, VAT Yes/No, rate, VAT amount, total, add/remove), D Settlement Calculation (Calculate Amount, Payable/Receivable/Settled badge, breakdown), E Accounting Details (Posting Date, Mode of Payment, account), F Confirmation. Any input change invalidates the calculation and disables Terminate Lease; the button shows a loading state and ignores double clicks.
 
+## Opening Terminate Lease from one lease (contextual entry)
+- Lease Contract form: **Terminate** navigates to `/re-portal?screen=terminate_lease&lease=<LEASE>` (the previous dialog remains under Actions > Terminate in Dialog). The Lease Contracts list **Terminate** button uses the same route. Guests are sent to login and returned to the same URL.
+- The page calls `get_lease_for_termination(name, property?, unit?)`, which loads the lease from the backend and verifies: lease exists, submitted, not already terminated, Active/Expiring, the user has write permission, any browser-supplied property/unit equal the lease's, the Unit belongs to the lease's Property, the Tenant exists. It returns Property, Unit, Tenant, Schedule End Date and deposit; the page then runs the normal Calculate Amount (rent schedule, outstanding, deposit).
+- Property, Unit and Lease Contract are read-only in this mode; Tenant is shown. Tenancy End Date and Posting Date stay editable.
+- `terminate` and `get_termination_settlement` re-run the same server checks (`lease_settlement.termination_context`); the portal also sends property/unit, which are validated.
+- The sidebar "Terminate Lease" entry keeps the general property/unit/lease selection.
+
 ## Known limitations / decisions for the owner
 - Proration policy is new (no rule existed); a Property Settings checkbox controls it.
 - Charge income is booked through the configured Rent Item's income account (no new accounts); a dedicated charge item/account may be preferred.

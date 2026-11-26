@@ -1,7 +1,7 @@
 # Lease termination: test results
 
 Command: `bench --site fresh.test run-tests --app thinknxg_estate`
-Result: **126 tests, OK** (21 in `tests/test_lease_termination_settlement.py`).
+Result: **131 tests, OK** (26 in `tests/test_lease_termination_settlement.py`).
 
 Figures below use the test lease: rent 1,200/yr paid quarterly (300 per installment), deposit 100, company currency AED.
 
@@ -24,6 +24,7 @@ Figures below use the test lease: rent 1,200/yr paid quarterly (300 per installm
 | Final period pro rata | `test_final_period_is_prorated_with_a_credit_note` – credit + owed = 300 within rounding | Pass |
 | Reversal | `test_reversal_restores_the_lease_and_cancels_entries` – JE and invoice cancelled, deposit and unit restored | Pass |
 | Outstanding from invoice balances | `test_outstanding_counts_invoiced_and_partially_paid_balances` | Pass |
+| Contextual entry from one lease | `test_context_is_read_from_the_lease_record`, `test_context_rejects_wrong_property_unit_or_lease`, `test_context_rejects_terminated_and_inconsistent_leases`, `test_context_requires_write_permission`, `test_terminating_from_context_posts_entries_that_reference_the_lease` | Pass |
 | Three dates separate; deposit balance | `test_three_dates_stay_separate`, `test_settlement_uses_deposit_balance_not_original_amount`, `test_deposit_refund_pays_out_the_balance_only` | Pass |
 
 GL verification is done inside the tests (GL Entry per voucher: debit = credit, posting dates, accounts). The brief's example figures (50,000 / 10,000 / 5,000 ⇒ 35,000 and 20,000 / 25,000 / 5,000 ⇒ 10,000 receivable) follow the same formula; the tests use smaller amounts so the invoice rounding rule does not obscure the checks.

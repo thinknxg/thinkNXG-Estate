@@ -1223,6 +1223,7 @@
         </style>
         <div class="tl-wrap">
           <div id="terminate-form-msg" style="display:none;padding:10px 14px;border-radius:var(--radius);font-size:15px;"></div>
+          <div id="terminate-context-bar" class="tl-stale" style="display:none;background:#eef2ff;color:#3730a3;"></div>
 
           <div class="tl-sec">
             <h3><b>A</b>{{ _("Lease Information") }}</h3>
@@ -1234,6 +1235,10 @@
               <div class="form-group" id="terminate-unit-group">
                 <label class="form-label">{{ _("Unit") }}</label>
                 <select class="form-input form-select" id="terminate-unit-select" onchange="renderTerminateLeaseSelect()" disabled><option value="">{{ _("Select property first…") }}</option></select>
+              </div>
+              <div class="form-group" id="terminate-tenant-group" style="display:none;">
+                <label class="form-label">{{ _("Tenant") }}</label>
+                <input class="form-input tl-ro" id="terminate-tenant" disabled>
               </div>
               <div class="form-group wide">
                 <label class="form-label">{{ _("Lease Contract") }}</label>
@@ -2746,7 +2751,9 @@
     if (id === 'property_enquiries') loadPropertyEnquiriesList();
     if (id === 'site_visit_requests') loadSiteVisitRequestsList();
     if (id === 'portal_tenants') loadPortalTenantsList();
-    if (id === 'terminate_lease') loadTerminateLeaseOptions();
+    if (id === 'terminate_lease') {
+      if (context && context.lease) loadTerminateContext(context.lease); else loadTerminateLeaseOptions();
+    }
     if (id === 'invoices') loadInvoices();
     if (id === 'compliance') loadCompliance();
     if (id === 'crm') loadCRM();
@@ -3331,7 +3338,70 @@
 
   let _terminateHasProperty = true;
 
+  let _terminateContextLease = null;
+
+  function setTerminateLocked(locked) {
+    ['terminate-property-select', 'terminate-unit-select', 'terminate-lease-select'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.disabled = locked; el.classList.toggle('tl-ro', locked); }
+    });
+    document.getElementById('terminate-tenant-group').style.display = locked ? '' : 'none';
+  }
+
+  function resetTerminateForm() {
+    document.getElementById('terminate-date').value = new Date().toISOString().slice(0, 10);
+    document.getElementById('terminate-posting-date').value = new Date().toISOString().slice(0, 10);
+    document.getElementById('terminate-schedule-end').value = '';
+    document.getElementById('terminate-deposit-balance').value = '';
+    document.getElementById('terminate-settlement-box').innerHTML = '';
+    _terminateCharges = []; renderTerminateCharges(true); invalidateTerminate();
+    document.getElementById('terminate-charges-box').style.display = 'none';
+    document.getElementById('terminate-position').innerHTML = '';
+    document.getElementById('terminate-reason').value = '';
+    document.getElementById('terminate-security-deposit').value = '';
+    document.getElementById('terminate-outstanding-rent').value = '';
+    document.getElementById('terminate-mode-of-payment').value = '';
+    document.getElementById('terminate-apply-charge').checked = false;
+    document.getElementById('terminate-form-msg').style.display = 'none';
+  }
+
+  // Contextual entry: opened from one lease. Everything comes from the server-verified record.
+  async function loadTerminateContext(leaseName) {
+    _terminateContextLease = null;
+    resetTerminateForm();
+    const bar = document.getElementById('terminate-context-bar');
+    bar.style.display = 'none';
+    try {
+      const c = await callApiWithParams('re_core', 'get_lease_for_termination', { name: leaseName });
+      _terminateContextLease = c.name;
+      const one = (id, value, label) => { document.getElementById(id).innerHTML = `<option value="${tEsc(value || '')}">${tEsc(label || value || '—')}</option>`; document.getElementById(id).value = value || ''; };
+      one('terminate-property-select', c.property, c.property_label);
+      document.getElementById('terminate-property-group').style.display = '';
+      one('terminate-unit-select', c.unit, c.unit_no);
+      one('terminate-lease-select', c.name, c.name);
+      document.getElementById('terminate-tenant').value = c.tenant_name || c.tenant;
+      document.getElementById('terminate-schedule-end').value = c.end_date || '';
+      document.getElementById('terminate-security-deposit').value = c.security_deposit_amount ? tMoney(c.security_deposit_amount, c.currency) : '';
+      document.getElementById('terminate-deposit-balance').value = c.deposit_balance || 0;
+      _terminateEligibleLeases = [{ name: c.name, tenant: c.tenant, property: c.property, unit: c.unit,
+        unit_no: c.unit_no, company: c.company, end_date: c.end_date, security_deposit_amount: c.security_deposit_amount }];
+      setTerminateLocked(true);
+      bar.textContent = __('Terminating lease') + ' ' + c.name + ' — ' + (c.tenant_name || c.tenant) + (c.unit_no ? ' · ' + c.unit_no : '') + '. ' + __('Property, Unit and Lease Contract come from the lease and cannot be changed here.');
+      bar.style.display = 'block';
+      await loadTerminateOptions(c.company, c.name);
+      calculateTerminateOutstandingRent();   // loads rent schedule / outstanding / deposit position
+    } catch (err) {
+      console.error(err);
+      setTerminateLocked(false);
+      loadTerminateLeaseOptions();
+      showTerminateMsg((err && err.message ? err.message : String(err)).replace(/<[^>]+>/g, ''), true);
+    }
+  }
+
   async function loadTerminateLeaseOptions() {
+    _terminateContextLease = null;
+    setTerminateLocked(false);
+    document.getElementById('terminate-context-bar').style.display = 'none';
     const propSel = document.getElementById('terminate-property-select');
     const sel = document.getElementById('terminate-lease-select');
     propSel.innerHTML = '<option value="">' + __('Loading…') + '</option>';
@@ -3627,6 +3697,8 @@
         apply_charge_to_tenant: apply,
         charges: apply ? terminateChargesPayload() : [],
         calc_token: st.token,
+        property: _terminateContextLease ? document.getElementById('terminate-property-select').value : null,
+        unit: _terminateContextLease ? (document.getElementById('terminate-unit-select').value || null) : null,
       });
       _terminateSettlement = null;
       showTerminateMsg(__('Lease ') + name + __(' terminated.') + (res && res.journal_entry ? ' ' + __('Journal Entry') + ' ' + res.journal_entry + '.' : ''), false);
@@ -3953,15 +4025,8 @@
   }
 
   function goToTerminateLease(leaseName) {
-    showScreen('terminate_lease');
-    setTimeout(async () => {
-      await loadTerminateLeaseOptions();
-      const sel = document.getElementById('terminate-lease-select');
-      if (sel) {
-        sel.value = leaseName;
-        onTerminateLeaseSelectChange();
-      }
-    }, 300);
+    showScreen('terminate_lease', { lease: leaseName });
+    try { history.replaceState(null, '', '?screen=terminate_lease&lease=' + encodeURIComponent(leaseName)); } catch (e) {}
   }
 
   function renderLeaseContractRow(r) {
@@ -6798,6 +6863,14 @@
       document.getElementById('screen-dashboard').classList.contains('active')) {
     loadDashboard();
   }
+
+  // Deep link: /re-portal?screen=terminate_lease&lease=LEASE-…  (used by the Lease Contract form)
+  (function () {
+    try {
+      const q = new URLSearchParams(location.search);
+      if (q.get('screen') === 'terminate_lease' && q.get('lease')) goToTerminateLease(q.get('lease'));
+    } catch (e) { console.error(e); }
+  })();
 
   // ─────────────────────────────────────────────
   // PROPERTY — CREATE

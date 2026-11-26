@@ -337,6 +337,68 @@ class TestLeaseTerminationSettlement(IntegrationTestCase):
 		self.assertEqual(ls.deposit_balance(lease.security_deposit), 100)
 		self.assertEqual(frappe.db.get_value("Unit", lease.unit, "current_lease"), lease.name)
 
+	# ---- opening the Terminate Lease page from one lease
+	def test_context_is_read_from_the_lease_record(self):
+		from thinknxg_estate.core.api import get_lease_for_termination
+
+		lease = self._lease("TT30", "+96890001230")
+		c = get_lease_for_termination(lease.name)
+		self.assertEqual((c["name"], c["property"], c["unit"], c["tenant"]),
+		                 (lease.name, lease.property, lease.unit, lease.tenant))
+		self.assertEqual(c["end_date"], str(getdate(lease.end_date)))
+		self.assertEqual(c["unit_no"], frappe.db.get_value("Unit", lease.unit, "unit_no"))
+		self.assertEqual(c["tenant_name"], frappe.db.get_value("Tenant", lease.tenant, "tenant_name"))
+		self.assertEqual(c["deposit_balance"], 100)
+		self.assertEqual(c["security_deposit"], lease.security_deposit)
+		# the browser may echo property/unit back; matching values are accepted
+		get_lease_for_termination(lease.name, property=lease.property, unit=lease.unit)
+
+	def test_context_rejects_wrong_property_unit_or_lease(self):
+		from thinknxg_estate.core.api import get_lease_for_termination
+
+		lease = self._lease("TT31", "+96890001231")
+		other = self._lease("TT32", "+96890001232")
+		with self.assertRaises(frappe.ValidationError):
+			get_lease_for_termination(lease.name, property="PROP-NOPE")
+		with self.assertRaises(frappe.ValidationError):
+			get_lease_for_termination(lease.name, unit=other.unit)
+		with self.assertRaises(frappe.ValidationError):
+			get_lease_for_termination("LEASE-DOES-NOT-EXIST")
+		with self.assertRaises(frappe.ValidationError):  # termination itself re-validates
+			lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), calc_token="x", unit=other.unit)
+
+	def test_context_rejects_terminated_and_inconsistent_leases(self):
+		from thinknxg_estate.core.api import get_lease_for_termination
+
+		lease = self._lease("TT33", "+96890001233")
+		other = self._lease("TT34", "+96890001234")
+		original_unit = lease.unit
+		frappe.db.set_value("Unit", other.unit, "property", "PROP-OTHER-" + lease.name)  # unit now in another property
+		lease.db_set("unit", other.unit)
+		with self.assertRaises(frappe.ValidationError):
+			get_lease_for_termination(lease.name)
+		lease.db_set("unit", original_unit)
+		lease.db_set("status", "Terminated")
+		with self.assertRaisesRegex(frappe.ValidationError, "already been terminated"):
+			get_lease_for_termination(lease.name)
+
+	def test_context_requires_write_permission(self):
+		from unittest.mock import patch
+
+		lease = self._lease("TT35", "+96890001235")
+		with patch("frappe.has_permission", return_value=False):
+			with self.assertRaises(frappe.PermissionError):
+				ls.termination_context(lease)
+
+	def test_terminating_from_context_posts_entries_that_reference_the_lease(self):
+		lease = self._lease("TT36", "+96890001236")
+		self._pay_first(lease)
+		s = lease.get_termination_settlement(tenancy_end_date=nowdate(), posting_date=nowdate())
+		lease.terminate(tenancy_end_date=nowdate(), posting_date=nowdate(), mode_of_payment="Cash",
+		                calc_token=s["token"], property=lease.property, unit=lease.unit)
+		lease.reload()
+		self.assertIn(lease.name, frappe.db.get_value("Journal Entry", lease.termination_journal_entry, "user_remark"))
+
 	def test_outstanding_counts_invoiced_and_partially_paid_balances(self):
 		lease = self._lease("TT19", "+96890001219")
 		rows = _rows(lease)
